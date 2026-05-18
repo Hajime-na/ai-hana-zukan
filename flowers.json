@@ -1,0 +1,455 @@
+[
+  {
+    "id": "rose",
+    "name": "バラ",
+    "reading": "ばら",
+    "english_name": "Rose",
+    "season": "春・秋",
+    "colors": [
+      "赤",
+      "ピンク",
+      "白",
+      "黄",
+      "オレンジ"
+    ],
+    "feature": "華やかで香り高く、贈り物の主役になりやすい定番花。色や本数で印象が変わり、特別感を演出できます。",
+    "care": "茎を斜めに切り戻し、清潔な花瓶で水を多めに保ちます。直射日光とエアコンの風を避け、毎日水を替えると長持ちします。",
+    "language": "愛・美・感謝",
+    "pop": "大切な気持ちを上品に伝える、気品あふれるバラ。記念日やプロポーズ、感謝の贈り物におすすめです。",
+    "instagram": "凛とした美しさが魅力のバラ。色ごとに表情が変わるので、贈る相手を思い浮かべながら選ぶ時間も楽しめます。#バラ #花のある暮らし #フラワーギフト",
+    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Comestible%20rose%20in%20the%20Laquenexy%20orchard%20garden%2C%20Moselle%2C%20France%20(01).jpg?width=1200",
+    "photo_source": "Wikimedia Commons / Comestible rose in the Laquenexy orchard garden, Moselle, France (01).jpg",
+    "photo_license": "Wikimedia Commons free license / see file page",
+    "photos": [
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Comestible%20rose%20in%20the%20Laquenexy%20orchard%20garden%2C%20Moselle%2C%20France%20(01).jpg?width=1200",
+        "source": "Wikimedia Commons / Comestible rose in the Laquenexy orchard garden, Moselle, France (01).jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "ピンク",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Red%20rose%20with%20black%20background.jpg?width=1200",
+        "source": "Wikimedia Commons / Red rose with black background.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "赤",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Englische%20Rose%20-The%20Squire-%20Raureif-20201107-RM-091853.jpg?width=1200",
+        "source": "Wikimedia Commons / Englische Rose -The Squire- Raureif-20201107-RM-091853.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "深紅",
+        "focal": "center"
+      }
+    ],
+    "romaji": "Bara"
+  },
+  {
+    "id": "tulip",
+    "name": "チューリップ",
+    "reading": "ちゅーりっぷ",
+    "english_name": "Tulip",
+    "season": "春",
+    "colors": [
+      "赤",
+      "ピンク",
+      "黄",
+      "白",
+      "紫"
+    ],
+    "feature": "やわらかな曲線と明るい色合いが春らしい花。飾るうちに茎が伸び、自然な動きを楽しめます。",
+    "care": "浅めの水で管理し、茎をこまめに切り戻します。暖かい場所では開きやすいため、涼しい場所に飾るのがおすすめです。",
+    "language": "思いやり・博愛",
+    "pop": "春の訪れを感じる軽やかなチューリップ。卒業・入学のお祝いにもぴったりです。",
+    "instagram": "春を連れてきてくれるチューリップ。ふんわり開く姿まで愛らしく、毎日の景色を明るくしてくれます。#チューリップ #春の花 #花屋",
+    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Red%20and%20white%20tulip%20at%20Myddelton%20House%2C%20Enfield%2C%20London.jpg?width=1200",
+    "photo_source": "Wikimedia Commons / Red and white tulip at Myddelton House, Enfield, London.jpg",
+    "photo_license": "Wikimedia Commons free license / see file page",
+    "photos": [
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Red%20and%20white%20tulip%20at%20Myddelton%20House%2C%20Enfield%2C%20London.jpg?width=1200",
+        "source": "Wikimedia Commons / Red and white tulip at Myddelton House, Enfield, London.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "複色",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tulip%20Tulipa%20clusiana%20'Lady%20Jane'%20Rock%20Ledge%20Flower%20Edit%202000px.jpg?width=1200",
+        "source": "Wikimedia Commons / Tulip Tulipa clusiana 'Lady Jane' Rock Ledge Flower Edit 2000px.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "白赤",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tulipa%20suaveolens%20floriade%20to%20Canberra.jpg?width=1200",
+        "source": "Wikimedia Commons / Tulipa suaveolens floriade to Canberra.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "ピンク",
+        "focal": "center"
+      }
+    ],
+    "romaji": "Churippu"
+  },
+  {
+    "id": "gerbera",
+    "name": "ガーベラ",
+    "reading": "がーべら",
+    "english_name": "Gerbera",
+    "season": "通年",
+    "colors": [
+      "赤",
+      "ピンク",
+      "黄",
+      "白",
+      "オレンジ"
+    ],
+    "feature": "ぱっと開いた花姿が明るく、元気な印象を与える花。カジュアルなギフトにも使いやすい人気花材です。",
+    "care": "茎が傷みやすいので水は浅めにし、花瓶を清潔に保ちます。切り戻しをしながら涼しい場所で管理します。",
+    "language": "希望・前向き・常に前進",
+    "pop": "見る人を明るくするガーベラ。お誕生日や応援の気持ちを届けたい時におすすめです。",
+    "instagram": "今日の気分を明るくしてくれるガーベラ。シンプルに一輪飾るだけでも、お部屋がぱっと華やぎます。#ガーベラ #花のある生活 #フラワーショップ",
+    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gerbera%20flower%20at%20Bharat%20Bhavan%20garden.jpg?width=1200",
+    "photo_source": "Wikimedia Commons / Gerbera flower at Bharat Bhavan garden.jpg",
+    "photo_license": "Wikimedia Commons free license / see file page",
+    "photos": [
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gerbera%20flower%20at%20Bharat%20Bhavan%20garden.jpg?width=1200",
+        "source": "Wikimedia Commons / Gerbera flower at Bharat Bhavan garden.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "ピンク",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/01%20Gerbera%20orange.jpg?width=1200",
+        "source": "Wikimedia Commons / 01 Gerbera orange.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "オレンジ",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gerbera%20flower%20taken%20at%20Loei%2C%20Thailand.jpg?width=1200",
+        "source": "Wikimedia Commons / Gerbera flower taken at Loei, Thailand.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "赤",
+        "focal": "center"
+      }
+    ],
+    "romaji": "Gabera"
+  },
+  {
+    "id": "carnation",
+    "name": "カーネーション",
+    "reading": "かーねーしょん",
+    "english_name": "Carnation",
+    "season": "春・通年",
+    "colors": [
+      "赤",
+      "ピンク",
+      "白",
+      "黄",
+      "複色"
+    ],
+    "feature": "フリルのような花びらが重なり、優しく華やかな印象。日持ちがよく、ギフトやアレンジに向いています。",
+    "care": "余分な葉を取り、水に浸かる部分を清潔にします。水替えと切り戻しを行い、風通しのよい場所に飾ります。",
+    "language": "無垢で深い愛・感謝",
+    "pop": "感謝の気持ちをやさしく包むカーネーション。母の日はもちろん、日頃のお礼にもおすすめです。",
+    "instagram": "ふんわり重なる花びらが美しいカーネーション。ありがとうの一言に、花のぬくもりを添えて。#カーネーション #感謝の花 #母の日",
+    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Carnation%20flower.jpg?width=1200",
+    "photo_source": "Wikimedia Commons / Carnation flower.jpg",
+    "photo_license": "Wikimedia Commons free license / see file page",
+    "photos": [
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Carnation%20flower.jpg?width=1200",
+        "source": "Wikimedia Commons / Carnation flower.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "ピンク",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Dianthus%20Caryophyllus.jpg?width=1200",
+        "source": "Wikimedia Commons / Dianthus Caryophyllus.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "白",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Dianthus%20caryophyllus%20flowers.png?width=1200",
+        "source": "Wikimedia Commons / Dianthus caryophyllus flowers.png",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "複色",
+        "focal": "center"
+      }
+    ],
+    "romaji": "Kaneshon"
+  },
+  {
+    "id": "hydrangea",
+    "name": "紫陽花",
+    "reading": "あじさい",
+    "english_name": "Hydrangea",
+    "season": "初夏",
+    "colors": [
+      "青",
+      "紫",
+      "ピンク",
+      "白",
+      "グリーン"
+    ],
+    "feature": "小花が集まったボリューム感が魅力。色の移ろいが美しく、季節感のあるディスプレイに向いています。",
+    "care": "水を好むため、茎を深く切り戻してたっぷり水を吸わせます。乾燥を避け、涼しい場所で管理します。",
+    "language": "家族団らん・和気あいあい",
+    "pop": "初夏を彩る上品な紫陽花。季節の贈り物や店頭ディスプレイに華やかな存在感を添えます。",
+    "instagram": "雨の季節にしっとり映える紫陽花。ひと枝で空間に奥行きが生まれる、初夏ならではの美しさです。#紫陽花 #季節の花 #初夏の花",
+    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Bigleaf%20Hydrangea%20Hydrangea%20macrophylla%20'Tokyo%20Delight'%20Pink%203008px.jpg?width=1200",
+    "photo_source": "Wikimedia Commons / Bigleaf Hydrangea Hydrangea macrophylla 'Tokyo Delight' Pink 3008px.jpg",
+    "photo_license": "Wikimedia Commons free license / see file page",
+    "photos": [
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Bigleaf%20Hydrangea%20Hydrangea%20macrophylla%20'Tokyo%20Delight'%20Pink%203008px.jpg?width=1200",
+        "source": "Wikimedia Commons / Bigleaf Hydrangea Hydrangea macrophylla 'Tokyo Delight' Pink 3008px.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "ピンク",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Hydrangea%20macrophylla%20-%20Hortensia%20hydrangea.jpg?width=1200",
+        "source": "Wikimedia Commons / Hydrangea macrophylla - Hortensia hydrangea.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "青",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Bigleaf%20Hydrangea%20Hydrangea%20macrophylla%20'Tokyo%20Delight'%20Flowers%203008px.jpg?width=1200",
+        "source": "Wikimedia Commons / Bigleaf Hydrangea Hydrangea macrophylla 'Tokyo Delight' Flowers 3008px.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "白青",
+        "focal": "center"
+      }
+    ],
+    "romaji": "Ajisai"
+  },
+  {
+    "id": "phalaenopsis",
+    "name": "胡蝶蘭",
+    "reading": "こちょうらん",
+    "english_name": "Phalaenopsis",
+    "season": "通年",
+    "colors": [
+      "白",
+      "ピンク",
+      "黄",
+      "リップ系"
+    ],
+    "feature": "蝶が舞うような優雅な花姿で、格式ある贈り物に選ばれる高級花。開店祝いや就任祝いに人気です。",
+    "care": "直射日光を避けた明るい室内で管理します。水やりは植え込み材が乾いてから控えめに行い、寒さに注意します。",
+    "language": "幸福が飛んでくる・純粋な愛",
+    "pop": "品格を贈る胡蝶蘭。開店・移転・就任など、特別なお祝いにふさわしい一鉢です。",
+    "instagram": "凛とした存在感で空間を格上げする胡蝶蘭。大切な節目に、長く楽しめる華やぎを。#胡蝶蘭 #開店祝い #法人ギフト",
+    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Phalaenopsis%20(aka).jpg?width=1200",
+    "photo_source": "Wikimedia Commons / Phalaenopsis (aka).jpg",
+    "photo_license": "Wikimedia Commons free license / see file page",
+    "photos": [
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Phalaenopsis%20(aka).jpg?width=1200",
+        "source": "Wikimedia Commons / Phalaenopsis (aka).jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "ピンク",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Phalaenopsis%20Cultivar%20White%2001.jpg?width=1200",
+        "source": "Wikimedia Commons / Phalaenopsis Cultivar White 01.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "白",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Phalaenopsis%20Cultivar%20Yellow%2001.jpg?width=1200",
+        "source": "Wikimedia Commons / Phalaenopsis Cultivar Yellow 01.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "黄",
+        "focal": "center"
+      }
+    ],
+    "romaji": "Kocho-ran"
+  },
+  {
+    "id": "sunflower",
+    "name": "ひまわり",
+    "reading": "ひまわり",
+    "english_name": "Sunflower",
+    "season": "夏",
+    "colors": [
+      "黄",
+      "オレンジ",
+      "ブラウン"
+    ],
+    "feature": "太陽のような明るさと力強さが魅力。夏のギフトや元気を届けたいシーンにぴったりです。",
+    "care": "茎を斜めに切り戻し、清潔な水で管理します。暑い時期は水が濁りやすいため、こまめな水替えが大切です。",
+    "language": "憧れ・あなただけを見つめる",
+    "pop": "夏の笑顔を届けるひまわり。元気を贈りたい方へのギフトにおすすめです。",
+    "instagram": "見ているだけで気持ちが明るくなるひまわり。夏のブーケに入れると、ぱっと華やかな印象に。#ひまわり #夏の花 #元気が出る花",
+    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sunflower%20sky%20backdrop.jpg?width=1200",
+    "photo_source": "Wikimedia Commons / Sunflower sky backdrop.jpg",
+    "photo_license": "Wikimedia Commons free license / see file page",
+    "photos": [
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sunflower%20sky%20backdrop.jpg?width=1200",
+        "source": "Wikimedia Commons / Sunflower sky backdrop.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "空",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sunflower%20macro%20wide.jpg?width=1200",
+        "source": "Wikimedia Commons / Sunflower macro wide.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "寄り",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sunflower%20and%20a%20bee.jpg?width=1200",
+        "source": "Wikimedia Commons / Sunflower and a bee.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "自然",
+        "focal": "center"
+      }
+    ],
+    "romaji": "Himawari"
+  },
+  {
+    "id": "ranunculus",
+    "name": "ラナンキュラス",
+    "reading": "らなんきゅらす",
+    "english_name": "Ranunculus",
+    "season": "冬・春",
+    "colors": [
+      "ピンク",
+      "白",
+      "黄",
+      "オレンジ",
+      "赤"
+    ],
+    "feature": "薄い花びらが幾重にも重なる、繊細でロマンチックな花。ブーケに入れるとやわらかな高級感が出ます。",
+    "care": "茎が空洞で折れやすいため、やさしく扱います。水は浅めにして清潔に保ち、涼しい場所に飾ります。",
+    "language": "とても魅力的・晴れやかな魅力",
+    "pop": "重なる花びらが美しいラナンキュラス。上品で可憐な春ギフトにおすすめです。",
+    "instagram": "幾重にも重なる花びらに見惚れるラナンキュラス。淡い色合わせで、やさしい春のブーケに。#ラナンキュラス #春のブーケ #花贈り",
+    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ranunculus%20asiaticus%2000041.jpg?width=1200",
+    "photo_source": "Wikimedia Commons / Ranunculus asiaticus 00041.jpg",
+    "photo_license": "Wikimedia Commons free license / see file page",
+    "photos": [
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ranunculus%20asiaticus%2000041.jpg?width=1200",
+        "source": "Wikimedia Commons / Ranunculus asiaticus 00041.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "淡色",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ranunculus%20asiaticus.jpg?width=1200",
+        "source": "Wikimedia Commons / Ranunculus asiaticus.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "赤",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Persian%20Buttercup%2004.jpg?width=1200",
+        "source": "Wikimedia Commons / Persian Buttercup 04.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "黄",
+        "focal": "center"
+      }
+    ],
+    "romaji": "Ranankyurasu"
+  },
+  {
+    "id": "peony",
+    "name": "芍薬",
+    "reading": "しゃくやく",
+    "english_name": "Peony",
+    "season": "初夏",
+    "colors": [
+      "ピンク",
+      "白",
+      "赤",
+      "コーラル"
+    ],
+    "feature": "つぼみから大輪へと開く姿がドラマチック。香りと存在感があり、季節限定の特別感があります。",
+    "care": "つぼみの蜜をやさしく拭き取り、茎を切り戻して深めの水に生けます。涼しい場所でゆっくり開かせます。",
+    "language": "はにかみ・恥じらい・幸福な結婚",
+    "pop": "季節だけの贅沢、芍薬。大輪に咲く美しさは、ご自宅用にも特別な贈り物にもおすすめです。",
+    "instagram": "つぼみから少しずつほどける芍薬。咲き進む時間まで美しい、初夏だけの特別な花です。#芍薬 #季節の花 #初夏のブーケ",
+    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tree%20peony%20flower%202021%20G2.jpg?width=1200",
+    "photo_source": "Wikimedia Commons / Tree peony flower 2021 G2.jpg",
+    "photo_license": "Wikimedia Commons free license / see file page",
+    "photos": [
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tree%20peony%20flower%202021%20G2.jpg?width=1200",
+        "source": "Wikimedia Commons / Tree peony flower 2021 G2.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "ピンク",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tree%20peony%20flower%202021%20G3.jpg?width=1200",
+        "source": "Wikimedia Commons / Tree peony flower 2021 G3.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "淡色",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tree%20peony%20flower%202021%20G1.jpg?width=1200",
+        "source": "Wikimedia Commons / Tree peony flower 2021 G1.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "赤",
+        "focal": "center"
+      }
+    ],
+    "romaji": "Shakuyaku"
+  },
+  {
+    "id": "babys-breath",
+    "name": "かすみ草",
+    "reading": "かすみそう",
+    "english_name": "Baby's Breath",
+    "season": "通年",
+    "colors": [
+      "白",
+      "ピンク"
+    ],
+    "feature": "小さな花がふんわり広がり、ブーケに軽やかさを添える名脇役。単品でも可憐で人気があります。",
+    "care": "水に浸かる葉や枝を取り、風通しのよい場所で管理します。ドライフラワーにも向いています。",
+    "language": "清らかな心・幸福・感謝",
+    "pop": "ふんわり優しいかすみ草。ブーケに透明感を添え、単品でも可憐に楽しめます。",
+    "instagram": "空気をまとったように軽やかなかすみ草。どんな花にも寄り添い、やさしい余白を作ってくれます。#かすみ草 #ナチュラルブーケ #花のある暮らし",
+    "photo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gypsophila%20paniculata.jpg?width=1200",
+    "photo_source": "Wikimedia Commons / Gypsophila paniculata.jpg",
+    "photo_license": "Public domain / PiPi",
+    "photos": [
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gypsophila%20paniculata.jpg?width=1200",
+        "source": "Wikimedia Commons / Gypsophila paniculata.jpg",
+        "license": "Public domain / PiPi",
+        "label": "全体",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gypsophila%20paniculata%20sl34.jpg?width=1200",
+        "source": "Wikimedia Commons / Gypsophila paniculata sl34.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "花房",
+        "focal": "center"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:FilePath/Close-up%20of%20baby's%20breath%20(Gypsophila%20paniculata)%20flowers.jpg?width=1200",
+        "source": "Wikimedia Commons / Close-up of baby's breath (Gypsophila paniculata) flowers.jpg",
+        "license": "Wikimedia Commons free license / see file page",
+        "label": "寄り",
+        "focal": "center"
+      }
+    ],
+    "romaji": "Kasumiso"
+  }
+]

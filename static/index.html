@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI花図鑑 | 花屋向け販促サポート</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Florist AI Library</p>
+        <h1>AI花図鑑</h1>
+        <p class="lead">花名を検索して、特徴・育て方・花言葉・店頭POP・Instagram文をすぐに確認できます。</p>
+      </div>
+      <form class="search-panel" id="searchForm">
+        <label for="searchInput">花名で検索</label>
+        <div class="search-row">
+          <input id="searchInput" type="search" placeholder="例：バラ、あじさい、rose" autocomplete="off">
+          <button type="submit">検索</button>
+        </div>
+        <div class="quick-list" id="quickList" aria-label="花の候補"></div>
+      </form>
+    </section>
+
+    <section class="content-grid">
+      <article class="flower-card" id="flowerCard">
+        <div class="empty-state">
+          <span>花名を入力してください</span>
+          <p>最初は「バラ」「チューリップ」「胡蝶蘭」などから検索できます。</p>
+        </div>
+      </article>
+
+      <aside class="ai-panel">
+        <div>
+          <p class="panel-label">AI相談</p>
+          <h2>接客メモを相談</h2>
+        </div>
+        <div class="consult-chips" aria-label="相談例">
+          <button type="button" data-consult="退職祝いの花束なら、落ち着いたピンクや白を中心に上品な印象でまとめるのがおすすめです。">退職祝い</button>
+          <button type="button" data-consult="開店祝いなら、胡蝶蘭や明るい黄色・オレンジ系の花で華やかさを出すと店頭映えします。">開店祝い</button>
+          <button type="button" data-consult="母の日なら、カーネーションに季節の小花を合わせると、定番感と特別感を両立できます。">母の日</button>
+        </div>
+        <textarea id="aiQuestion" placeholder="例：退職祝いにおすすめの色合わせは？"></textarea>
+        <button id="aiButton" type="button">相談する</button>
+        <div class="ai-answer" id="aiAnswer">花の雰囲気・贈る相手・ご予算を合わせて考えると、より伝わる提案になります。まずは用途と色味を聞いてみましょう。</div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
