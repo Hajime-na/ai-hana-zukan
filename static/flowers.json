@@ -1,0 +1,178 @@
+[
+  {
+    "name": "バラ",
+    "season": "通年・春と秋が特におすすめ",
+    "feature": "花色が豊富で、ギフトから店頭フェアまで幅広く使える定番花材です。高級感と特別感を出しやすく、写真映えもします。",
+    "care": "水に浸かる葉を取り、切り戻して深めの水に活けます。直射日光とエアコンの風を避けると長持ちします。",
+    "language": "愛・美・感謝",
+    "tags": [
+      "ギフト",
+      "記念日",
+      "店頭POP",
+      "高級感"
+    ],
+    "fallback": "linear-gradient(135deg, #f9d9df, #c86b7d 55%, #fff7f4)",
+    "photo_url": "https://images.unsplash.com/photo-1518709779341-56cf4535e94b?auto=format&fit=crop&w=900&q=80",
+    "photos": [
+      {
+        "url": "https://images.unsplash.com/photo-1518709779341-56cf4535e94b?auto=format&fit=crop&w=900&q=80",
+        "source": "Unsplash",
+        "license": "Unsplash License",
+        "usage": "reference_only",
+        "poster_allowed": false,
+        "credit_required": true,
+        "license_note": "図鑑参考用。ポスター発注・PNG出力には使用不可。正式素材をアップロードしてください。"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1496062031456-07b8f162a322?auto=format&fit=crop&w=900&q=80",
+        "source": "Unsplash",
+        "license": "Unsplash License",
+        "usage": "reference_only",
+        "poster_allowed": false,
+        "credit_required": true,
+        "license_note": "図鑑参考用。ポスター発注・PNG出力には使用不可。正式素材をアップロードしてください。"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1559563362-c667ba5f5480?auto=format&fit=crop&w=900&q=80",
+        "source": "Unsplash",
+        "license": "Unsplash License",
+        "usage": "reference_only",
+        "poster_allowed": false,
+        "credit_required": true,
+        "license_note": "図鑑参考用。ポスター発注・PNG出力には使用不可。正式素材をアップロードしてください。"
+      }
+    ]
+  },
+  {
+    "name": "チューリップ",
+    "season": "1月から4月",
+    "feature": "春らしさが一目で伝わる花材です。やわらかな曲線があり、明るく親しみやすい売り場づくりに向いています。",
+    "care": "浅めの水で管理し、涼しい場所に置きます。茎が伸びやすいため、毎日の表情変化も魅力として伝えられます。",
+    "language": "思いやり・博愛",
+    "tags": [
+      "春",
+      "Instagram",
+      "親しみ",
+      "入学祝い"
+    ],
+    "fallback": "linear-gradient(135deg, #fff3b8, #f49f83 52%, #d9ead7)",
+    "photo_url": "https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=900&q=85",
+    "photos": [
+      {
+        "url": "https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=900&q=85",
+        "source": "Unsplash",
+        "license": "Unsplash License",
+        "usage": "reference_only",
+        "poster_allowed": false,
+        "credit_required": true,
+        "license_note": "図鑑参考用。ポスター発注・PNG出力には使用不可。正式素材をアップロードしてください。"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Colourful_Tulipa_flower.jpg",
+        "source": "Wikimedia Commons",
+        "license": "Creative Commons",
+        "usage": "reference_only",
+        "poster_allowed": false,
+        "credit_required": true,
+        "license_note": "図鑑参考用。ポスター発注・PNG出力には使用不可。正式素材をアップロードしてください。"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=900&q=85",
+        "source": "Unsplash",
+        "license": "Unsplash License",
+        "usage": "reference_only",
+        "poster_allowed": false,
+        "credit_required": true,
+        "license_note": "図鑑参考用。ポスター発注・PNG出力には使用不可。正式素材をアップロードしてください。"
+      }
+    ]
+  },
+  {
+    "name": "ミモザ",
+    "season": "2月から3月",
+    "feature": "黄色い小花がふんわり集まり、季節感と明るさを強く出せます。SNS投稿やフェア告知に使いやすい花材です。",
+    "care": "乾燥しやすいため、入荷後は早めの提案がおすすめです。ドライフラワーとして楽しめる点も訴求できます。",
+    "language": "感謝・友情・思いやり",
+    "tags": [
+      "季節感",
+      "SNS",
+      "ドライ",
+      "明るい"
+    ],
+    "fallback": "linear-gradient(135deg, #fff8ba, #e2c84f 48%, #9dbb82)",
+    "photo_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Acacia_dealbata_flowers_%289570486474%29.jpg",
+    "photos": [
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Acacia_dealbata_flowers_%289570486474%29.jpg",
+        "source": "Wikimedia Commons",
+        "license": "CC BY 2.0",
+        "usage": "reference_only",
+        "poster_allowed": false,
+        "credit_required": true,
+        "license_note": "図鑑参考用。ポスター発注・PNG出力には使用不可。正式素材をアップロードしてください。"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Acacia_dealbata_flowers.jpg",
+        "source": "Wikimedia Commons",
+        "license": "CC0",
+        "usage": "reference_only",
+        "poster_allowed": false,
+        "credit_required": true,
+        "license_note": "図鑑参考用。ポスター発注・PNG出力には使用不可。正式素材をアップロードしてください。"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Acacia_Dealbata_Mimosa.jpg",
+        "source": "Wikimedia Commons",
+        "license": "CC BY-SA 4.0",
+        "usage": "reference_only",
+        "poster_allowed": false,
+        "credit_required": true,
+        "license_note": "図鑑参考用。ポスター発注・PNG出力には使用不可。正式素材をアップロードしてください。"
+      }
+    ]
+  },
+  {
+    "name": "ラナンキュラス",
+    "season": "12月から4月",
+    "feature": "薄い花びらが幾重にも重なり、繊細で上品な印象を作れます。ポスターやギフト提案で主役になりやすい花です。",
+    "care": "茎がやわらかいので浅水で管理します。こまめに切り戻し、花首を支えるように活けると美しく見せられます。",
+    "language": "とても魅力的・華やかな魅力",
+    "tags": [
+      "上品",
+      "ポスター",
+      "ギフト",
+      "春"
+    ],
+    "fallback": "linear-gradient(135deg, #f7cfd8, #f7efe9 50%, #8caf94)",
+    "photo_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Flower,_Persian_buttercup_%22M-Sakura%22_-_Flickr_-_nekonomania.jpg",
+    "photos": [
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Flower,_Persian_buttercup_%22M-Sakura%22_-_Flickr_-_nekonomania.jpg",
+        "source": "Wikimedia Commons",
+        "license": "Creative Commons",
+        "usage": "reference_only",
+        "poster_allowed": false,
+        "credit_required": true,
+        "license_note": "図鑑参考用。ポスター発注・PNG出力には使用不可。正式素材をアップロードしてください。"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Flower,_Persian_buttercup_%22M-Beige%22_-_Flickr_-_nekonomania.jpg",
+        "source": "Wikimedia Commons",
+        "license": "Creative Commons",
+        "usage": "reference_only",
+        "poster_allowed": false,
+        "credit_required": true,
+        "license_note": "図鑑参考用。ポスター発注・PNG出力には使用不可。正式素材をアップロードしてください。"
+      },
+      {
+        "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/IMG_5417-Ranunculus_asiaticus.jpg",
+        "source": "Wikimedia Commons",
+        "license": "CC BY 3.0",
+        "usage": "reference_only",
+        "poster_allowed": false,
+        "credit_required": true,
+        "license_note": "図鑑参考用。ポスター発注・PNG出力には使用不可。正式素材をアップロードしてください。"
+      }
+    ]
+  }
+]

@@ -1,54 +1,415 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI花図鑑 | 花屋向け販促サポート</title>
-  <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-  <main class="app-shell">
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Florist AI Library</p>
-        <h1>AI花図鑑</h1>
-        <p class="lead">花名を検索して、特徴・育て方・花言葉・店頭POP・Instagram文をすぐに確認できます。</p>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI花図鑑｜花屋さんの販促・ポスター作成</title>
+    <link rel="stylesheet" href="/static/style.css?v=v03landscapetype2" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">AI Flower Guide</p>
+        <h1>AI花図鑑｜花屋さんの販促・ポスター作成</h1>
       </div>
-      <form class="search-panel" id="searchForm">
-        <label for="searchInput">花名で検索</label>
-        <div class="search-row">
-          <input id="searchInput" type="search" placeholder="例：バラ、あじさい、rose" autocomplete="off">
-          <button type="submit">検索</button>
-        </div>
-        <div class="quick-list" id="quickList" aria-label="花の候補"></div>
-      </form>
-    </section>
+      <div class="status">試作版</div>
+    </header>
 
-    <section class="content-grid">
-      <article class="flower-card" id="flowerCard">
-        <div class="empty-state">
-          <span>花名を入力してください</span>
-          <p>最初は「バラ」「チューリップ」「胡蝶蘭」などから検索できます。</p>
+    <main class="page">
+      <section class="panel catalog-panel" aria-labelledby="catalog-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Flower Search</p>
+            <h2 id="catalog-title">花を検索・選択</h2>
+          </div>
+          <input id="searchInput" type="search" placeholder="花名・季節・用途で検索" />
         </div>
-      </article>
+        <div id="flowerGrid" class="flower-grid"></div>
+      </section>
 
-      <aside class="ai-panel">
-        <div>
-          <p class="panel-label">AI相談</p>
-          <h2>接客メモを相談</h2>
+      <section class="panel detail-panel" aria-labelledby="detail-title">
+        <div class="detail-layout">
+          <div class="photo-column">
+            <div id="flowerHero" class="flower-hero" aria-label="花写真"></div>
+            <div class="detail-photo-toolbar">
+              <button class="icon-button" id="detailPrevPhoto" aria-label="前の写真">‹</button>
+              <span id="detailPhotoCounter" class="photo-counter">1 / 1</span>
+              <button class="icon-button" id="detailNextPhoto" aria-label="次の写真">›</button>
+            </div>
+            <div id="detailThumbnails" class="thumbnail-row"></div>
+            <p id="photoCredit" class="photo-credit"></p>
+          </div>
+          <div class="detail-content">
+            <p class="eyebrow">Flower Detail</p>
+            <h2 id="detail-title">花の特徴</h2>
+            <p id="flowerFeature" class="lead"></p>
+            <dl class="info-grid">
+              <div>
+                <dt>育て方</dt>
+                <dd id="flowerCare"></dd>
+              </div>
+              <div>
+                <dt>花言葉</dt>
+                <dd id="flowerLanguage"></dd>
+              </div>
+              <div>
+                <dt>季節</dt>
+                <dd id="flowerSeason"></dd>
+              </div>
+            </dl>
+            <div id="flowerTags" class="tag-row"></div>
+            <div class="detail-actions">
+              <button id="goPromotion" class="primary-button compact-button">この花で販促文を作る</button>
+              <button id="goPoster" class="secondary-button compact-button">この花でポスターを作る</button>
+            </div>
+          </div>
         </div>
-        <div class="consult-chips" aria-label="相談例">
-          <button type="button" data-consult="退職祝いの花束なら、落ち着いたピンクや白を中心に上品な印象でまとめるのがおすすめです。">退職祝い</button>
-          <button type="button" data-consult="開店祝いなら、胡蝶蘭や明るい黄色・オレンジ系の花で華やかさを出すと店頭映えします。">開店祝い</button>
-          <button type="button" data-consult="母の日なら、カーネーションに季節の小花を合わせると、定番感と特別感を両立できます。">母の日</button>
-        </div>
-        <textarea id="aiQuestion" placeholder="例：退職祝いにおすすめの色合わせは？"></textarea>
-        <button id="aiButton" type="button">相談する</button>
-        <div class="ai-answer" id="aiAnswer">花の雰囲気・贈る相手・ご予算を合わせて考えると、より伝わる提案になります。まずは用途と色味を聞いてみましょう。</div>
-      </aside>
-    </section>
-  </main>
+      </section>
 
-  <script src="/static/app.js"></script>
-</body>
+      <section id="promotionSection" class="panel ai-panel" aria-labelledby="ai-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Promotion Draft</p>
+            <h2 id="ai-title">AI販促文を作る</h2>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            花材
+            <input id="flowerInput" value="バラ" />
+          </label>
+          <label>
+            用途
+            <select id="purposeInput">
+              <option>店頭POP</option>
+              <option>Instagram</option>
+              <option>ギフト</option>
+              <option>ポスター</option>
+            </select>
+          </label>
+          <label>
+            雰囲気
+            <select id="toneInput">
+              <option>やさしい</option>
+              <option>高級感</option>
+              <option>かわいい</option>
+              <option>和風</option>
+            </select>
+          </label>
+        </div>
+
+        <button id="suggestButton" class="primary-button">AI案を作る</button>
+        <div id="suggestions" class="suggestions"></div>
+      </section>
+
+      <section id="posterSection" class="panel poster-panel" aria-labelledby="poster-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Poster Lettering</p>
+            <h2 id="poster-title">ポスター文字入れ</h2>
+            <p class="section-description">写真に文字を入れて、店頭用ポスターの仕上がりを確認できます。</p>
+          </div>
+          <div class="photo-actions">
+            <button class="icon-button" id="prevPhoto" aria-label="前の写真">‹</button>
+            <button class="icon-button" id="nextPhoto" aria-label="次の写真">›</button>
+          </div>
+        </div>
+
+        <div class="poster-order-card">
+          <div class="poster-preview-column">
+            <div id="posterPreviewFrame" class="poster-preview-frame">
+              <div id="posterPreview" class="poster-preview">
+                <div id="posterImageLayer" class="poster-image-layer" aria-hidden="true"></div>
+                <div id="posterCopy" class="poster-copy">
+                  <p id="posterSub">季節のおすすめ</p>
+                  <strong id="posterTitleText">バラ フェア</strong>
+                  <small id="posterMeta">Hana Flower / 5.23 - 5.31</small>
+                </div>
+              </div>
+            </div>
+            <div id="materialWarning" class="material-warning" hidden>
+              この写真は図鑑参考用です。ポスター発注・PNG出力には使用できません。正式素材をアップロードしてください。
+            </div>
+            <div class="export-actions">
+              <button id="savePngButton" class="secondary-button" type="button">PNGで保存</button>
+              <p id="pngStatus" class="export-status" aria-live="polite"></p>
+            </div>
+          </div>
+
+          <div class="poster-form">
+            <div class="form-section">
+              <p class="eyebrow">Basic</p>
+              <h3>基本情報</h3>
+              <label>
+                正式素材をアップロード
+                <input id="officialMaterialInput" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
+              </label>
+              <p id="officialMaterialStatus" class="field-help">jpg / jpeg / png / webp に対応。アップロードした画像だけがPNG保存・仮注文に使えます。</p>
+              <label>
+                画像の使い方
+                <select id="uploadedMaterialMode">
+                  <option value="background">写真に文字を入れる</option>
+                  <option value="finished">画像をそのまま使う</option>
+                </select>
+              </label>
+              <p id="uploadedMaterialModeHelp" class="field-help">写真に文字を入れる：アプリ側で文字帯・タイトル・店舗名・日付を重ねます。</p>
+              <div class="form-grid two">
+                <label>
+                  ポスターサイズ
+                  <select id="posterSize">
+                    <option value="original">元画像比率</option>
+                    <option value="a4-portrait" selected>A4縦</option>
+                    <option value="a4-landscape">A4横</option>
+                    <option value="square">正方形</option>
+                    <option value="wide">16:9</option>
+                    <option value="story">9:16</option>
+                  </select>
+                </label>
+                <label class="lettering-only">
+                  画像の表示方法
+                  <select id="imageFit">
+                    <option value="cover">全面に敷く</option>
+                    <option value="contain">全体を収める</option>
+                    <option value="width">幅に合わせる</option>
+                    <option value="height">高さに合わせる</option>
+                  </select>
+                </label>
+              </div>
+              <label class="lettering-only">
+                画像位置
+                <select id="imagePosition">
+                  <option value="center">中央</option>
+                  <option value="top">上</option>
+                  <option value="bottom">下</option>
+                  <option value="left">左</option>
+                  <option value="right">右</option>
+                </select>
+              </label>
+              <label>
+                ポスター回転
+                <select id="posterRotation">
+                  <option value="normal">通常</option>
+                  <option value="right">右90度回転</option>
+                </select>
+              </label>
+              <div class="image-adjust-panel lettering-only">
+                <div class="section-head compact">
+                  <div>
+                    <p class="eyebrow">Image Adjust</p>
+                    <h3>ポスター画像調整</h3>
+                    <p class="field-help">写真だけを調整します。文字帯は動かず、仕上がり確認とPNG保存にも反映されます。</p>
+                  </div>
+                </div>
+                <label>
+                  画像ズーム <span id="imageZoomValue" class="range-value">100%</span>
+                  <input id="imageZoom" type="range" min="50" max="200" value="100" />
+                </label>
+                <label>
+                  横位置 <span id="imageOffsetXValue" class="range-value">0</span>
+                  <input id="imageOffsetX" type="range" min="-100" max="100" value="0" />
+                </label>
+                <label>
+                  縦位置 <span id="imageOffsetYValue" class="range-value">0</span>
+                  <input id="imageOffsetY" type="range" min="-100" max="100" value="0" />
+                </label>
+                <label>
+                  画像回転
+                  <select id="imageRotation">
+                    <option value="normal">通常</option>
+                    <option value="right">右90度</option>
+                  </select>
+                </label>
+                <button id="resetImageAdjust" class="secondary-button compact-button" type="button">リセット</button>
+              </div>
+              <label class="lettering-only">
+                ポスターデザイン
+                <select id="posterDesign">
+                  <option value="photo-full">写真全面タイプ</option>
+                  <option value="bottom-margin">下部余白タイプ</option>
+                  <option value="simple">上品シンプルタイプ</option>
+                </select>
+              </label>
+              <p id="posterDesignHelp" class="field-help lettering-only">写真全面タイプ：写真を大きく見せる店頭向けデザイン</p>
+              <div class="mode-note lettering-only">すでに文字入りの画像を使う場合は「画像をそのまま使う」を選んでください。このモードではアプリ側の文字帯を重ねます。</div>
+              <label class="lettering-only">
+                メインタイトル
+                <input id="posterMainTitle" value="バラ フェア" />
+              </label>
+              <label class="lettering-only">
+                サブタイトル
+                <input id="posterSubtitle" value="大切な方へ、上質な彩りを。" />
+              </label>
+              <label class="lettering-only">
+                店舗名
+                <input id="posterShop" value="Hana Flower" />
+              </label>
+              <label class="lettering-only">
+                日付・期間
+                <input id="posterDate" value="5.23 - 5.31" />
+              </label>
+              <label class="lettering-only">
+                補足文
+                <textarea id="posterNote" rows="3">店頭にて季節の花束をご用意しています。</textarea>
+              </label>
+              <div class="form-grid two lettering-only">
+              <label>
+                文字タイプ
+                <select id="posterType">
+                  <option value="elegant">上品</option>
+                  <option value="friendly">親しみやすい</option>
+                  <option value="bold">目立つ</option>
+                </select>
+              </label>
+              <label>
+                文字位置
+                <select id="posterPosition">
+                  <option value="bottom-left">左下</option>
+                  <option value="bottom-right">右下</option>
+                  <option value="bottom-center">中央下</option>
+                  <option value="bottom-band">下帯</option>
+                  <option value="center">中央</option>
+                  <option value="top-left">左上</option>
+                </select>
+              </label>
+              </div>
+              <button id="posterAiButton" class="secondary-button lettering-only">AIで文章を作る</button>
+            </div>
+
+            <div class="form-section revision-box lettering-only">
+              <div class="section-head compact">
+                <div>
+                  <p class="eyebrow">AI Revision</p>
+                  <h3>AI修正リクエスト</h3>
+                  <p class="field-help">作成した文章に対して、直してほしい内容を書けます</p>
+                </div>
+              </div>
+              <div class="chip-row" aria-label="修正例">
+                <button type="button" class="request-chip">もっと高級感を出して</button>
+                <button type="button" class="request-chip">短くして</button>
+                <button type="button" class="request-chip">ギフト向けにして</button>
+                <button type="button" class="request-chip">日本語だけにして</button>
+                <button type="button" class="request-chip">店舗名を目立たせて</button>
+              </div>
+              <label>
+                修正コメント
+                <textarea id="revisionRequest" rows="3" placeholder="例：もっと高級感を出して、短くしてください"></textarea>
+              </label>
+              <button id="reviseButton" class="secondary-button">AIで再修正する</button>
+              <div id="revisionResult" class="revision-result"></div>
+            </div>
+
+            <div class="form-section finish-section">
+              <p class="eyebrow">Final Check</p>
+              <h3>仕上がり確認</h3>
+              <p class="field-help">入力内容と文字位置を確認して、注文前の最終確認へ進みます。</p>
+              <button id="finishButton" class="primary-button finish-button">仕上がり確認へ</button>
+              <div id="finishChecklist" class="finish-checklist" hidden>
+                <label><input type="checkbox" /> 誤字脱字を確認しました</label>
+                <label><input type="checkbox" /> 店舗名・日付を確認しました</label>
+                <label><input type="checkbox" /> 文字位置はおまかせ微調整で了承します</label>
+                <label><input type="checkbox" /> 印刷時に色味が多少異なる場合があります</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="confirmationSection" class="panel confirmation-panel" aria-labelledby="confirm-title" hidden>
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Final Preview</p>
+            <h2 id="confirm-title">仕上がり確認</h2>
+            <p class="section-description">注文前に、ポスターの文字内容と確認事項をチェックできます。</p>
+          </div>
+        </div>
+
+        <div id="finishReview" class="finish-review">
+          <div class="confirmation-preview-area">
+            <div id="confirmPosterPreviewFrame" class="poster-preview-frame confirm-poster-preview-frame">
+              <div id="confirmPosterPreview" class="poster-preview confirm-poster-preview">
+                <div id="confirmPosterImageLayer" class="poster-image-layer" aria-hidden="true"></div>
+                <div id="confirmPosterCopy" class="poster-copy confirm-poster-copy">
+                  <p id="confirmPosterSub"></p>
+                  <strong id="confirmPosterTitle"></strong>
+                  <small id="confirmPosterMeta"></small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="confirmation-detail-area">
+            <dl class="confirm-summary" aria-label="入力内容一覧">
+              <div>
+                <dt>メインタイトル</dt>
+                <dd id="confirmTitle"></dd>
+              </div>
+              <div>
+                <dt>サブタイトル</dt>
+                <dd id="confirmSubtitle"></dd>
+              </div>
+              <div>
+                <dt>店舗名</dt>
+                <dd id="confirmShop"></dd>
+              </div>
+              <div>
+                <dt>日付・期間</dt>
+                <dd id="confirmDate"></dd>
+              </div>
+              <div>
+                <dt>補足文</dt>
+                <dd id="confirmNote"></dd>
+              </div>
+              <div>
+                <dt>文字タイプ</dt>
+                <dd id="confirmType"></dd>
+              </div>
+              <div>
+                <dt>文字位置</dt>
+                <dd id="confirmPosition"></dd>
+              </div>
+              <div>
+                <dt>ポスターサイズ</dt>
+                <dd id="confirmPosterSize"></dd>
+              </div>
+              <div>
+                <dt>画像表示</dt>
+                <dd id="confirmImageFit"></dd>
+              </div>
+              <div>
+                <dt>素材の使い方</dt>
+                <dd id="confirmMaterialMode"></dd>
+              </div>
+              <div>
+                <dt>ポスター回転</dt>
+                <dd id="confirmPosterRotation"></dd>
+              </div>
+            </dl>
+
+            <div id="finishCheckItems" class="finish-checklist">
+              <label><input type="checkbox" /> 誤字脱字を確認しました</label>
+              <label><input type="checkbox" /> 店舗名・日付を確認しました</label>
+              <label><input type="checkbox" /> 文字位置はおまかせ微調整で了承します</label>
+              <label><input type="checkbox" /> 文字位置・サイズは最終調整される場合があります</label>
+              <label><input type="checkbox" /> 印刷時に色味が多少異なる場合があります</label>
+            </div>
+
+            <div id="confirmMaterialWarning" class="material-warning" hidden>
+              この写真は図鑑参考用です。ポスター発注・PNG出力には使用できません。正式素材をアップロードしてください。
+            </div>
+
+            <div class="confirmation-actions">
+              <button id="backToEditButton" class="secondary-button" type="button">編集に戻る</button>
+              <button id="saveConfirmPngButton" class="secondary-button" type="button">PNGで保存</button>
+              <button id="placeOrderButton" class="primary-button finish-button" type="button">この内容で仮注文する</button>
+            </div>
+            <p id="confirmPngStatus" class="export-status" aria-live="polite"></p>
+            <p id="orderStatus" class="order-status" hidden></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js?v=v03landscapetype2"></script>
+  </body>
 </html>
