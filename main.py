@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -63,6 +63,10 @@ class SaveOrderRequest(BaseModel):
     png_data_url: str = ""
 
 
+class UpdateStatusRequest(BaseModel):
+    status: str
+
+
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
 def _fallback_copy(req: GenerateCopyRequest) -> dict:
@@ -81,7 +85,20 @@ def _fallback_copy(req: GenerateCopyRequest) -> dict:
     }
 
 
-# ── Routes ───────────────────────────────────────────────────────────────────
+def _load_order_json(order_id: str) -> dict:
+    json_path = ORDERS_DIR / f"order_{order_id}.json"
+    if not json_path.exists():
+        raise HTTPException(status_code=404, detail="Order not found")
+    with open(json_path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _save_order_json(order_id: str, data: dict) -> None:
+    with open(ORDERS_DIR / f"order_{order_id}.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+# ── Core routes ──────────────────────────────────────────────────────────────
 
 @app.get("/")
 def read_index():
@@ -180,6 +197,8 @@ def generate_copy(request: GenerateCopyRequest):
         return _fallback_copy(request)
 
 
+# ── Order management routes ───────────────────────────────────────────────────
+
 @app.post("/api/save-order")
 def save_order(request: SaveOrderRequest):
     try:
@@ -190,8 +209,11 @@ def save_order(request: SaveOrderRequest):
         json_file = f"order_{order_id}.json"
         png_file = f"poster_{order_id}.png"
 
+        order_data = dict(request.order_data)
+        order_data.setdefault("status", "new")
+
         with open(ORDERS_DIR / json_file, "w", encoding="utf-8") as f:
-            json.dump(request.order_data, f, ensure_ascii=False, indent=2)
+            json.dump(order_data, f, ensure_ascii=False, indent=2)
 
         saved_png = False
         if request.png_data_url:
@@ -229,6 +251,7 @@ def list_orders():
                     "main_title": data.get("main_title", ""),
                     "poster_size": data.get("poster_size", ""),
                     "image_usage": data.get("image_usage", ""),
+                    "status": data.get("status", "new"),
                     "json_file": json_path.name,
                     "png_file": png_file if (ORDERS_DIR / png_file).exists() else None,
                 })
@@ -237,3 +260,47 @@ def list_orders():
         return {"orders": orders}
     except Exception as e:
         return {"orders": [], "error": str(e)}
+
+
+@app.get("/api/orders/{order_id}/poster")
+def get_order_poster(order_id: str):
+    png_path = ORDERS_DIR / f"poster_{order_id}.png"
+    if not png_path.exists():
+        raise HTTPException(status_code=404, detail="Poster not found")
+    return FileResponse(str(png_path), media_type="image/png")
+
+
+@app.get("/api/orders/{order_id}/json")
+def get_order_json(order_id: str):
+    json_path = ORDERS_DIR / f"order_{order_id}.json"
+    if not json_path.exists():
+        raise HTTPException(status_code=404, detail="Order not found")
+    return FileResponse(str(json_path), media_type="application/json")
+
+
+@app.post("/api/orders/{order_id}/status")
+def update_order_status(order_id: str, request: UpdateStatusRequest):
+    try:
+        data = _load_order_json(order_id)
+        data["status"] = request.status
+        _save_order_json(order_id, data)
+        return {"ok": True, "order_id": order_id, "status": request.status}
+    except HTTPException:
+        return {"ok": False, "error": "Order not found"}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@app.delete("/api/orders/{order_id}")
+def delete_order(order_id: str):
+    json_path = ORDERS_DIR / f"order_{order_id}.json"
+    png_path = ORDERS_DIR / f"poster_{order_id}.png"
+    if not json_path.exists():
+        return {"ok": False, "error": "Order not found"}
+    try:
+        json_path.unlink()
+        if png_path.exists():
+            png_path.unlink()
+        return {"ok": True, "order_id": order_id}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}

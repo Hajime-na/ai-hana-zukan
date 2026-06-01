@@ -1636,6 +1636,15 @@ async function saveToServer(orderData, statusElement) {
   }
 }
 
+const STATUS_LABELS = {
+  new: "新規",
+  checking: "確認中",
+  ready: "準備完了",
+  done: "完了",
+  canceled: "キャンセル",
+};
+const STATUS_VALUES = Object.keys(STATUS_LABELS);
+
 async function renderServerOrders() {
   const list = document.querySelector("#serverOrdersList");
   if (!list) return;
@@ -1647,12 +1656,18 @@ async function renderServerOrders() {
       return;
     }
     list.innerHTML = orders
-      .map(
-        (order) => `
-          <article class="order-history-item">
+      .map((order) => {
+        const status = order.status || "new";
+        const statusLabel = STATUS_LABELS[status] || status;
+        const statusOptions = STATUS_VALUES.map(
+          (v) => `<option value="${v}"${v === status ? " selected" : ""}>${STATUS_LABELS[v]}</option>`,
+        ).join("");
+        return `
+          <article class="order-history-item server-order-item" data-order-id="${order.order_id}">
             <div class="order-history-header">
               <strong class="order-history-id">注文ID：${order.order_id}</strong>
               <span class="order-history-date">${formatHistoryDate(order.created_at)}</span>
+              <span class="order-status-badge status-${status}">${statusLabel}</span>
             </div>
             <dl class="order-history-detail">
               <div><dt>花名</dt><dd>${order.flower_name || "―"}</dd></div>
@@ -1663,14 +1678,131 @@ async function renderServerOrders() {
               <div><dt>JSONファイル</dt><dd>${order.json_file || "―"}</dd></div>
               <div><dt>PNGファイル</dt><dd>${order.png_file || "（なし）"}</dd></div>
             </dl>
+            <div class="order-history-actions server-order-actions">
+              <button type="button" class="secondary-button server-detail-btn" data-order-id="${order.order_id}">詳細を見る</button>
+              <label class="server-status-label">
+                ステータス
+                <select class="server-status-select" data-order-id="${order.order_id}">${statusOptions}</select>
+              </label>
+              <button type="button" class="discard-button server-delete-btn" data-order-id="${order.order_id}">削除</button>
+            </div>
           </article>
-        `,
-      )
+        `;
+      })
       .join("");
   } catch {
     list.innerHTML = '<p class="history-empty">サーバー注文の取得に失敗しました</p>';
   }
 }
+
+async function showOrderDetail(orderId) {
+  const modal = document.querySelector("#orderDetailModal");
+  const content = document.querySelector("#orderDetailContent");
+  content.innerHTML = '<p class="history-empty">読み込み中...</p>';
+  modal.hidden = false;
+  document.body.classList.add("modal-open");
+
+  try {
+    const resp = await fetch(`/api/orders/${orderId}/json`);
+    const data = await resp.json();
+    const status = data.status || "new";
+    const statusLabel = STATUS_LABELS[status] || status;
+    const checkLabels = {
+      typo_checked: "誤字脱字確認",
+      shop_date_checked: "店舗名・日付確認",
+      position_adjustment_accepted: "文字位置おまかせ微調整を了承",
+      final_adjustment_accepted: "文字位置・サイズ最終調整を了承",
+      color_difference_accepted: "色味の差異を了承",
+    };
+    const checks = data.checks || {};
+    const checkHtml = Object.entries(checkLabels)
+      .map(([key, label]) => `<div><dt>${label}</dt><dd>${checks[key] ? "済" : "未"}</dd></div>`)
+      .join("");
+    const hasPoster = Boolean(data.png_filename);
+
+    content.innerHTML = `
+      <h3 class="order-detail-title">注文詳細</h3>
+      <div class="order-detail-body">
+        ${hasPoster ? `<div class="order-detail-poster"><img src="/api/orders/${orderId}/poster" alt="ポスタープレビュー" class="order-detail-poster-img" loading="lazy" /></div>` : ""}
+        <dl class="order-detail-fields">
+          <div><dt>注文ID</dt><dd>${data.order_id || orderId}</dd></div>
+          <div><dt>作成日時</dt><dd>${formatHistoryDate(data.created_at)}</dd></div>
+          <div><dt>ステータス</dt><dd><span class="order-status-badge status-${status}">${statusLabel}</span></dd></div>
+          <div><dt>花名</dt><dd>${data.flower_name || "―"}</dd></div>
+          <div><dt>店舗名</dt><dd>${data.shop_name || "―"}</dd></div>
+          <div><dt>タイトル</dt><dd>${data.main_title || "―"}</dd></div>
+          <div><dt>サブタイトル</dt><dd>${data.subtitle || "―"}</dd></div>
+          <div><dt>補足文</dt><dd>${data.note || "―"}</dd></div>
+          <div><dt>ポスターサイズ</dt><dd>${data.poster_size || "―"}</dd></div>
+          <div><dt>画像の使い方</dt><dd>${data.image_usage || "―"}</dd></div>
+          <div><dt>素材状態</dt><dd>${data.material_status || "―"}</dd></div>
+          <div><dt>JSONファイル</dt><dd>${data.png_filename ? `order_${orderId}.json` : "―"}</dd></div>
+          <div><dt>PNGファイル</dt><dd>${data.png_filename || "―"}</dd></div>
+        </dl>
+        <div class="order-detail-checks">
+          <h4>確認チェック項目</h4>
+          <dl class="order-history-detail">${checkHtml}</dl>
+        </div>
+      </div>
+    `;
+  } catch {
+    content.innerHTML = '<p class="history-empty">注文データの読み込みに失敗しました</p>';
+  }
+}
+
+function closeOrderDetail() {
+  document.querySelector("#orderDetailModal").hidden = true;
+  document.body.classList.remove("modal-open");
+}
+
+async function updateOrderStatus(orderId, status) {
+  try {
+    await fetch(`/api/orders/${orderId}/status`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+    // Update badge without full re-render
+    const badge = document.querySelector(`.server-order-item[data-order-id="${orderId}"] .order-status-badge`);
+    if (badge) {
+      badge.textContent = STATUS_LABELS[status] || status;
+      badge.className = `order-status-badge status-${status}`;
+    }
+  } catch {
+    // silent fail — select already shows the new value
+  }
+}
+
+async function deleteServerOrder(orderId) {
+  if (!window.confirm(`注文 ${orderId} を削除しますか？\nJSONファイルとPNGファイルが削除されます。`)) return;
+  try {
+    const resp = await fetch(`/api/orders/${orderId}`, { method: "DELETE" });
+    const result = await resp.json();
+    if (result.ok) renderServerOrders();
+  } catch {
+    // ignore
+  }
+}
+
+document.querySelector("#serverOrdersList").addEventListener("click", async (event) => {
+  const detailBtn = event.target.closest(".server-detail-btn");
+  if (detailBtn) {
+    showOrderDetail(detailBtn.dataset.orderId);
+    return;
+  }
+  const deleteBtn = event.target.closest(".server-delete-btn");
+  if (deleteBtn) {
+    deleteServerOrder(deleteBtn.dataset.orderId);
+  }
+});
+
+document.querySelector("#serverOrdersList").addEventListener("change", (event) => {
+  const select = event.target.closest(".server-status-select");
+  if (select) updateOrderStatus(select.dataset.orderId, select.value);
+});
+
+document.querySelector("#closeOrderDetailButton").addEventListener("click", closeOrderDetail);
+document.querySelector("#orderDetailBackdrop").addEventListener("click", closeOrderDetail);
 
 document.querySelector("#refreshServerOrdersButton").addEventListener("click", renderServerOrders);
 
