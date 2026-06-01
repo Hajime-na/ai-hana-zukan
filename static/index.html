@@ -408,6 +408,18 @@
           </div>
         </div>
       </section>
+
+      <section id="orderHistorySection" class="panel history-panel" aria-labelledby="history-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Order History</p>
+            <h2 id="history-title">仮注文履歴</h2>
+          </div>
+          <button type="button" id="clearHistoryButton" class="discard-button">仮注文履歴をすべて削除</button>
+        </div>
+        <p class="history-notice">この履歴はこのブラウザ内だけに保存されます。サーバーには保存されません。</p>
+        <div id="orderHistoryList" class="order-history-list"></div>
+      </section>
     </main>
 
     <script src="/static/app.js?v=v03landscapetype2"></script>

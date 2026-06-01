@@ -20,6 +20,8 @@ const state = {
   uploadedMaterial: null,
 };
 
+const ORDER_HISTORY_KEY = "ai_hana_zukan_order_history";
+
 const flowerGrid = document.querySelector("#flowerGrid");
 const searchInput = document.querySelector("#searchInput");
 const flowerHero = document.querySelector("#flowerHero");
@@ -1373,6 +1375,122 @@ placeOrderButton.addEventListener("click", () => {
   document.querySelector("#saveOrderPngButton").addEventListener("click", () => {
     savePosterPng(document.querySelector("#orderPngStatus"), pngFileName);
   });
+  saveOrderToHistory(orderData, jsonFileName);
+});
+
+function loadOrderHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(ORDER_HISTORY_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveOrderToHistory(orderData, jsonFileName) {
+  const history = loadOrderHistory();
+  const entry = {
+    order_id: orderData.order_id,
+    created_at: orderData.created_at,
+    flower_name: orderData.flower_name,
+    image_usage: orderData.image_usage,
+    poster_size: orderData.poster_size,
+    shop_name: orderData.shop_name,
+    main_title: orderData.main_title,
+    period: orderData.period,
+    png_filename: orderData.png_filename,
+    json_filename: jsonFileName,
+    material_status: orderData.material_status,
+  };
+  history.unshift(entry);
+  localStorage.setItem(ORDER_HISTORY_KEY, JSON.stringify(history));
+  renderOrderHistory();
+}
+
+function deleteOrderFromHistory(orderId) {
+  const history = loadOrderHistory().filter((e) => e.order_id !== orderId);
+  localStorage.setItem(ORDER_HISTORY_KEY, JSON.stringify(history));
+  renderOrderHistory();
+}
+
+function clearOrderHistory() {
+  localStorage.removeItem(ORDER_HISTORY_KEY);
+  renderOrderHistory();
+}
+
+function redownloadOrderJson(entry) {
+  const blob = new Blob([JSON.stringify(entry, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = entry.json_filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+}
+
+function formatHistoryDate(isoString) {
+  try {
+    const d = new Date(isoString);
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}/${pad(d.getMonth() + 1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  } catch {
+    return isoString;
+  }
+}
+
+function renderOrderHistory() {
+  const list = document.querySelector("#orderHistoryList");
+  if (!list) return;
+
+  const history = loadOrderHistory();
+  if (history.length === 0) {
+    list.innerHTML = '<p class="history-empty">まだ仮注文はありません</p>';
+    return;
+  }
+
+  list.innerHTML = history
+    .map(
+      (entry) => `
+        <article class="order-history-item" data-order-id="${entry.order_id}">
+          <div class="order-history-header">
+            <strong class="order-history-id">注文ID：${entry.order_id}</strong>
+            <span class="order-history-date">${formatHistoryDate(entry.created_at)}</span>
+          </div>
+          <dl class="order-history-detail">
+            <div><dt>花名</dt><dd>${entry.flower_name || "―"}</dd></div>
+            <div><dt>画像の使い方</dt><dd>${entry.image_usage || "―"}</dd></div>
+            <div><dt>ポスターサイズ</dt><dd>${entry.poster_size || "―"}</dd></div>
+            <div><dt>店舗名</dt><dd>${entry.shop_name || "―"}</dd></div>
+            <div><dt>タイトル</dt><dd>${entry.main_title || "―"}</dd></div>
+            <div><dt>期間</dt><dd>${entry.period || "―"}</dd></div>
+            <div><dt>PNGファイル名</dt><dd>${entry.png_filename || "―"}</dd></div>
+            <div><dt>JSONファイル名</dt><dd>${entry.json_filename || "―"}</dd></div>
+          </dl>
+          <div class="order-history-actions">
+            <button type="button" class="secondary-button history-redownload-btn" data-order-id="${entry.order_id}">JSONを再保存</button>
+            <button type="button" class="discard-button history-delete-btn" data-order-id="${entry.order_id}">履歴から削除</button>
+          </div>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+document.querySelector("#clearHistoryButton").addEventListener("click", clearOrderHistory);
+
+document.querySelector("#orderHistoryList").addEventListener("click", (event) => {
+  const redownloadBtn = event.target.closest(".history-redownload-btn");
+  if (redownloadBtn) {
+    const orderId = redownloadBtn.dataset.orderId;
+    const entry = loadOrderHistory().find((e) => e.order_id === orderId);
+    if (entry) redownloadOrderJson(entry);
+    return;
+  }
+  const deleteBtn = event.target.closest(".history-delete-btn");
+  if (deleteBtn) {
+    deleteOrderFromHistory(deleteBtn.dataset.orderId);
+  }
 });
 
 async function init() {
@@ -1389,6 +1507,7 @@ async function init() {
   renderFlowerDetail();
   applyFlowerToPoster();
   requestSuggestions();
+  renderOrderHistory();
   if (isConfirmModeFromUrl()) {
     showFinishReview({ updateUrl: false });
   }
