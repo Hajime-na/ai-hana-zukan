@@ -80,8 +80,12 @@ const finishReview = document.querySelector("#finishReview");
 const page = document.querySelector(".page");
 const savePngButton = document.querySelector("#savePngButton");
 const saveConfirmPngButton = document.querySelector("#saveConfirmPngButton");
+const savePdfButton = document.querySelector("#savePdfButton");
+const saveConfirmPdfButton = document.querySelector("#saveConfirmPdfButton");
 const pngStatus = document.querySelector("#pngStatus");
 const confirmPngStatus = document.querySelector("#confirmPngStatus");
+const pdfStatus = document.querySelector("#pdfStatus");
+const confirmPdfStatus = document.querySelector("#confirmPdfStatus");
 const materialWarning = document.querySelector("#materialWarning");
 const confirmPosterPreviewFrame = document.querySelector("#confirmPosterPreviewFrame");
 const confirmPosterPreview = document.querySelector("#confirmPosterPreview");
@@ -548,7 +552,7 @@ function updateMaterialRightsUI() {
     element.hidden = false;
     element.classList.toggle("is-success", allowed);
   });
-  [savePngButton, saveConfirmPngButton, placeOrderButton].forEach((button) => {
+  [savePngButton, saveConfirmPngButton, savePdfButton, saveConfirmPdfButton, placeOrderButton].forEach((button) => {
     if (!button) return;
     button.disabled = !allowed;
     button.title = allowed ? "" : "正式素材が必要です";
@@ -1067,6 +1071,7 @@ function buildOrderJson(orderId) {
     material_status: photo?.license_note || "",
     poster_allowed: isPosterMaterialAllowed(),
     png_filename: `poster_${orderId}.png`,
+    pdf_filename: `poster_${orderId}.pdf`,
     checks: {
       typo_checked: checkboxes[0]?.checked ?? false,
       shop_date_checked: checkboxes[1]?.checked ?? false,
@@ -1114,6 +1119,123 @@ async function savePosterPng(statusElement, fileName) {
     setExportStatus(statusElement, "PNGを保存しました");
   } catch (error) {
     setExportStatus(statusElement, "PNG保存に失敗しました", true);
+  }
+}
+
+const PDF_DISCLAIMER = "PDF出力は簡易版です。印刷会社への正式入稿前には解像度・塗り足し・色味をご確認ください。";
+
+function getPdfFileName(orderId) {
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  const dateStr = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+  return orderId ? `poster_${orderId}.pdf` : `poster_preview_${dateStr}.pdf`;
+}
+
+function getPdfPageDimensions(canvasWidth, canvasHeight) {
+  const sizeKey = posterSize.value;
+  const isRotated = getPosterRotationSetting().rotated;
+  if (sizeKey === "a4-portrait") {
+    return isRotated ? { width: 297, height: 210 } : { width: 210, height: 297 };
+  }
+  if (sizeKey === "a4-landscape") {
+    return isRotated ? { width: 210, height: 297 } : { width: 297, height: 210 };
+  }
+  const ratio = canvasWidth / canvasHeight;
+  if (ratio >= 1) {
+    const maxW = 297, maxH = 210;
+    if (ratio > maxW / maxH) {
+      return { width: maxW, height: Math.round((maxW / ratio) * 10) / 10 };
+    }
+    return { width: Math.round(maxH * ratio * 10) / 10, height: maxH };
+  }
+  const maxW = 210, maxH = 297;
+  if (ratio < maxW / maxH) {
+    return { width: Math.round(maxH * ratio * 10) / 10, height: maxH };
+  }
+  return { width: maxW, height: Math.round((maxW / ratio) * 10) / 10 };
+}
+
+async function savePosterPdf(statusElement, fileName) {
+  if (!isPosterMaterialAllowed()) {
+    setExportStatus(statusElement, "PDF保存には正式素材が必要です", true);
+    return;
+  }
+  if (!window.jspdf) {
+    setExportStatus(statusElement, "jsPDFの読み込み中です。しばらくお待ちください", true);
+    return;
+  }
+  setExportStatus(statusElement, "PDFを作成しています...");
+  try {
+    const canvas = await renderPosterCanvas();
+    const { width: pdfW, height: pdfH } = getPdfPageDimensions(canvas.width, canvas.height);
+    const orientation = pdfW >= pdfH ? "landscape" : "portrait";
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation, unit: "mm", format: [pdfW, pdfH] });
+    const imgData = canvas.toDataURL("image/jpeg", 0.92);
+    doc.addImage(imgData, "JPEG", 0, 0, pdfW, pdfH);
+    doc.setFontSize(6);
+    doc.setTextColor(140, 140, 140);
+    doc.text(PDF_DISCLAIMER, 2, pdfH - 1.5);
+    doc.save(fileName || getPdfFileName());
+    setExportStatus(statusElement, "PDFを保存しました");
+  } catch {
+    setExportStatus(statusElement, "PDF保存に失敗しました", true);
+  }
+}
+
+async function saveServerOrderPdf(orderId, statusElement) {
+  if (!window.jspdf) {
+    if (statusElement) statusElement.textContent = "jsPDFの読み込み中です";
+    return;
+  }
+  if (statusElement) statusElement.textContent = "PDFを作成中...";
+  let imgUrl = "";
+  try {
+    const resp = await fetch(`/api/orders/${orderId}/poster`);
+    if (!resp.ok) throw new Error("poster not found");
+    const blob = await resp.blob();
+    imgUrl = URL.createObjectURL(blob);
+    const img = await new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = reject;
+      image.src = imgUrl;
+    });
+    const ratio = img.naturalWidth / img.naturalHeight;
+    let pdfW, pdfH;
+    if (ratio >= 1) {
+      const maxW = 297, maxH = 210;
+      if (ratio > maxW / maxH) {
+        pdfW = maxW; pdfH = Math.round((maxW / ratio) * 10) / 10;
+      } else {
+        pdfH = maxH; pdfW = Math.round(maxH * ratio * 10) / 10;
+      }
+    } else {
+      const maxW = 210, maxH = 297;
+      if (ratio < maxW / maxH) {
+        pdfH = maxH; pdfW = Math.round(maxH * ratio * 10) / 10;
+      } else {
+        pdfW = maxW; pdfH = Math.round((maxW / ratio) * 10) / 10;
+      }
+    }
+    const orientation = pdfW >= pdfH ? "landscape" : "portrait";
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation, unit: "mm", format: [pdfW, pdfH] });
+    const reader = new FileReader();
+    const base64 = await new Promise((resolve) => {
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+    doc.addImage(base64, "PNG", 0, 0, pdfW, pdfH);
+    doc.setFontSize(6);
+    doc.setTextColor(140, 140, 140);
+    doc.text(PDF_DISCLAIMER, 2, pdfH - 1.5);
+    doc.save(`poster_${orderId}.pdf`);
+    URL.revokeObjectURL(imgUrl);
+    if (statusElement) statusElement.textContent = "PDFを保存しました";
+  } catch {
+    if (imgUrl) URL.revokeObjectURL(imgUrl);
+    if (statusElement) statusElement.textContent = "PDF保存に失敗しました（ポスター画像がサーバーに保存されていない可能性があります）";
   }
 }
 
@@ -1439,6 +1561,8 @@ document.querySelector("#finishButton").addEventListener("click", showFinishRevi
 backToEditButton.addEventListener("click", backToEdit);
 savePngButton.addEventListener("click", () => savePosterPng(pngStatus));
 saveConfirmPngButton.addEventListener("click", () => savePosterPng(confirmPngStatus));
+savePdfButton.addEventListener("click", () => savePosterPdf(pdfStatus));
+saveConfirmPdfButton.addEventListener("click", () => savePosterPdf(confirmPdfStatus));
 
 placeOrderButton.addEventListener("click", () => {
   if (!isPosterMaterialAllowed()) {
@@ -1467,8 +1591,10 @@ placeOrderButton.addEventListener("click", () => {
     <span class="order-status-note">注文ID：${orderId}</span><br>
     <button type="button" class="secondary-button order-json-button" id="saveOrderJsonButton">注文JSONを保存</button>
     <button type="button" class="secondary-button order-json-button" id="saveOrderPngButton">PNGを保存</button>
+    <button type="button" class="secondary-button order-json-button" id="saveOrderPdfButton">PDFを保存</button>
     <button type="button" class="secondary-button order-json-button" id="saveToServerButton">サーバーに保存</button>
     <p id="orderPngStatus" class="export-status order-png-status"></p>
+    <p id="orderPdfStatus" class="export-status order-png-status"></p>
     <p id="serverSaveStatus" class="export-status order-png-status"></p>
   `;
   orderStatus.hidden = false;
@@ -1479,6 +1605,9 @@ placeOrderButton.addEventListener("click", () => {
   });
   document.querySelector("#saveOrderPngButton").addEventListener("click", () => {
     savePosterPng(document.querySelector("#orderPngStatus"), pngFileName);
+  });
+  document.querySelector("#saveOrderPdfButton").addEventListener("click", () => {
+    savePosterPdf(document.querySelector("#orderPdfStatus"), getPdfFileName(orderId));
   });
   document.querySelector("#saveToServerButton").addEventListener("click", () => {
     saveToServer(orderData, document.querySelector("#serverSaveStatus"));
@@ -1680,12 +1809,14 @@ async function renderServerOrders() {
             </dl>
             <div class="order-history-actions server-order-actions">
               <button type="button" class="secondary-button server-detail-btn" data-order-id="${order.order_id}">詳細を見る</button>
+              ${order.png_file ? `<button type="button" class="secondary-button server-pdf-btn" data-order-id="${order.order_id}">PDFで保存</button>` : ""}
               <label class="server-status-label">
                 ステータス
                 <select class="server-status-select" data-order-id="${order.order_id}">${statusOptions}</select>
               </label>
               <button type="button" class="discard-button server-delete-btn" data-order-id="${order.order_id}">削除</button>
             </div>
+            ${order.png_file ? `<p class="server-pdf-status export-status" data-order-id="${order.order_id}"></p>` : ""}
           </article>
         `;
       })
@@ -1788,6 +1919,13 @@ document.querySelector("#serverOrdersList").addEventListener("click", async (eve
   const detailBtn = event.target.closest(".server-detail-btn");
   if (detailBtn) {
     showOrderDetail(detailBtn.dataset.orderId);
+    return;
+  }
+  const pdfBtn = event.target.closest(".server-pdf-btn");
+  if (pdfBtn) {
+    const orderId = pdfBtn.dataset.orderId;
+    const statusEl = document.querySelector(`.server-pdf-status[data-order-id="${orderId}"]`);
+    saveServerOrderPdf(orderId, statusEl);
     return;
   }
   const deleteBtn = event.target.closest(".server-delete-btn");

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI花図鑑｜花屋さんの販促・ポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v03landscapetype2" />
+    <link rel="stylesheet" href="/static/style.css?v=v09pdf" />
   </head>
   <body>
     <header class="topbar">
@@ -133,7 +133,9 @@
             </div>
             <div class="export-actions">
               <button id="savePngButton" class="secondary-button" type="button">PNGで保存</button>
+              <button id="savePdfButton" class="secondary-button" type="button">PDFで保存</button>
               <p id="pngStatus" class="export-status" aria-live="polite"></p>
+              <p id="pdfStatus" class="export-status" aria-live="polite"></p>
             </div>
           </div>
 
@@ -401,9 +403,11 @@
             <div class="confirmation-actions">
               <button id="backToEditButton" class="secondary-button" type="button">編集に戻る</button>
               <button id="saveConfirmPngButton" class="secondary-button" type="button">PNGで保存</button>
+              <button id="saveConfirmPdfButton" class="secondary-button" type="button">PDFで保存</button>
               <button id="placeOrderButton" class="primary-button finish-button" type="button">この内容で仮注文する</button>
             </div>
             <p id="confirmPngStatus" class="export-status" aria-live="polite"></p>
+            <p id="confirmPdfStatus" class="export-status" aria-live="polite"></p>
             <p id="orderStatus" class="order-status" hidden></p>
           </div>
         </div>
@@ -442,6 +446,7 @@
       </div>
     </div>
 
-    <script src="/static/app.js?v=v03landscapetype2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="/static/app.js?v=v09pdf"></script>
   </body>
 </html>
