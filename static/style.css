@@ -1106,6 +1106,20 @@ body.confirm-mode .topbar,
   color: #7a5b1c;
 }
 
+.order-status-note {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+.order-json-button {
+  font-size: 14px;
+  margin-top: 8px;
+  min-height: 38px;
+  padding: 8px 20px;
+}
+
 .order-status[hidden] {
   display: none;
 }

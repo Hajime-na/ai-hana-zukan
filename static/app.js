@@ -982,6 +982,63 @@ function getExportFileName() {
   return `poster_${safeName}_${dateText}.png`;
 }
 
+function getOrderJsonFileName() {
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  const date = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
+  const time = `${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+  return `order_${date}_${time}.json`;
+}
+
+function buildOrderJson() {
+  const now = new Date();
+  const snapshot = getPosterSnapshot();
+  const photo = getCurrentPosterPhoto();
+  const checkboxes = Array.from(finishCheckItems.querySelectorAll('input[type="checkbox"]'));
+  return {
+    order_id: `ord_${Date.now()}`,
+    created_at: now.toISOString(),
+    flower_name: state.selectedFlower?.name || "",
+    image_usage: getUploadedMaterialModeSetting().label,
+    poster_size: snapshot.posterSize,
+    poster_rotation: snapshot.posterRotation,
+    image_fit: snapshot.imageFit,
+    image_position: snapshot.imagePosition,
+    image_zoom: snapshot.imageZoom,
+    image_offset_x: snapshot.imageOffsetX,
+    image_offset_y: snapshot.imageOffsetY,
+    main_title: snapshot.title,
+    subtitle: snapshot.subtitle,
+    shop_name: snapshot.shop,
+    period: snapshot.date,
+    note: snapshot.note,
+    text_style: snapshot.type,
+    text_position: snapshot.position,
+    material_status: photo?.license_note || "",
+    poster_allowed: isPosterMaterialAllowed(),
+    png_filename: getExportFileName(),
+    checks: {
+      typo_checked: checkboxes[0]?.checked ?? false,
+      shop_date_checked: checkboxes[1]?.checked ?? false,
+      position_adjustment_accepted: checkboxes[2]?.checked ?? false,
+      final_adjustment_accepted: checkboxes[3]?.checked ?? false,
+      color_difference_accepted: checkboxes[4]?.checked ?? false,
+    },
+  };
+}
+
+function saveOrderJson(orderData, fileName) {
+  const blob = new Blob([JSON.stringify(orderData, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = fileName;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+}
+
 async function savePosterPng(statusElement) {
   if (!isPosterMaterialAllowed()) {
     setExportStatus(statusElement, "PNG保存には正式素材が必要です", true);
@@ -1295,10 +1352,20 @@ placeOrderButton.addEventListener("click", () => {
     orderStatus.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
-  orderStatus.innerHTML = "<strong>仮注文を受け付けました</strong><br>正式な決済・印刷・発送処理はまだ行われません";
+  const orderData = buildOrderJson();
+  const fileName = getOrderJsonFileName();
+  orderStatus.innerHTML = `
+    <strong>仮注文を受け付けました</strong><br>
+    正式な決済・印刷・発送処理はまだ行われません<br>
+    <span class="order-status-note">注文データJSONを保存できます</span><br>
+    <button type="button" class="secondary-button order-json-button" id="saveOrderJsonButton">注文JSONを保存</button>
+  `;
   orderStatus.hidden = false;
   orderStatus.classList.remove("is-warning");
   orderStatus.scrollIntoView({ behavior: "smooth", block: "center" });
+  document.querySelector("#saveOrderJsonButton").addEventListener("click", () => {
+    saveOrderJson(orderData, fileName);
+  });
 });
 
 async function init() {
