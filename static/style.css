@@ -1131,6 +1131,16 @@ body.confirm-mode .topbar,
   display: none;
 }
 
+.ai-fallback-notice {
+  background: #fffaf1;
+  border: 1px solid #ead7a8;
+  border-radius: 8px;
+  color: #7a5b1c;
+  font-size: 13px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+}
+
 .history-notice {
   color: var(--muted);
   font-size: 13px;

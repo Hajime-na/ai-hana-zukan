@@ -285,6 +285,29 @@ function renderFlowerDetail() {
   renderDetailPhoto();
 }
 
+async function callGenerateApi(payload) {
+  try {
+    const response = await fetch("/api/generate-copy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    return { data, usedFallback: data.fallback === true };
+  } catch {
+    return { data: null, usedFallback: true };
+  }
+}
+
+function aiResponseToSuggestions(data) {
+  const items = [];
+  if (data.pop_text) items.push({ label: "店頭POP", text: data.pop_text });
+  if (data.instagram_text) items.push({ label: "SNS向け", text: data.instagram_text });
+  if (data.note) items.push({ label: "補足文", text: data.note });
+  return items.length ? items : makeSuggestionItems();
+}
+
 function makeSuggestionItems() {
   const flower = state.selectedFlower;
   const purpose = purposeInput.value;
@@ -324,12 +347,37 @@ function renderSuggestions(items) {
     .join("");
 }
 
-function requestSuggestions() {
+async function requestSuggestions() {
   suggestButton.disabled = true;
-  suggestButton.textContent = "作成中...";
-  const items = makeSuggestionItems();
-  renderSuggestions(items);
-  state.currentDraft = items[0].text;
+  suggestButton.textContent = "AIが文章を作成中です...";
+  suggestions.innerHTML = "";
+
+  const flower = state.selectedFlower;
+  const { data, usedFallback } = await callGenerateApi({
+    flower_name: flower.name,
+    flower_features: flower.feature,
+    flower_language: flower.language,
+    care_summary: flower.care,
+    purpose: purposeInput.value,
+    tone: toneInput.value,
+  });
+
+  if (data && !usedFallback) {
+    const items = aiResponseToSuggestions(data);
+    state.currentDraft = data.note || data.pop_text || items[0]?.text || "";
+    renderSuggestions(items);
+  } else {
+    const items = makeSuggestionItems();
+    state.currentDraft = items[0].text;
+    renderSuggestions(items);
+    if (usedFallback || data?.fallback) {
+      const notice = document.createElement("p");
+      notice.className = "ai-fallback-notice";
+      notice.textContent = "AI APIに接続できなかったため、ローカル生成文を表示しています。";
+      suggestions.prepend(notice);
+    }
+  }
+
   suggestButton.disabled = false;
   suggestButton.textContent = "AI案を作る";
 }
@@ -1160,41 +1208,93 @@ function applyFlowerToPoster() {
   updatePoster();
 }
 
-function createPosterText() {
+async function createPosterText() {
+  const button = document.querySelector("#posterAiButton");
+  button.disabled = true;
+  button.textContent = "AIが文章を作成中です...";
+
   const flower = state.selectedFlower;
-  const draft = makeSuggestionItems()[0].text;
   const tonePhrase = ["やさしい", "かわいい"].includes(toneInput.value) ? `${toneInput.value}雰囲気` : toneInput.value;
-  state.currentDraft = draft;
-  posterMainTitle.value = `${flower.name} フェア`;
-  posterSubtitle.value = `${flower.language.split("・")[0]}を贈る、${tonePhrase}の花選び。`;
-  posterNote.value = draft;
+
+  const { data, usedFallback } = await callGenerateApi({
+    flower_name: flower.name,
+    flower_features: flower.feature,
+    flower_language: flower.language,
+    care_summary: flower.care,
+    purpose: purposeInput.value,
+    tone: toneInput.value,
+    shop_name: posterShop.value,
+    period: posterDate.value,
+  });
+
+  if (data && !usedFallback) {
+    state.currentDraft = data.note || data.pop_text || "";
+    posterMainTitle.value = data.main_title || `${flower.name} フェア`;
+    posterSubtitle.value = data.subtitle || `${flower.language.split("・")[0]}を贈る、${tonePhrase}の花選び。`;
+    posterNote.value = data.note || state.currentDraft;
+  } else {
+    const draft = makeSuggestionItems()[0].text;
+    state.currentDraft = draft;
+    posterMainTitle.value = `${flower.name} フェア`;
+    posterSubtitle.value = `${flower.language.split("・")[0]}を贈る、${tonePhrase}の花選び。`;
+    posterNote.value = draft;
+  }
+
   updatePoster();
+  button.disabled = false;
+  button.textContent = "AIで文章を作る";
 }
 
-function createRevision() {
-  const request = revisionRequest.value.trim();
-  const base = state.currentDraft || posterNote.value || makeSuggestionItems()[0].text;
-  const flower = state.selectedFlower;
-  const note = request || "少し短く、店頭で読みやすく";
-  const tonePhrase = ["やさしい", "かわいい"].includes(toneInput.value) ? `${toneInput.value}雰囲気` : toneInput.value;
-  const wantsLuxury = note.includes("高級感") || note.includes("上品");
-  const wantsShort = note.includes("短く") || note.includes("短い");
-  const title = wantsLuxury ? `上質な${flower.name}フェア` : posterMainTitle.value || `${flower.name} フェア`;
-  const subtitle = wantsLuxury
-    ? `${flower.language.split("・")[0]}の彩りを、大切な方へ。`
-    : `${flower.language.split("・")[0]}を贈る、${tonePhrase}の花選び。`;
-  const shortNote = wantsLuxury ? "贈りものにおすすめです。" : `${flower.name}を気軽に楽しめる季節のおすすめです。`;
-  const longNote = `${base.split("\n")[0]}\n修正方針：${note}\n${flower.language}の印象を残しながら、ひと目で伝わる表現に整えました。`;
-  state.revisionProposal = {
-    title,
-    subtitle,
-    note: wantsShort ? shortNote : longNote,
-  };
+async function createRevision() {
+  reviseButton.disabled = true;
+  reviseButton.textContent = "AIが修正中です...";
 
+  const request = revisionRequest.value.trim();
+  const flower = state.selectedFlower;
+  const tonePhrase = ["やさしい", "かわいい"].includes(toneInput.value) ? `${toneInput.value}雰囲気` : toneInput.value;
+
+  const { data, usedFallback } = await callGenerateApi({
+    flower_name: flower.name,
+    flower_features: flower.feature,
+    flower_language: flower.language,
+    care_summary: flower.care,
+    purpose: purposeInput.value,
+    tone: toneInput.value,
+    current_main_title: posterMainTitle.value,
+    current_subtitle: posterSubtitle.value,
+    current_note: posterNote.value,
+    user_request: request || "少し短く、店頭で読みやすく",
+  });
+
+  if (data && !usedFallback) {
+    state.revisionProposal = {
+      title: data.main_title || posterMainTitle.value,
+      subtitle: data.subtitle || posterSubtitle.value,
+      note: data.note || posterNote.value,
+    };
+  } else {
+    const base = state.currentDraft || posterNote.value || makeSuggestionItems()[0].text;
+    const note = request || "少し短く、店頭で読みやすく";
+    const wantsLuxury = note.includes("高級感") || note.includes("上品");
+    const wantsShort = note.includes("短く") || note.includes("短い");
+    const title = wantsLuxury ? `上質な${flower.name}フェア` : posterMainTitle.value || `${flower.name} フェア`;
+    const subtitle = wantsLuxury
+      ? `${flower.language.split("・")[0]}の彩りを、大切な方へ。`
+      : `${flower.language.split("・")[0]}を贈る、${tonePhrase}の花選び。`;
+    const shortNote = wantsLuxury ? "贈りものにおすすめです。" : `${flower.name}を気軽に楽しめる季節のおすすめです。`;
+    const longNote = `${base.split("\n")[0]}\n修正方針：${note}\n${flower.language}の印象を残しながら、ひと目で伝わる表現に整えました。`;
+    state.revisionProposal = {
+      title,
+      subtitle,
+      note: wantsShort ? shortNote : longNote,
+    };
+  }
+
+  const sourceLabel = data && !usedFallback ? "AI修正案" : "修正案（ローカル生成）";
   revisionResult.innerHTML = `
     <article class="revision-card revision-suggestion">
       <div class="suggestion-head">
-        <strong>修正案</strong>
+        <strong>${sourceLabel}</strong>
         <div class="revision-actions">
           <button class="adopt-button" id="applyRevision">この修正案を反映する</button>
           <button class="discard-button" id="discardRevision">破棄する</button>
@@ -1216,6 +1316,9 @@ function createRevision() {
       </dl>
     </article>
   `;
+
+  reviseButton.disabled = false;
+  reviseButton.textContent = "AIで再修正する";
 }
 
 function selectFlower(name) {
