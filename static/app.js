@@ -982,21 +982,21 @@ function getExportFileName() {
   return `poster_${safeName}_${dateText}.png`;
 }
 
-function getOrderJsonFileName() {
+function generateOrderId() {
   const now = new Date();
   const pad = (n) => String(n).padStart(2, "0");
   const date = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
   const time = `${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
-  return `order_${date}_${time}.json`;
+  return `${date}_${time}`;
 }
 
-function buildOrderJson() {
+function buildOrderJson(orderId) {
   const now = new Date();
   const snapshot = getPosterSnapshot();
   const photo = getCurrentPosterPhoto();
   const checkboxes = Array.from(finishCheckItems.querySelectorAll('input[type="checkbox"]'));
   return {
-    order_id: `ord_${Date.now()}`,
+    order_id: orderId,
     created_at: now.toISOString(),
     flower_name: state.selectedFlower?.name || "",
     image_usage: getUploadedMaterialModeSetting().label,
@@ -1016,7 +1016,7 @@ function buildOrderJson() {
     text_position: snapshot.position,
     material_status: photo?.license_note || "",
     poster_allowed: isPosterMaterialAllowed(),
-    png_filename: getExportFileName(),
+    png_filename: `poster_${orderId}.png`,
     checks: {
       typo_checked: checkboxes[0]?.checked ?? false,
       shop_date_checked: checkboxes[1]?.checked ?? false,
@@ -1039,7 +1039,7 @@ function saveOrderJson(orderData, fileName) {
   URL.revokeObjectURL(url);
 }
 
-async function savePosterPng(statusElement) {
+async function savePosterPng(statusElement, fileName) {
   if (!isPosterMaterialAllowed()) {
     setExportStatus(statusElement, "PNG保存には正式素材が必要です", true);
     return;
@@ -1056,7 +1056,7 @@ async function savePosterPng(statusElement) {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = getExportFileName();
+    anchor.download = fileName || getExportFileName();
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
@@ -1352,19 +1352,26 @@ placeOrderButton.addEventListener("click", () => {
     orderStatus.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
-  const orderData = buildOrderJson();
-  const fileName = getOrderJsonFileName();
+  const orderId = generateOrderId();
+  const orderData = buildOrderJson(orderId);
+  const jsonFileName = `order_${orderId}.json`;
+  const pngFileName = `poster_${orderId}.png`;
   orderStatus.innerHTML = `
     <strong>仮注文を受け付けました</strong><br>
     正式な決済・印刷・発送処理はまだ行われません<br>
-    <span class="order-status-note">注文データJSONを保存できます</span><br>
+    <span class="order-status-note">注文ID：${orderId}</span><br>
     <button type="button" class="secondary-button order-json-button" id="saveOrderJsonButton">注文JSONを保存</button>
+    <button type="button" class="secondary-button order-json-button" id="saveOrderPngButton">PNGを保存</button>
+    <p id="orderPngStatus" class="export-status order-png-status"></p>
   `;
   orderStatus.hidden = false;
   orderStatus.classList.remove("is-warning");
   orderStatus.scrollIntoView({ behavior: "smooth", block: "center" });
   document.querySelector("#saveOrderJsonButton").addEventListener("click", () => {
-    saveOrderJson(orderData, fileName);
+    saveOrderJson(orderData, jsonFileName);
+  });
+  document.querySelector("#saveOrderPngButton").addEventListener("click", () => {
+    savePosterPng(document.querySelector("#orderPngStatus"), pngFileName);
   });
 });
 
