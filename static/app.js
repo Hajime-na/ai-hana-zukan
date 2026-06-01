@@ -1467,7 +1467,9 @@ placeOrderButton.addEventListener("click", () => {
     <span class="order-status-note">注文ID：${orderId}</span><br>
     <button type="button" class="secondary-button order-json-button" id="saveOrderJsonButton">注文JSONを保存</button>
     <button type="button" class="secondary-button order-json-button" id="saveOrderPngButton">PNGを保存</button>
+    <button type="button" class="secondary-button order-json-button" id="saveToServerButton">サーバーに保存</button>
     <p id="orderPngStatus" class="export-status order-png-status"></p>
+    <p id="serverSaveStatus" class="export-status order-png-status"></p>
   `;
   orderStatus.hidden = false;
   orderStatus.classList.remove("is-warning");
@@ -1477,6 +1479,9 @@ placeOrderButton.addEventListener("click", () => {
   });
   document.querySelector("#saveOrderPngButton").addEventListener("click", () => {
     savePosterPng(document.querySelector("#orderPngStatus"), pngFileName);
+  });
+  document.querySelector("#saveToServerButton").addEventListener("click", () => {
+    saveToServer(orderData, document.querySelector("#serverSaveStatus"));
   });
   saveOrderToHistory(orderData, jsonFileName);
 });
@@ -1596,6 +1601,79 @@ document.querySelector("#orderHistoryList").addEventListener("click", (event) =>
   }
 });
 
+async function saveToServer(orderData, statusElement) {
+  if (statusElement) {
+    statusElement.textContent = "サーバーに保存中...";
+    statusElement.classList.remove("is-error");
+  }
+  try {
+    const canvas = await renderPosterCanvas();
+    const pngDataUrl = canvas.toDataURL("image/png");
+    const response = await fetch("/api/save-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        order_id: orderData.order_id,
+        order_data: orderData,
+        png_data_url: pngDataUrl,
+      }),
+    });
+    const result = await response.json();
+    if (result.ok) {
+      if (statusElement) statusElement.textContent = "サーバーに保存しました";
+      renderServerOrders();
+    } else {
+      if (statusElement) {
+        statusElement.textContent = `サーバー保存に失敗しました: ${result.error || ""}`;
+        statusElement.classList.add("is-error");
+      }
+    }
+  } catch {
+    if (statusElement) {
+      statusElement.textContent = "サーバー保存に失敗しました";
+      statusElement.classList.add("is-error");
+    }
+  }
+}
+
+async function renderServerOrders() {
+  const list = document.querySelector("#serverOrdersList");
+  if (!list) return;
+  try {
+    const response = await fetch("/api/orders");
+    const { orders } = await response.json();
+    if (!orders || orders.length === 0) {
+      list.innerHTML = '<p class="history-empty">サーバーに保存された注文はありません</p>';
+      return;
+    }
+    list.innerHTML = orders
+      .map(
+        (order) => `
+          <article class="order-history-item">
+            <div class="order-history-header">
+              <strong class="order-history-id">注文ID：${order.order_id}</strong>
+              <span class="order-history-date">${formatHistoryDate(order.created_at)}</span>
+            </div>
+            <dl class="order-history-detail">
+              <div><dt>花名</dt><dd>${order.flower_name || "―"}</dd></div>
+              <div><dt>店舗名</dt><dd>${order.shop_name || "―"}</dd></div>
+              <div><dt>タイトル</dt><dd>${order.main_title || "―"}</dd></div>
+              <div><dt>ポスターサイズ</dt><dd>${order.poster_size || "―"}</dd></div>
+              <div><dt>画像の使い方</dt><dd>${order.image_usage || "―"}</dd></div>
+              <div><dt>JSONファイル</dt><dd>${order.json_file || "―"}</dd></div>
+              <div><dt>PNGファイル</dt><dd>${order.png_file || "（なし）"}</dd></div>
+            </dl>
+          </article>
+        `,
+      )
+      .join("");
+  } catch {
+    list.innerHTML = '<p class="history-empty">サーバー注文の取得に失敗しました</p>';
+  }
+}
+
+document.querySelector("#refreshServerOrdersButton").addEventListener("click", renderServerOrders);
+
 async function init() {
   try {
     const response = await fetch("/static/flowers.json?v=v03landscapetype2");
@@ -1611,6 +1689,7 @@ async function init() {
   applyFlowerToPoster();
   requestSuggestions();
   renderOrderHistory();
+  renderServerOrders();
   if (isConfirmModeFromUrl()) {
     showFinishReview({ updateUrl: false });
   }

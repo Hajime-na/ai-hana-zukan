@@ -420,6 +420,18 @@
         <p class="history-notice">この履歴はこのブラウザ内だけに保存されます。サーバーには保存されません。</p>
         <div id="orderHistoryList" class="order-history-list"></div>
       </section>
+
+      <section id="serverOrdersSection" class="panel history-panel" aria-labelledby="server-orders-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Server Orders</p>
+            <h2 id="server-orders-title">サーバー保存済み注文</h2>
+          </div>
+          <button type="button" id="refreshServerOrdersButton" class="secondary-button compact-button">一覧を更新</button>
+        </div>
+        <p class="history-notice">この保存機能はローカル開発用です。本番運用では認証・DB・バックアップが必要です。</p>
+        <div id="serverOrdersList" class="order-history-list"></div>
+      </section>
     </main>
 
     <script src="/static/app.js?v=v03landscapetype2"></script>

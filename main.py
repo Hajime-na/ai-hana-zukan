@@ -1,6 +1,8 @@
+import base64
 import json
 import os
 from pathlib import Path
+from typing import Any
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
@@ -26,9 +28,13 @@ app = FastAPI(title="AI花図鑑")
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
+ORDERS_DIR = BASE_DIR / "orders"
+ORDERS_DIR.mkdir(exist_ok=True)
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
+
+# ── Pydantic models ──────────────────────────────────────────────────────────
 
 class PromotionRequest(BaseModel):
     flower: str = "バラ"
@@ -51,6 +57,14 @@ class GenerateCopyRequest(BaseModel):
     user_request: str = ""
 
 
+class SaveOrderRequest(BaseModel):
+    order_id: str
+    order_data: dict[str, Any] = {}
+    png_data_url: str = ""
+
+
+# ── Helpers ──────────────────────────────────────────────────────────────────
+
 def _fallback_copy(req: GenerateCopyRequest) -> dict:
     flower = req.flower_name or "季節の花"
     lang = req.flower_language.split("・")[0] if req.flower_language else "美しさ"
@@ -66,6 +80,8 @@ def _fallback_copy(req: GenerateCopyRequest) -> dict:
         "message": "AI APIに接続できなかったため、ローカル生成文を表示しています。",
     }
 
+
+# ── Routes ───────────────────────────────────────────────────────────────────
 
 @app.get("/")
 def read_index():
@@ -87,24 +103,14 @@ def create_suggestions(request: PromotionRequest):
     flower = request.flower.strip() or "季節の花"
     purpose = request.purpose.strip() or "店頭POP"
     tone = request.tone.strip() or "やさしい"
-
     return {
         "purpose": purpose,
         "flower": flower,
         "tone": tone,
         "suggestions": [
-            {
-                "label": "図鑑ベース",
-                "text": f"{flower}の魅力が伝わる、{tone}雰囲気の{purpose}文です。",
-            },
-            {
-                "label": "店頭向け",
-                "text": f"{flower}入荷しました。\n季節の贈りものや、ご自宅の彩りにおすすめです。",
-            },
-            {
-                "label": "SNS向け",
-                "text": f"{flower}のやわらかな表情を店頭でご覧ください。\n#{flower} #花のある暮らし #フラワーギフト",
-            },
+            {"label": "図鑑ベース", "text": f"{flower}の魅力が伝わる、{tone}雰囲気の{purpose}文です。"},
+            {"label": "店頭向け", "text": f"{flower}入荷しました。\n季節の贈りものや、ご自宅の彩りにおすすめです。"},
+            {"label": "SNS向け", "text": f"{flower}のやわらかな表情を店頭でご覧ください。\n#{flower} #花のある暮らし #フラワーギフト"},
         ],
     }
 
@@ -155,10 +161,7 @@ def generate_copy(request: GenerateCopyRequest):
         response = _openai_client.chat.completions.create(
             model=OPENAI_MODEL,
             messages=[
-                {
-                    "role": "system",
-                    "content": "あなたは花屋さんの販促文ライターです。指定されたJSON形式のみで返答してください。",
-                },
+                {"role": "system", "content": "あなたは花屋さんの販促文ライターです。指定されたJSON形式のみで返答してください。"},
                 {"role": "user", "content": prompt},
             ],
             response_format={"type": "json_object"},
@@ -175,3 +178,62 @@ def generate_copy(request: GenerateCopyRequest):
         }
     except Exception:
         return _fallback_copy(request)
+
+
+@app.post("/api/save-order")
+def save_order(request: SaveOrderRequest):
+    try:
+        order_id = request.order_id.strip()
+        if not order_id:
+            return {"ok": False, "error": "order_id is required"}
+
+        json_file = f"order_{order_id}.json"
+        png_file = f"poster_{order_id}.png"
+
+        with open(ORDERS_DIR / json_file, "w", encoding="utf-8") as f:
+            json.dump(request.order_data, f, ensure_ascii=False, indent=2)
+
+        saved_png = False
+        if request.png_data_url:
+            raw = request.png_data_url
+            if "," in raw:
+                raw = raw.split(",", 1)[1]
+            (ORDERS_DIR / png_file).write_bytes(base64.b64decode(raw))
+            saved_png = True
+
+        return {
+            "ok": True,
+            "order_id": order_id,
+            "json_file": json_file,
+            "png_file": png_file if saved_png else None,
+        }
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@app.get("/api/orders")
+def list_orders():
+    try:
+        orders = []
+        for json_path in sorted(ORDERS_DIR.glob("order_*.json"), reverse=True):
+            try:
+                with open(json_path, encoding="utf-8") as f:
+                    data = json.load(f)
+                order_id = data.get("order_id", json_path.stem.replace("order_", ""))
+                png_file = f"poster_{order_id}.png"
+                orders.append({
+                    "order_id": order_id,
+                    "created_at": data.get("created_at", ""),
+                    "flower_name": data.get("flower_name", ""),
+                    "shop_name": data.get("shop_name", ""),
+                    "main_title": data.get("main_title", ""),
+                    "poster_size": data.get("poster_size", ""),
+                    "image_usage": data.get("image_usage", ""),
+                    "json_file": json_path.name,
+                    "png_file": png_file if (ORDERS_DIR / png_file).exists() else None,
+                })
+            except Exception:
+                continue
+        return {"orders": orders}
+    except Exception as e:
+        return {"orders": [], "error": str(e)}
