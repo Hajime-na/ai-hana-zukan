@@ -82,6 +82,8 @@ const textOffsetXValue = document.querySelector("#textOffsetXValue");
 const textOffsetYValue = document.querySelector("#textOffsetYValue");
 const layoutSuggestButton = document.querySelector("#layoutSuggestButton");
 const layoutProposalsEl = document.querySelector("#layoutProposals");
+const uploadTriggerButton = document.querySelector("#uploadTriggerButton");
+const advancedSettingsDetails = document.querySelector("#advancedSettingsDetails");
 const posterRotation = document.querySelector("#posterRotation");
 const uploadedMaterialMode = document.querySelector("#uploadedMaterialMode");
 const uploadedMaterialModeHelp = document.querySelector("#uploadedMaterialModeHelp");
@@ -1701,6 +1703,16 @@ window.addEventListener("resize", () => {
 });
 
 officialMaterialInput.addEventListener("change", handleOfficialMaterialUpload);
+
+// ファイル選択トリガー（display:none の input を programmatic click で開く）
+uploadTriggerButton?.addEventListener("click", () => {
+  if (officialMaterialInput && !officialMaterialInput.disabled) officialMaterialInput.click();
+});
+
+// 詳細設定の開閉に合わせて file input の disabled を切り替え
+advancedSettingsDetails?.addEventListener("toggle", () => {
+  if (officialMaterialInput) officialMaterialInput.disabled = !advancedSettingsDetails.open;
+});
 document.querySelector("#finishButton").addEventListener("click", showFinishReview);
 backToEditButton.addEventListener("click", backToEdit);
 savePngButton.addEventListener("click", () => savePosterPng(pngStatus));

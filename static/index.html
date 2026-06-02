@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v23nofulloverlay" />
+    <link rel="stylesheet" href="/static/style.css?v=v24nounwantedfile" />
   </head>
   <body>
     <header class="topbar">
@@ -226,10 +226,8 @@
                   <!-- 自分の画像を使う -->
                   <div class="upload-subsection">
                     <p class="upload-subsection-label">自分の画像を使う</p>
-                    <label>
-                      正式素材をアップロード
-                      <input id="officialMaterialInput" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
-                    </label>
+                    <input id="officialMaterialInput" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" disabled style="display:none" />
+                    <button type="button" id="uploadTriggerButton" class="secondary-button compact-button">ファイルを選択</button>
                     <p id="officialMaterialStatus" class="field-help">jpg / jpeg / png / webp 対応。アップロードした画像でPNG保存・仮注文できます。</p>
                   </div>
                 </div>
@@ -493,6 +491,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v23nofulloverlay"></script>
+    <script src="/static/app.js?v=v24nounwantedfile"></script>
   </body>
 </html>
