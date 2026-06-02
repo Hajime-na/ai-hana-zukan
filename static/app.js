@@ -1306,61 +1306,43 @@ async function renderZoomConfirmArea() {
   const zoomNote = document.querySelector("#zoomConfirmNote");
   if (!zoomArea || !zoomCanvas) return;
 
-  // フル解像度キャンバスをレンダリング
+  // PNG保存と完全に同じ関数・同じ設定で完成canvasを生成
   const full = await renderPosterCanvas().catch(() => null);
   if (!full) return;
 
   const W = full.width;
   const H = full.height;
 
-  // テキストボックス位置を取得（オフセット適用済み）
+  // テキストボックス位置を取得（PNG保存と同じオフセット適用済み）
   const box = getCopyBox(posterPosition.value, posterDesign.value, W, H);
   box.x += parseInt(textOffsetX?.value) || 0;
   box.y += parseInt(textOffsetY?.value) || 0;
 
-  // クロップ範囲（文字帯 + 上下コンテキスト）
+  // クロップ範囲（文字帯 + コンテキスト）
   const padX = Math.round(box.width * 0.25);
-  const padTop = Math.round(box.height * 1.4);   // 文字帯上の花写真エリア
+  const padTop = Math.round(box.height * 1.4);
   const padBot = Math.round(box.height * 0.2);
   const cropX = Math.max(0, box.x - padX);
   const cropY = Math.max(0, box.y - padTop);
   const cropW = Math.min(W - cropX, box.width + padX * 2);
   const cropH = Math.min(H - cropY, box.height + padTop + padBot);
 
-  // 表示サイズ（最大 700px 幅）
-  const maxDisp = 700;
-  const dispW = Math.min(cropW, maxDisp);
-  const dispH = Math.round(cropH * dispW / cropW);
-
-  zoomCanvas.width = dispW;
-  zoomCanvas.height = dispH;
-  // CSS サイズを明示して browser scaling を防ぐ
-  zoomCanvas.style.width = dispW + "px";
-  zoomCanvas.style.height = dispH + "px";
-  zoomCanvas.style.maxWidth = "100%";
+  // 1:1 ピクセルコピー（スケーリングなし・追加描画なし）
+  zoomCanvas.width = cropW;
+  zoomCanvas.height = cropH;
+  zoomCanvas.style.width = "";   // CSSの max-width:100% に委ねる
+  zoomCanvas.style.height = "";
 
   const ctx = zoomCanvas.getContext("2d");
-  ctx.drawImage(full, cropX, cropY, cropW, cropH, 0, 0, dispW, dispH);
+  ctx.drawImage(full, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+  // ↑ fullCanvas から 1:1 でコピーするだけ。文字・透かし・フィルターは一切追加しない。
 
-  // demo 素材には薄い「確認用」透かしを追加
   const photo = getCurrentPosterPhoto();
   const isDemo = photo?.usage !== "uploaded" && photo?.poster_allowed !== true;
-  if (isDemo) {
-    ctx.save();
-    ctx.font = `bold ${Math.round(dispH * 0.14)}px sans-serif`;
-    ctx.fillStyle = "rgba(255,255,255,0.16)";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.translate(dispW / 2, dispH / 2);
-    ctx.rotate(-Math.PI / 8);
-    ctx.fillText("確認用", 0, 0);
-    ctx.restore();
-  }
-
   if (zoomNote) {
     zoomNote.textContent = isDemo
-      ? "確認用テンプレート — 印刷品質の参考表示です"
-      : "文字帯周辺の拡大確認表示です";
+      ? "確認用テンプレート — PNG保存時の文字まわりと同一品質"
+      : "PNG保存時の文字まわりと同一品質で表示しています";
   }
 
   zoomArea.hidden = false;

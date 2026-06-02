@@ -1225,9 +1225,8 @@ button:disabled {
 .zoom-confirm-canvas {
   border-radius: 4px;
   display: block;
-  height: auto;
-  margin: 0 auto;
-  max-width: 100%;
+  height: auto;   /* アスペクト比維持 */
+  max-width: 100%; /* コンテナ幅を超えない。引き伸ばしはしない */
 }
 
 .zoom-confirm-note {
