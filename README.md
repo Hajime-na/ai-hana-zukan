@@ -400,10 +400,62 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 ## ポスター画像の管理
 
-- 制作ポスター画像は `static/posters/` に配置する
-- `poster_templates.json` の `image` には `/static/posters/xxx.png` を指定する
-- 正式販売用ポスターは `poster_allowed: true`
-- デモ・検討中ポスターは `poster_allowed: false`
+### 保存場所
+
+```
+static/posters/
+  ├── spring_001.png
+  ├── spring_002.png
+  ├── summer_001.png
+  ├── mothersday_001.png
+  └── ...
+```
+
+- **フォルダ分けはしない** — `static/posters/` に全ポスター画像をフラットに置く
+- カテゴリはファイル名プレフィックスと `poster_templates.json` の `categories` フィールドで管理する
+
+### ファイル名規則
+
+| プレフィックス | カテゴリ |
+|---|---|
+| `spring_` | 春 |
+| `summer_` | 夏 |
+| `autumn_` | 秋 |
+| `winter_` | 冬 |
+| `mothersday_` | 母の日 |
+| `gift_` | ギフト |
+| `opening_` | 開店祝い |
+
+連番は3桁ゼロ埋め（`001`, `002`, ...）
+
+### poster_templates.json への登録例
+
+```json
+{
+  "id": "spring-a",
+  "short_label": "春A",
+  "image": "/static/posters/spring_001.png",
+  "categories": ["春"],
+  "season": "春",
+  "poster_allowed": true
+}
+```
+
+- `image`: `/static/posters/xxx.png` 形式で指定
+- `categories`: 複数カテゴリに同時所属可能（例：`["春", "ギフト", "かわいい"]`）
+- `season`: 季節の主カテゴリ（表示ソート用）
+- `poster_allowed: true` — 正式販売用
+- `poster_allowed: false` — デモ・検討中
+
+### カテゴリ運用の考え方
+
+1枚の画像を複数カテゴリに出せるよう、フォルダではなく `categories` 配列で分類する。
+
+```json
+"categories": ["春", "ギフト", "かわいい"]
+```
+
+この場合、春・ギフト・かわいいの3カテゴリ棚に同じ画像が表示される。
 
 ---
 
