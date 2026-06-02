@@ -421,7 +421,15 @@ function updatePoster() {
   uploadedMaterialModeHelp.textContent = getUploadedMaterialModeSetting().help;
   posterForm.classList.toggle("is-finished-mode", isFinishedModeSelected());
   updateMaterialRightsUI();
+  updateWatermark();
   if (confirmationSection && !confirmationSection.hidden) renderFinishReview();
+}
+
+function updateWatermark() {
+  const photo = getCurrentPosterPhoto();
+  const needsWatermark = photo?.usage !== "uploaded";
+  posterPreviewFrame.classList.toggle("has-watermark", needsWatermark);
+  confirmPosterPreviewFrame?.classList.toggle("has-watermark", needsWatermark);
 }
 
 function syncPosterPositionOptions(isLandscape) {
@@ -1983,6 +1991,7 @@ function renderGalleryShelf() {
             <div class="gallery-thumb-preview" style="${t.image ? `background-image:url('${t.image}');background-size:cover;background-position:center` : `--gallery-gradient:${t.gradient}`}">
               ${isSelected ? '<span class="gallery-selected-badge">選択中</span>' : ""}
               ${!t.image ? `<span class="gallery-thumb-title">${t.default_main_title || t.title}</span>` : ""}
+              ${!t.poster_allowed ? '<span class="gallery-sample-badge">SAMPLE</span>' : ""}
             </div>
             <span class="gallery-thumb-label">${t.short_label}</span>
           </button>`;
@@ -2085,7 +2094,7 @@ async function init() {
   applyFlowerToPoster();
   requestSuggestions();
   try {
-    const tplResp = await fetch("/static/poster_templates.json?v=v12removemock");
+    const tplResp = await fetch("/static/poster_templates.json?v=v13watermark");
     const tplData = await tplResp.json();
     state.posterTemplates = tplData.templates || [];
     state.posterCategoriesOrder = tplData.categories_order || [];

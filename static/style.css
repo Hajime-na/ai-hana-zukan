@@ -548,7 +548,7 @@ dd {
   background: var(--poster-fallback);
   border-radius: 8px;
   max-width: 100%;
-  min-height: clamp(360px, 48vw, 540px);
+  min-height: clamp(260px, 34vw, 420px);
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -593,7 +593,7 @@ dd {
 .poster-preview-column {
   display: grid;
   gap: 12px;
-  max-width: none;
+  max-width: 460px;
   min-width: 0;
   width: 100%;
   z-index: 2;
@@ -601,7 +601,7 @@ dd {
 
 .poster-order-card .poster-preview-frame {
   max-width: none;
-  min-height: clamp(420px, 52vw, 620px);
+  min-height: clamp(280px, 36vw, 460px);
   width: 100%;
 }
 
@@ -1013,6 +1013,17 @@ button:disabled {
   aspect-ratio: var(--poster-display-aspect, var(--poster-aspect, 210 / 297));
   min-height: 0;
   width: 100%;
+}
+
+/* Watermark overlay (CSS only — not exported to PNG/PDF) */
+.poster-preview-frame.has-watermark::before,
+.confirm-poster-preview-frame.has-watermark::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='160'%3E%3Ctext x='50%25' y='50%25' transform='rotate(-30 110 80)' text-anchor='middle' dominant-baseline='middle' font-size='22' font-weight='bold' fill='rgba(255%2C255%2C255%2C0.28)' font-family='sans-serif' letter-spacing='6'%3ESAMPLE%3C/text%3E%3C/svg%3E");
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 20;
 }
 
 .confirmation-panel {
@@ -1575,7 +1586,7 @@ body.modal-open {
 .gallery-thumb {
   background: #fff;
   border: 2px solid var(--line);
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -1583,7 +1594,7 @@ body.modal-open {
   overflow: hidden;
   padding: 0;
   transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
-  width: 100px;
+  width: 82px;
 }
 
 .gallery-thumb:hover {
@@ -1639,27 +1650,42 @@ body.modal-open {
 
 .gallery-thumb-label {
   color: var(--ink);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   overflow: hidden;
-  padding: 4px 5px;
+  padding: 3px 4px;
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+/* SAMPLE badge on thumbnails */
+.gallery-sample-badge {
+  background: rgba(0, 0, 0, 0.52);
+  border-radius: 2px;
+  bottom: 4px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 1px 3px;
+  position: absolute;
+  right: 4px;
+  z-index: 2;
+}
+
 /* "もっと見る" button */
 .gallery-more-btn {
-  align-self: center;
+  align-self: flex-end;
   background: #fff;
   border: 1px solid var(--green);
-  border-radius: 8px;
+  border-radius: 6px;
   color: var(--green-dark);
   cursor: pointer;
   flex-shrink: 0;
-  font-size: 11px;
-  min-height: 34px;
-  padding: 5px 10px;
+  font-size: 10px;
+  margin-bottom: 20px;
+  padding: 4px 8px;
   white-space: nowrap;
 }
 
