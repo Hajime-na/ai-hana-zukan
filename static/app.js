@@ -73,6 +73,10 @@ const imageZoomValue = document.querySelector("#imageZoomValue");
 const imageOffsetXValue = document.querySelector("#imageOffsetXValue");
 const imageOffsetYValue = document.querySelector("#imageOffsetYValue");
 const resetImageAdjust = document.querySelector("#resetImageAdjust");
+const textOffsetX = document.querySelector("#textOffsetX");
+const textOffsetY = document.querySelector("#textOffsetY");
+const textOffsetXValue = document.querySelector("#textOffsetXValue");
+const textOffsetYValue = document.querySelector("#textOffsetYValue");
 const posterRotation = document.querySelector("#posterRotation");
 const uploadedMaterialMode = document.querySelector("#uploadedMaterialMode");
 const uploadedMaterialModeHelp = document.querySelector("#uploadedMaterialModeHelp");
@@ -422,7 +426,16 @@ function updatePoster() {
   posterForm.classList.toggle("is-finished-mode", isFinishedModeSelected());
   updateMaterialRightsUI();
   updateWatermark();
+  applyTextOffsetToPreview(posterCopy, posterPreviewFrame);
   if (confirmationSection && !confirmationSection.hidden) renderFinishReview();
+}
+
+function applyTextOffsetToPreview(copyEl, frameEl) {
+  if (!copyEl || !frameEl) return;
+  const ox = parseInt(textOffsetX?.value) || 0;
+  const oy = parseInt(textOffsetY?.value) || 0;
+  const scale = (frameEl.offsetWidth || 380) / getPosterBaseSize().width;
+  copyEl.style.transform = (ox || oy) ? `translate(${ox * scale}px, ${oy * scale}px)` : "";
 }
 
 function updateWatermark() {
@@ -605,6 +618,8 @@ function getPosterSnapshot() {
     imageRotation: getImageAdjustment().rotation.label,
     materialMode: getUploadedMaterialModeSetting().label,
     posterRotation: getPosterRotationSetting().label,
+    text_offset_x: parseInt(textOffsetX?.value) || 0,
+    text_offset_y: parseInt(textOffsetY?.value) || 0,
   };
 }
 
@@ -992,6 +1007,8 @@ async function renderBasePosterCanvas() {
 
   drawPosterOverlay(context, posterDesign.value, canvas.width, canvas.height);
   const box = getCopyBox(posterPosition.value, posterDesign.value, canvas.width, canvas.height);
+  box.x += parseInt(textOffsetX?.value) || 0;
+  box.y += parseInt(textOffsetY?.value) || 0;
 
   context.save();
   context.fillStyle = box.band ? "rgba(255,255,255,0.78)" : canvas.width > canvas.height ? "rgba(255,255,255,0.75)" : posterDesign.value === "bottom-margin" ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.76)";
@@ -1281,6 +1298,7 @@ function renderFinishReview() {
   renderPosterTitle(confirmPosterTitle, snapshot.title);
   confirmPosterSub.textContent = snapshot.subtitle;
   confirmPosterMeta.textContent = `${snapshot.shop} / ${snapshot.date}`;
+  applyTextOffsetToPreview(confirmPosterCopy, confirmPosterPreviewFrame);
 
   confirmTitle.textContent = snapshot.title;
   confirmSubtitle.textContent = snapshot.subtitle;
@@ -1557,6 +1575,9 @@ document.querySelector("#nextPhoto").addEventListener("click", () => moveDetailP
     element.addEventListener("change", updatePoster);
   },
 );
+
+textOffsetX?.addEventListener("input", () => { if (textOffsetXValue) textOffsetXValue.textContent = textOffsetX.value; updatePoster(); });
+textOffsetY?.addEventListener("input", () => { if (textOffsetYValue) textOffsetYValue.textContent = textOffsetY.value; updatePoster(); });
 
 resetImageAdjust.addEventListener("click", () => {
   imageZoom.value = "100";
@@ -2040,6 +2061,8 @@ function applyPosterTemplate(template) {
   if (template.poster_type) posterType.value = template.poster_type;
   if (template.poster_design) posterDesign.value = template.poster_design;
   uploadedMaterialMode.value = "background";
+  if (textOffsetX) { textOffsetX.value = "0"; if (textOffsetXValue) textOffsetXValue.textContent = "0"; }
+  if (textOffsetY) { textOffsetY.value = "0"; if (textOffsetYValue) textOffsetYValue.textContent = "0"; }
   if (template.poster_position) {
     const opts = Array.from(posterPosition.options);
     if (opts.some((o) => o.value === template.poster_position)) posterPosition.value = template.poster_position;

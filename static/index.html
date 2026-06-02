@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v18slimband" />
+    <link rel="stylesheet" href="/static/style.css?v=v19textoffset" />
   </head>
   <body>
     <header class="topbar">
@@ -209,6 +209,17 @@
                       </select>
                     </label>
                     <button id="resetImageAdjust" class="secondary-button compact-button" type="button">リセット</button>
+                  </div>
+                  <!-- 文字帯位置の微調整 -->
+                  <div class="form-grid two lettering-only">
+                    <label>
+                      横位置微調整 <span id="textOffsetXValue" class="range-value">0</span>
+                      <input id="textOffsetX" type="range" min="-30" max="30" value="0" />
+                    </label>
+                    <label>
+                      縦位置微調整 <span id="textOffsetYValue" class="range-value">0</span>
+                      <input id="textOffsetY" type="range" min="-30" max="30" value="0" />
+                    </label>
                   </div>
                   <!-- 自分の画像を使う -->
                   <div class="upload-subsection">
@@ -480,6 +491,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v18slimband"></script>
+    <script src="/static/app.js?v=v19textoffset"></script>
   </body>
 </html>
