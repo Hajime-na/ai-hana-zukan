@@ -25,6 +25,7 @@ const state = {
   galleryCategoryLimits: {},
   proposalBandOpacity: null,
   activeProposalIndex: -1,
+  layoutProposals: [],
 };
 
 const ORDER_HISTORY_KEY = "ai_hana_zukan_order_history";
@@ -1595,33 +1596,58 @@ document.querySelector("#nextPhoto").addEventListener("click", () => moveDetailP
 textOffsetX?.addEventListener("input", () => { if (textOffsetXValue) textOffsetXValue.textContent = textOffsetX.value; updatePoster(); });
 textOffsetY?.addEventListener("input", () => { if (textOffsetYValue) textOffsetYValue.textContent = textOffsetY.value; updatePoster(); });
 
+// フロント側ローカル候補（二重フォールバック用）
+function getLocalLayoutProposals(isLandscape) {
+  const titleLen = (posterMainTitle?.value || "").length;
+  const xHint = titleLen > 7 ? -5 : 0;
+  if (isLandscape) {
+    return [
+      { label: "上品控えめ案", position: "bottom-right", design: "photo-full", type: "elegant", band_opacity: 0.72, offset_x: 0, offset_y: 0, reason: "横長写真の右下に控えめに配置。写真が主役になります。" },
+      { label: "店頭POP案", position: "bottom-band", design: "photo-full", type: "bold", band_opacity: 0.82, offset_x: 0, offset_y: 0, reason: "下帯にまとめてPOP感を演出します。" },
+      { label: "写真重視案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.64, offset_x: 5, offset_y: 5, reason: "高い透明度で写真の印象を最大限に保ちます。" },
+    ];
+  }
+  return [
+    { label: "上品控えめ案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.70, offset_x: xHint, offset_y: 0, reason: "左下に控えめな文字帯。花の美しさを邪魔しません。" },
+    { label: "店頭POP案", position: "bottom-center", design: "bottom-margin", type: "friendly", band_opacity: 0.88, offset_x: 0, offset_y: 0, reason: "下部余白に文字をまとめた見やすいPOPデザイン。" },
+    { label: "写真重視案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.62, offset_x: xHint, offset_y: 8, reason: "透明度を高めて写真の美しさを最大限に残します。" },
+  ];
+}
+
 function applyLayoutProposal(proposal, index) {
-  if (posterPosition && proposal.position) posterPosition.value = proposal.position;
-  if (posterDesign && proposal.design) posterDesign.value = proposal.design;
-  if (posterType && proposal.type) posterType.value = proposal.type;
+  const pos = proposal.position || proposal.text_position;
+  const des = proposal.design || proposal.text_style;
+  const typ = proposal.type;
+  const opacity = proposal.band_opacity ?? proposal.overlay_opacity;
+  if (posterPosition && pos) posterPosition.value = pos;
+  if (posterDesign && des) posterDesign.value = des;
+  if (posterType && typ) posterType.value = typ;
   if (textOffsetX) { textOffsetX.value = String(proposal.offset_x ?? 0); if (textOffsetXValue) textOffsetXValue.textContent = textOffsetX.value; }
   if (textOffsetY) { textOffsetY.value = String(proposal.offset_y ?? 0); if (textOffsetYValue) textOffsetYValue.textContent = textOffsetY.value; }
-  state.proposalBandOpacity = typeof proposal.band_opacity === "number" ? proposal.band_opacity : null;
+  state.proposalBandOpacity = typeof opacity === "number" ? opacity : null;
   state.activeProposalIndex = index;
   document.querySelectorAll(".layout-proposal-card").forEach((el, i) => el.classList.toggle("is-active", i === index));
   updatePoster();
 }
 
 function renderLayoutProposals(proposals, source) {
-  if (!layoutProposalsEl) return;
+  if (!layoutProposalsEl || !Array.isArray(proposals) || proposals.length === 0) return;
+  state.layoutProposals = proposals;
   layoutProposalsEl.innerHTML = proposals.map((p, i) => `
     <div class="layout-proposal-card${state.activeProposalIndex === i ? " is-active" : ""}" data-index="${i}">
-      <div class="layout-proposal-label">${p.label}</div>
-      <div class="layout-proposal-reason">${p.reason}</div>
+      <div class="layout-proposal-label">${p.label || ""}</div>
+      <div class="layout-proposal-reason">${p.reason || ""}</div>
     </div>`).join("") + `<p class="layout-proposals-source">${source === "ai" ? "AI提案" : "ローカル提案"}</p>`;
   layoutProposalsEl.hidden = false;
-  layoutProposalsEl.addEventListener("click", (e) => {
-    const card = e.target.closest(".layout-proposal-card");
-    if (!card) return;
-    const idx = parseInt(card.dataset.index);
-    applyLayoutProposal(proposals[idx], idx);
-  }, { once: false });
 }
+
+// クリックリスナーは一度だけ設定
+layoutProposalsEl?.addEventListener("click", (e) => {
+  const card = e.target.closest(".layout-proposal-card");
+  if (!card || !state.layoutProposals?.length) return;
+  const idx = parseInt(card.dataset.index);
+  if (!isNaN(idx) && state.layoutProposals[idx]) applyLayoutProposal(state.layoutProposals[idx], idx);
+});
 
 layoutSuggestButton?.addEventListener("click", async () => {
   const size = getPosterBaseSize();
@@ -1639,10 +1665,13 @@ layoutSuggestButton?.addEventListener("click", async () => {
         is_landscape: isLandscape,
       }),
     });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    renderLayoutProposals(data.proposals, data.source);
+    const proposals = Array.isArray(data?.proposals) && data.proposals.length >= 1 ? data.proposals : null;
+    renderLayoutProposals(proposals ?? getLocalLayoutProposals(isLandscape), proposals ? data.source : "local");
   } catch {
-    if (layoutProposalsEl) { layoutProposalsEl.textContent = "提案の取得に失敗しました。"; layoutProposalsEl.hidden = false; }
+    // フロント側フォールバック（サーバー到達不能・JSONエラー等）
+    renderLayoutProposals(getLocalLayoutProposals(isLandscape), "local");
   } finally {
     layoutSuggestButton.disabled = false;
     layoutSuggestButton.textContent = "AIで文字配置を提案";
