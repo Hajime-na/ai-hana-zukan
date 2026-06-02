@@ -1160,7 +1160,15 @@ button:disabled {
 .confirm-poster-preview-frame {
   aspect-ratio: var(--poster-display-aspect, var(--poster-aspect, 210 / 297));
   min-height: 0;
+  overflow: hidden;
+  position: relative;
   width: 100%;
+}
+
+/* 確認画面: demo素材は軽くぼかして確認用と明示（文字確認は可能なレベル） */
+.confirm-poster-preview-frame.has-watermark .confirm-poster-preview {
+  filter: blur(0.4px);
+  opacity: 0.90;
 }
 
 /* Watermark overlay (CSS only — not exported to PNG/PDF) */

@@ -587,10 +587,12 @@ function isPosterMaterialAllowed() {
 
 function getMaterialWarningText() {
   const photo = getCurrentPosterPhoto();
-  if (photo?.poster_allowed === true) {
-    return photo.license_note || "アップロードされた正式素材を使用中です";
-  }
-  const note = photo?.license_note || "この写真は図鑑参考用です。ポスター発注・PNG出力には使用できません。正式素材をアップロードしてください。";
+  const usage = photo?.usage;
+  const allowed = photo?.poster_allowed === true;
+  if (usage === "uploaded") return "アップロードされた正式素材を使用中です。";
+  if (usage === "template" && allowed) return "正式テンプレート素材として使用可能です。";
+  if (usage === "template" && !allowed) return "確認用テンプレートです。正式保存・注文には正式素材が必要です。";
+  const note = photo?.license_note || "正式素材をアップロードしてください。";
   return `正式素材が必要です。${note}`;
 }
 
