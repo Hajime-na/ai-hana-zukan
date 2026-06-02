@@ -1602,15 +1602,15 @@ function getLocalLayoutProposals(isLandscape) {
   const xHint = titleLen > 7 ? -5 : 0;
   if (isLandscape) {
     return [
-      { label: "上品控えめ案", position: "bottom-right", design: "photo-full", type: "elegant", band_opacity: 0.72, offset_x: 0, offset_y: 0, reason: "横長写真の右下に控えめに配置。写真が主役になります。" },
-      { label: "店頭POP案", position: "bottom-band", design: "photo-full", type: "bold", band_opacity: 0.82, offset_x: 0, offset_y: 0, reason: "下帯にまとめてPOP感を演出します。" },
-      { label: "写真重視案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.64, offset_x: 5, offset_y: 5, reason: "高い透明度で写真の印象を最大限に保ちます。" },
+      { label: "左下カード案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.76, offset_x: 0, offset_y: 0, reason: "左下に読みやすいカード。写真を活かします。" },
+      { label: "中央下カード案", position: "bottom-center", design: "photo-full", type: "friendly", band_opacity: 0.84, offset_x: 0, offset_y: 0, reason: "中央下に配置。写真は加工しません。" },
+      { label: "写真重視案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.58, offset_x: 0, offset_y: 0, reason: "カードを薄くして写真の色を最大限残します。" },
     ];
   }
   return [
-    { label: "上品控えめ案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.70, offset_x: xHint, offset_y: 0, reason: "左下に控えめな文字帯。花の美しさを邪魔しません。" },
-    { label: "店頭POP案", position: "bottom-center", design: "bottom-margin", type: "friendly", band_opacity: 0.88, offset_x: 0, offset_y: 0, reason: "下部余白に文字をまとめた見やすいPOPデザイン。" },
-    { label: "写真重視案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.62, offset_x: xHint, offset_y: 8, reason: "透明度を高めて写真の美しさを最大限に残します。" },
+    { label: "左下カード案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.76, offset_x: xHint, offset_y: 0, reason: "左下に読みやすいカード。写真を活かします。" },
+    { label: "中央下カード案", position: "bottom-center", design: "photo-full", type: "friendly", band_opacity: 0.84, offset_x: 0, offset_y: 0, reason: "中央下に配置。写真は一切加工しません。" },
+    { label: "写真重視案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.58, offset_x: xHint, offset_y: 8, reason: "カードを薄くして写真の色を最大限残します。" },
   ];
 }
 
