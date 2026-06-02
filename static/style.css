@@ -1119,7 +1119,7 @@ button:disabled {
 /* Watermark overlay (CSS only — not exported to PNG/PDF) */
 .poster-preview-frame.has-watermark::before,
 .confirm-poster-preview-frame.has-watermark::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='160'%3E%3Ctext x='50%25' y='50%25' transform='rotate(-30 110 80)' text-anchor='middle' dominant-baseline='middle' font-size='22' font-weight='bold' fill='rgba(255%2C255%2C255%2C0.28)' font-family='sans-serif' letter-spacing='6'%3ESAMPLE%3C/text%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='220'%3E%3Ctext x='50%25' y='50%25' transform='rotate(-30 150 110)' text-anchor='middle' dominant-baseline='middle' font-size='15' font-weight='bold' fill='rgba(255%2C255%2C255%2C0.14)' font-family='sans-serif' letter-spacing='8'%3ESAMPLE%3C/text%3E%3C/svg%3E");
   content: "";
   inset: 0;
   pointer-events: none;
