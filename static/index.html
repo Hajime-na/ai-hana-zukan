@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v14previewsize" />
+    <link rel="stylesheet" href="/static/style.css?v=v15compactform" />
   </head>
   <body>
     <header class="topbar">
@@ -81,99 +81,9 @@
 
           <div class="poster-form">
             <div class="form-section">
-              <p class="eyebrow">Basic</p>
-              <h3>基本情報</h3>
-              <label>
-                正式素材をアップロード
-                <input id="officialMaterialInput" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
-              </label>
-              <p id="officialMaterialStatus" class="field-help">jpg / jpeg / png / webp に対応。アップロードした画像だけがPNG保存・仮注文に使えます。</p>
-              <label>
-                画像の使い方
-                <select id="uploadedMaterialMode">
-                  <option value="background">写真に文字を入れる</option>
-                  <option value="finished">画像をそのまま使う</option>
-                </select>
-              </label>
-              <p id="uploadedMaterialModeHelp" class="field-help">写真に文字を入れる：アプリ側で文字帯・タイトル・店舗名・日付を重ねます。</p>
-              <div class="form-grid two">
-                <label>
-                  ポスターサイズ
-                  <select id="posterSize">
-                    <option value="original">元画像比率</option>
-                    <option value="a4-portrait" selected>A4縦</option>
-                    <option value="a4-landscape">A4横</option>
-                    <option value="square">正方形</option>
-                    <option value="wide">16:9</option>
-                    <option value="story">9:16</option>
-                  </select>
-                </label>
-                <label class="lettering-only">
-                  画像の表示方法
-                  <select id="imageFit">
-                    <option value="cover">全面に敷く</option>
-                    <option value="contain">全体を収める</option>
-                    <option value="width">幅に合わせる</option>
-                    <option value="height">高さに合わせる</option>
-                  </select>
-                </label>
-              </div>
-              <label class="lettering-only">
-                画像位置
-                <select id="imagePosition">
-                  <option value="center">中央</option>
-                  <option value="top">上</option>
-                  <option value="bottom">下</option>
-                  <option value="left">左</option>
-                  <option value="right">右</option>
-                </select>
-              </label>
-              <label>
-                ポスター回転
-                <select id="posterRotation">
-                  <option value="normal">通常</option>
-                  <option value="right">右90度回転</option>
-                </select>
-              </label>
-              <div class="image-adjust-panel lettering-only">
-                <div class="section-head compact">
-                  <div>
-                    <p class="eyebrow">Image Adjust</p>
-                    <h3>ポスター画像調整</h3>
-                    <p class="field-help">写真だけを調整します。文字帯は動かず、仕上がり確認とPNG保存にも反映されます。</p>
-                  </div>
-                </div>
-                <label>
-                  画像ズーム <span id="imageZoomValue" class="range-value">100%</span>
-                  <input id="imageZoom" type="range" min="50" max="200" value="100" />
-                </label>
-                <label>
-                  横位置 <span id="imageOffsetXValue" class="range-value">0</span>
-                  <input id="imageOffsetX" type="range" min="-100" max="100" value="0" />
-                </label>
-                <label>
-                  縦位置 <span id="imageOffsetYValue" class="range-value">0</span>
-                  <input id="imageOffsetY" type="range" min="-100" max="100" value="0" />
-                </label>
-                <label>
-                  画像回転
-                  <select id="imageRotation">
-                    <option value="normal">通常</option>
-                    <option value="right">右90度</option>
-                  </select>
-                </label>
-                <button id="resetImageAdjust" class="secondary-button compact-button" type="button">リセット</button>
-              </div>
-              <label class="lettering-only">
-                ポスターデザイン
-                <select id="posterDesign">
-                  <option value="photo-full">写真全面タイプ</option>
-                  <option value="bottom-margin">下部余白タイプ</option>
-                  <option value="simple">上品シンプルタイプ</option>
-                </select>
-              </label>
-              <p id="posterDesignHelp" class="field-help lettering-only">写真全面タイプ：写真を大きく見せる店頭向けデザイン</p>
-              <div class="mode-note lettering-only">すでに文字入りの画像を使う場合は「画像をそのまま使う」を選んでください。このモードではアプリ側の文字帯を重ねます。</div>
+              <p class="eyebrow">Text Edit</p>
+              <h3>文字入れ</h3>
+
               <label class="lettering-only">
                 メインタイトル
                 <input id="posterMainTitle" value="バラ フェア" />
@@ -192,18 +102,9 @@
               </label>
               <label class="lettering-only">
                 補足文
-                <textarea id="posterNote" rows="3">店頭にて季節の花束をご用意しています。</textarea>
+                <textarea id="posterNote" rows="2">店頭にて季節の花束をご用意しています。</textarea>
               </label>
-              <div class="form-grid two lettering-only">
-              <label>
-                文字タイプ
-                <select id="posterType">
-                  <option value="elegant">上品</option>
-                  <option value="friendly">親しみやすい</option>
-                  <option value="bold">目立つ</option>
-                </select>
-              </label>
-              <label>
+              <label class="lettering-only">
                 文字位置
                 <select id="posterPosition">
                   <option value="bottom-left">左下</option>
@@ -214,37 +115,135 @@
                   <option value="top-left">左上</option>
                 </select>
               </label>
-              </div>
               <button id="posterAiButton" class="secondary-button lettering-only">AIで文章を作る</button>
+
+              <!-- 詳細設定 -->
+              <details class="advanced-details" id="advancedSettingsDetails">
+                <summary class="advanced-summary">詳細設定を開く</summary>
+                <div class="advanced-inner">
+                  <label class="lettering-only">
+                    文字タイプ
+                    <select id="posterType">
+                      <option value="elegant">上品</option>
+                      <option value="friendly">親しみやすい</option>
+                      <option value="bold">目立つ</option>
+                    </select>
+                  </label>
+                  <label class="lettering-only">
+                    ポスターデザイン
+                    <select id="posterDesign">
+                      <option value="photo-full">写真全面タイプ</option>
+                      <option value="bottom-margin">下部余白タイプ</option>
+                      <option value="simple">上品シンプルタイプ</option>
+                    </select>
+                  </label>
+                  <p id="posterDesignHelp" class="field-help lettering-only">写真全面タイプ：写真を大きく見せる店頭向けデザイン</p>
+                  <div class="mode-note lettering-only">すでに文字入りの画像を使う場合は「画像をそのまま使う」を選んでください。</div>
+                  <label>
+                    画像の使い方
+                    <select id="uploadedMaterialMode">
+                      <option value="background">写真に文字を入れる</option>
+                      <option value="finished">画像をそのまま使う</option>
+                    </select>
+                  </label>
+                  <p id="uploadedMaterialModeHelp" class="field-help">写真に文字を入れる：アプリ側で文字帯・タイトル・店舗名・日付を重ねます。</p>
+                  <div class="form-grid two">
+                    <label>
+                      ポスターサイズ
+                      <select id="posterSize">
+                        <option value="original">元画像比率</option>
+                        <option value="a4-portrait" selected>A4縦</option>
+                        <option value="a4-landscape">A4横</option>
+                        <option value="square">正方形</option>
+                        <option value="wide">16:9</option>
+                        <option value="story">9:16</option>
+                      </select>
+                    </label>
+                    <label class="lettering-only">
+                      画像の表示方法
+                      <select id="imageFit">
+                        <option value="cover">全面に敷く</option>
+                        <option value="contain">全体を収める</option>
+                        <option value="width">幅に合わせる</option>
+                        <option value="height">高さに合わせる</option>
+                      </select>
+                    </label>
+                  </div>
+                  <label class="lettering-only">
+                    画像位置
+                    <select id="imagePosition">
+                      <option value="center">中央</option>
+                      <option value="top">上</option>
+                      <option value="bottom">下</option>
+                      <option value="left">左</option>
+                      <option value="right">右</option>
+                    </select>
+                  </label>
+                  <label>
+                    ポスター回転
+                    <select id="posterRotation">
+                      <option value="normal">通常</option>
+                      <option value="right">右90度回転</option>
+                    </select>
+                  </label>
+                  <div class="image-adjust-panel lettering-only">
+                    <p class="eyebrow" style="margin-top:10px">Image Adjust</p>
+                    <p class="field-help">写真だけを調整します。文字帯は動かず、PNG保存にも反映されます。</p>
+                    <label>
+                      画像ズーム <span id="imageZoomValue" class="range-value">100%</span>
+                      <input id="imageZoom" type="range" min="50" max="200" value="100" />
+                    </label>
+                    <label>
+                      横位置 <span id="imageOffsetXValue" class="range-value">0</span>
+                      <input id="imageOffsetX" type="range" min="-100" max="100" value="0" />
+                    </label>
+                    <label>
+                      縦位置 <span id="imageOffsetYValue" class="range-value">0</span>
+                      <input id="imageOffsetY" type="range" min="-100" max="100" value="0" />
+                    </label>
+                    <label>
+                      画像回転
+                      <select id="imageRotation">
+                        <option value="normal">通常</option>
+                        <option value="right">右90度</option>
+                      </select>
+                    </label>
+                    <button id="resetImageAdjust" class="secondary-button compact-button" type="button">リセット</button>
+                  </div>
+                  <!-- 自分の画像を使う -->
+                  <div class="upload-subsection">
+                    <p class="upload-subsection-label">自分の画像を使う</p>
+                    <label>
+                      正式素材をアップロード
+                      <input id="officialMaterialInput" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
+                    </label>
+                    <p id="officialMaterialStatus" class="field-help">jpg / jpeg / png / webp 対応。アップロードした画像でPNG保存・仮注文できます。</p>
+                  </div>
+                </div>
+              </details>
             </div>
 
-            <div class="form-section revision-box lettering-only">
-              <div class="section-head compact">
-                <div>
-                  <p class="eyebrow">AI Revision</p>
-                  <h3>AI修正リクエスト</h3>
-                  <p class="field-help">作成した文章に対して、直してほしい内容を書けます</p>
+            <!-- AI修正リクエスト -->
+            <details class="ai-revision-details lettering-only" id="aiRevisionDetails">
+              <summary class="advanced-summary">AIで修正する</summary>
+              <div class="advanced-inner revision-box">
+                <div class="chip-row" aria-label="修正例">
+                  <button type="button" class="request-chip">もっと高級感を出して</button>
+                  <button type="button" class="request-chip">短くして</button>
+                  <button type="button" class="request-chip">ギフト向けにして</button>
+                  <button type="button" class="request-chip">日本語だけにして</button>
+                  <button type="button" class="request-chip">店舗名を目立たせて</button>
                 </div>
+                <label>
+                  修正コメント
+                  <textarea id="revisionRequest" rows="2" placeholder="例：もっと高級感を出して、短くしてください"></textarea>
+                </label>
+                <button id="reviseButton" class="secondary-button">AIで再修正する</button>
+                <div id="revisionResult" class="revision-result"></div>
               </div>
-              <div class="chip-row" aria-label="修正例">
-                <button type="button" class="request-chip">もっと高級感を出して</button>
-                <button type="button" class="request-chip">短くして</button>
-                <button type="button" class="request-chip">ギフト向けにして</button>
-                <button type="button" class="request-chip">日本語だけにして</button>
-                <button type="button" class="request-chip">店舗名を目立たせて</button>
-              </div>
-              <label>
-                修正コメント
-                <textarea id="revisionRequest" rows="3" placeholder="例：もっと高級感を出して、短くしてください"></textarea>
-              </label>
-              <button id="reviseButton" class="secondary-button">AIで再修正する</button>
-              <div id="revisionResult" class="revision-result"></div>
-            </div>
+            </details>
 
             <div class="form-section finish-section">
-              <p class="eyebrow">Final Check</p>
-              <h3>仕上がり確認</h3>
-              <p class="field-help">入力内容と文字位置を確認して、注文前の最終確認へ進みます。</p>
               <button id="finishButton" class="primary-button finish-button">仕上がり確認へ</button>
               <div id="finishChecklist" class="finish-checklist" hidden>
                 <label><input type="checkbox" /> 誤字脱字を確認しました</label>
@@ -481,6 +480,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v14previewsize"></script>
+    <script src="/static/app.js?v=v15compactform"></script>
   </body>
 </html>
