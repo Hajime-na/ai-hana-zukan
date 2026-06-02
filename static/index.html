@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v30zoomtight" />
+    <link rel="stylesheet" href="/static/style.css?v=v31charquality" />
   </head>
   <body>
     <header class="topbar">
@@ -293,17 +293,10 @@
               </div>
             </div>
 
-            <!-- 実解像度拡大確認（プレビュー直下） -->
+            <!-- 文字品質確認（プレビュー直下） -->
             <div id="zoomConfirmArea" class="zoom-confirm-area" hidden>
-              <div class="zoom-confirm-header">
-                <p class="eyebrow">Zoom Check</p>
-                <h3>実解像度拡大確認</h3>
-                <p class="field-help">保存時に近い品質で、文字まわりを部分拡大しています。</p>
-              </div>
-              <div class="zoom-canvas-wrap">
-                <canvas id="zoomConfirmCanvas" class="zoom-confirm-canvas"></canvas>
-              </div>
-              <p id="zoomConfirmNote" class="zoom-confirm-note"></p>
+              <p class="zoom-confirm-label">文字品質確認 — 出力画像から文字の一部を拡大表示しています。</p>
+              <canvas id="zoomConfirmCanvas" class="zoom-confirm-canvas"></canvas>
             </div>
 
             <!-- 素材状態 & 保存ボタン -->
@@ -474,6 +467,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v30zoomtight"></script>
+    <script src="/static/app.js?v=v31charquality"></script>
   </body>
 </html>

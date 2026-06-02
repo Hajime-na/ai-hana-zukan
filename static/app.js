@@ -837,7 +837,7 @@ function createTitleMeasureContext() {
 }
 
 function setCanvasTitleFont(context, size) {
-  context.font = `500 ${size}px 'Yu Gothic', 'Meiryo', sans-serif`;
+  context.font = `400 ${size}px 'Yu Gothic', 'Meiryo', sans-serif`;
 }
 
 function fitSingleLineTitle(context, title, maxWidth, baseSize = 50, minSize = 34) {
@@ -1032,44 +1032,49 @@ async function renderBasePosterCanvas() {
   const _defaultOpacity = box.band ? 0.78 : canvas.width > canvas.height ? 0.75 : posterDesign.value === "bottom-margin" ? 0.88 : 0.76;
   const _bandOpacity = state.proposalBandOpacity ?? _defaultOpacity;
   context.fillStyle = `rgba(255,255,255,${_bandOpacity})`;
-  roundRect(context, box.x, box.y, box.width, box.height, 8);
+  roundRect(context, Math.round(box.x), Math.round(box.y), Math.round(box.width), Math.round(box.height), 6);
   context.fill();
 
   if (posterPosition.value !== "bottom-center" && posterPosition.value !== "center" && posterPosition.value !== "bottom-band") {
-    context.fillStyle = posterType.value === "friendly" ? "#d89aa8" : posterType.value === "bold" ? "#26342b" : "#7fa98a";
-    context.fillRect(box.x, box.y, 7, box.height);
+    context.fillStyle = posterType.value === "friendly" ? "rgba(216,154,168,0.7)" : posterType.value === "bold" ? "rgba(38,52,43,0.7)" : "rgba(100,160,120,0.5)";
+    context.fillRect(Math.round(box.x), Math.round(box.y), 5, Math.round(box.height));
   }
 
   const isLandscapeCanvas = canvas.width > canvas.height;
   const paddingX = isLandscapeCanvas ? 20 : 30;
-  const textX = box.align === "center" ? box.x + box.width / 2 : box.x + paddingX;
+  const textX = Math.round(box.align === "center" ? box.x + box.width / 2 : box.x + paddingX);
   const maxTextWidth = isLandscapeCanvas ? box.width - paddingX * 2 : Math.min(420, box.width - paddingX * 2);
   context.textAlign = box.align;
   context.textBaseline = "top";
 
-  context.fillStyle = "#6e7d72";
-  context.font = isLandscapeCanvas ? "500 18px 'Yu Gothic', 'Meiryo', sans-serif" : "500 22px 'Yu Gothic', 'Meiryo', sans-serif";
-  context.fillText(snapshot.subtitle, textX, box.y + 20, maxTextWidth);
+  // サブタイトル（細め・控えめ）
+  context.fillStyle = "#6e8a80";
+  context.font = isLandscapeCanvas ? "400 17px 'Yu Gothic', 'Meiryo', sans-serif" : "400 20px 'Yu Gothic', 'Meiryo', sans-serif";
+  context.fillText(snapshot.subtitle, textX, Math.round(box.y + 20), maxTextWidth);
 
-  context.fillStyle = "#26342b";
+  // メインタイトル（weight 400・#1f342d・整数座標）
+  context.fillStyle = "#1f342d";
   const titleLayout = layoutCanvasTitle(context, snapshot.title, maxTextWidth, isLandscapeCanvas ? { baseSize: 40, minSize: 28 } : { baseSize: 50, minSize: 34 });
   setCanvasTitleFont(context, titleLayout.fontSize);
   const titleLines = titleLayout.lines;
   const titleLineHeight = Math.round(titleLayout.fontSize * 1.12);
   titleLines.forEach((line, index) => {
-    context.fillText(line, textX, box.y + 52 + index * titleLineHeight, maxTextWidth);
+    context.fillText(line, textX, Math.round(box.y + 52 + index * titleLineHeight), maxTextWidth);
   });
 
-  context.strokeStyle = "rgba(63,111,80,0.20)";
+  // 区切り線
+  context.strokeStyle = "rgba(63,111,80,0.16)";
+  context.lineWidth = 1;
   context.beginPath();
-  const metaLineY = isLandscapeCanvas ? box.y + box.height - 32 : box.y + box.height - 38;
-  context.moveTo(box.x + paddingX, metaLineY);
-  context.lineTo(box.x + box.width - paddingX, metaLineY);
+  const metaLineY = Math.round(isLandscapeCanvas ? box.y + box.height - 32 : box.y + box.height - 38);
+  context.moveTo(Math.round(box.x + paddingX), metaLineY + 0.5);
+  context.lineTo(Math.round(box.x + box.width - paddingX), metaLineY + 0.5);
   context.stroke();
 
-  context.fillStyle = "#6e7d72";
-  context.font = isLandscapeCanvas ? "400 15px 'Yu Gothic', 'Meiryo', sans-serif" : "400 17px 'Yu Gothic', 'Meiryo', sans-serif";
-  context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, isLandscapeCanvas ? box.y + box.height - 22 : box.y + box.height - 26, maxTextWidth);
+  // 店舗名・日付（細め・小さめ）
+  context.fillStyle = "#7a9288";
+  context.font = isLandscapeCanvas ? "300 13px 'Yu Gothic', 'Meiryo', sans-serif" : "300 15px 'Yu Gothic', 'Meiryo', sans-serif";
+  context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, Math.round(isLandscapeCanvas ? box.y + box.height - 22 : box.y + box.height - 26), maxTextWidth);
   context.restore();
 
   return canvas;
@@ -1303,43 +1308,38 @@ async function saveServerOrderPdf(orderId, statusElement) {
 async function renderZoomConfirmArea() {
   const zoomArea = document.querySelector("#zoomConfirmArea");
   const zoomCanvas = document.querySelector("#zoomConfirmCanvas");
-  const zoomNote = document.querySelector("#zoomConfirmNote");
   if (!zoomArea || !zoomCanvas) return;
 
-  // PNG保存と同じ完成canvas（同一関数・同一設定・追加描画なし）
+  // PNG保存と同じ完成canvas（同一関数・追加描画なし）
   const full = await renderPosterCanvas().catch(() => null);
   if (!full) return;
 
   const W = full.width;
   const H = full.height;
 
-  // 文字帯の実座標（renderBasePosterCanvas と同じ計算）
+  // タイトル文字の実座標を計算（renderBasePosterCanvas と同じ）
   const box = getCopyBox(posterPosition.value, posterDesign.value, W, H);
   box.x += parseInt(textOffsetX?.value) || 0;
   box.y += parseInt(textOffsetY?.value) || 0;
+  const isLandscape = W > H;
+  const paddingX = isLandscape ? 20 : 30;
+  const titleStartX = box.align === "center" ? box.x + box.width / 2 : box.x + paddingX;
+  const titleStartY = box.y + 52; // renderBasePosterCanvas と同一
 
-  // クロップ範囲：固定 80px 余白（狭い範囲 = 明確な拡大）
-  const pad = 80;
-  const cropX = Math.max(0, box.x - pad);
-  const cropY = Math.max(0, box.y - pad);
-  const cropW = Math.min(W - cropX, box.width + pad * 2);
-  const cropH = Math.min(H - cropY, box.height + pad * 2);
+  // 文字の一部だけを切り出す（タイトル中央 ~3文字分）
+  const charW = isLandscape ? 120 : 160;  // ~2〜3文字分の幅（canvas px）
+  const charH = isLandscape ? 70 : 90;    // タイトル1行分
+  const cropX = Math.round(Math.max(0, titleStartX - charW / 2));
+  const cropY = Math.round(Math.max(0, titleStartY - 8));
+  const cropW = Math.round(Math.min(W - cropX, charW));
+  const cropH = Math.round(Math.min(H - cropY, charH));
 
-  // 1:1 ピクセルコピーのみ（スケーリング・追加描画・透かし再描画なし）
+  // 1:1 ピクセルコピーのみ（再描画・透かし追加なし）
   zoomCanvas.width = cropW;
   zoomCanvas.height = cropH;
   zoomCanvas.style.width = "";
   zoomCanvas.style.height = "";
-
   zoomCanvas.getContext("2d").drawImage(full, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
-
-  const photo = getCurrentPosterPhoto();
-  const isDemo = photo?.usage !== "uploaded" && photo?.poster_allowed !== true;
-  if (zoomNote) {
-    zoomNote.textContent = isDemo
-      ? "確認用テンプレート — PNG保存時の文字まわりと同一品質"
-      : "PNG保存時の文字まわりと同一品質で表示しています";
-  }
 
   zoomArea.hidden = false;
 }
