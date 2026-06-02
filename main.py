@@ -102,7 +102,10 @@ def _save_order_json(order_id: str, data: dict) -> None:
 
 @app.get("/")
 def read_index():
-    return FileResponse(STATIC_DIR / "index.html")
+    return FileResponse(
+        STATIC_DIR / "index.html",
+        headers={"Cache-Control": "no-store"},
+    )
 
 
 @app.get("/api/info")
