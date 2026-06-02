@@ -802,6 +802,53 @@ dd {
   padding-top: 5px;
 }
 
+/* Layout proposal cards */
+.layout-proposals {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.layout-proposal-card {
+  background: #f5f9f5;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 7px 10px;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.layout-proposal-card:hover {
+  background: #edf5ee;
+  border-color: var(--green);
+}
+
+.layout-proposal-card.is-active {
+  background: #e4f0e6;
+  border-color: var(--green-dark);
+}
+
+.layout-proposal-label {
+  color: var(--green-dark);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.layout-proposal-reason {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.4;
+  margin-top: 1px;
+}
+
+.layout-proposals-source {
+  color: var(--muted);
+  font-size: 9px;
+  margin-top: 3px;
+  text-align: right;
+}
+
 .poster-form {
   background: #fbfdfb;
   border: 1px solid #cfdccf;

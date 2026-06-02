@@ -67,6 +67,13 @@ class UpdateStatusRequest(BaseModel):
     status: str
 
 
+class LayoutSuggestRequest(BaseModel):
+    title: str = ""
+    subtitle: str = ""
+    flower_name: str = ""
+    is_landscape: bool = False
+
+
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
 def _fallback_copy(req: GenerateCopyRequest) -> dict:
@@ -83,6 +90,34 @@ def _fallback_copy(req: GenerateCopyRequest) -> dict:
         "fallback": True,
         "message": "AI APIに接続できなかったため、ローカル生成文を表示しています。",
     }
+
+
+def _local_layout_suggestions(req: LayoutSuggestRequest) -> list[dict]:
+    title_len = len(req.title)
+    if req.is_landscape:
+        return [
+            {"label": "上品控えめ案", "position": "bottom-right", "design": "photo-full",
+             "type": "elegant", "band_opacity": 0.72, "offset_x": 0, "offset_y": 0,
+             "reason": "横長写真の右下に控えめに配置。写真が主役になります。"},
+            {"label": "店頭POP案", "position": "bottom-band", "design": "photo-full",
+             "type": "bold", "band_opacity": 0.82, "offset_x": 0, "offset_y": 0,
+             "reason": "下帯にまとめてPOP感を演出します。"},
+            {"label": "写真重視案", "position": "bottom-left", "design": "photo-full",
+             "type": "elegant", "band_opacity": 0.64, "offset_x": 5, "offset_y": 5,
+             "reason": "高い透明度で写真の印象を最大限に保ちます。"},
+        ]
+    x_hint = -5 if title_len > 7 else 0
+    return [
+        {"label": "上品控えめ案", "position": "bottom-left", "design": "photo-full",
+         "type": "elegant", "band_opacity": 0.70, "offset_x": x_hint, "offset_y": 0,
+         "reason": "左下に控えめな文字帯。花の美しさを邪魔しません。"},
+        {"label": "店頭POP案", "position": "bottom-center", "design": "bottom-margin",
+         "type": "friendly", "band_opacity": 0.88, "offset_x": 0, "offset_y": 0,
+         "reason": "下部余白に文字をまとめた見やすいPOPデザイン。"},
+        {"label": "写真重視案", "position": "bottom-left", "design": "photo-full",
+         "type": "elegant", "band_opacity": 0.62, "offset_x": x_hint, "offset_y": 8,
+         "reason": "透明度を高めて写真の美しさを最大限に残します。"},
+    ]
 
 
 def _load_order_json(order_id: str) -> dict:
@@ -198,6 +233,58 @@ def generate_copy(request: GenerateCopyRequest):
         }
     except Exception:
         return _fallback_copy(request)
+
+
+# ── Layout suggestion ────────────────────────────────────────────────────────
+
+@app.post("/api/suggest-layout")
+def suggest_layout(request: LayoutSuggestRequest):
+    if _openai_client is None:
+        return {"proposals": _local_layout_suggestions(request), "source": "local"}
+    prompt = f"""花屋ポスターの文字入れ配置を3案提案してください。
+
+タイトル: {request.title}
+サブタイトル: {request.subtitle}
+花名: {request.flower_name}
+向き: {"横長" if request.is_landscape else "縦長"}
+
+JSON形式のみで返してください:
+{{
+  "proposals": [
+    {{
+      "label": "案の名前",
+      "position": "bottom-left|bottom-right|bottom-center|bottom-band|top-left|center",
+      "design": "photo-full|bottom-margin|simple",
+      "type": "elegant|friendly|bold",
+      "band_opacity": 0.60〜0.90,
+      "offset_x": -30〜30の整数,
+      "offset_y": -30〜30の整数,
+      "reason": "おすすめ理由（30文字以内）"
+    }}
+  ]
+}}"""
+    try:
+        resp = _openai_client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=[
+                {"role": "system", "content": "花屋ポスターデザイナーです。JSON形式のみで返答してください。"},
+                {"role": "user", "content": prompt},
+            ],
+            response_format={"type": "json_object"},
+            temperature=0.7,
+            max_tokens=600,
+        )
+        data = json.loads(resp.choices[0].message.content)
+        proposals = data.get("proposals", [])
+        if len(proposals) < 3:
+            raise ValueError("insufficient proposals")
+        for p in proposals:
+            p["band_opacity"] = round(max(0.55, min(0.92, float(p.get("band_opacity", 0.76)))), 2)
+            p["offset_x"] = max(-30, min(30, int(p.get("offset_x", 0))))
+            p["offset_y"] = max(-30, min(30, int(p.get("offset_y", 0))))
+        return {"proposals": proposals[:3], "source": "ai"}
+    except Exception:
+        return {"proposals": _local_layout_suggestions(request), "source": "local"}
 
 
 # ── Order management routes ───────────────────────────────────────────────────

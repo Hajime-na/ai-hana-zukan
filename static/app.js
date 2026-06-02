@@ -23,6 +23,8 @@ const state = {
   templateMaterial: null,
   selectedTemplateId: null,
   galleryCategoryLimits: {},
+  proposalBandOpacity: null,
+  activeProposalIndex: -1,
 };
 
 const ORDER_HISTORY_KEY = "ai_hana_zukan_order_history";
@@ -77,6 +79,8 @@ const textOffsetX = document.querySelector("#textOffsetX");
 const textOffsetY = document.querySelector("#textOffsetY");
 const textOffsetXValue = document.querySelector("#textOffsetXValue");
 const textOffsetYValue = document.querySelector("#textOffsetYValue");
+const layoutSuggestButton = document.querySelector("#layoutSuggestButton");
+const layoutProposalsEl = document.querySelector("#layoutProposals");
 const posterRotation = document.querySelector("#posterRotation");
 const uploadedMaterialMode = document.querySelector("#uploadedMaterialMode");
 const uploadedMaterialModeHelp = document.querySelector("#uploadedMaterialModeHelp");
@@ -427,7 +431,15 @@ function updatePoster() {
   updateMaterialRightsUI();
   updateWatermark();
   applyTextOffsetToPreview(posterCopy, posterPreviewFrame);
+  applyBandOpacity(posterCopy);
   if (confirmationSection && !confirmationSection.hidden) renderFinishReview();
+}
+
+function applyBandOpacity(copyEl) {
+  if (!copyEl) return;
+  copyEl.style.background = state.proposalBandOpacity !== null
+    ? `rgba(255,255,255,${state.proposalBandOpacity})`
+    : "";
 }
 
 function applyTextOffsetToPreview(copyEl, frameEl) {
@@ -620,6 +632,7 @@ function getPosterSnapshot() {
     posterRotation: getPosterRotationSetting().label,
     text_offset_x: parseInt(textOffsetX?.value) || 0,
     text_offset_y: parseInt(textOffsetY?.value) || 0,
+    band_opacity: state.proposalBandOpacity,
   };
 }
 
@@ -1011,7 +1024,9 @@ async function renderBasePosterCanvas() {
   box.y += parseInt(textOffsetY?.value) || 0;
 
   context.save();
-  context.fillStyle = box.band ? "rgba(255,255,255,0.78)" : canvas.width > canvas.height ? "rgba(255,255,255,0.75)" : posterDesign.value === "bottom-margin" ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.76)";
+  const _defaultOpacity = box.band ? 0.78 : canvas.width > canvas.height ? 0.75 : posterDesign.value === "bottom-margin" ? 0.88 : 0.76;
+  const _bandOpacity = state.proposalBandOpacity ?? _defaultOpacity;
+  context.fillStyle = `rgba(255,255,255,${_bandOpacity})`;
   roundRect(context, box.x, box.y, box.width, box.height, 8);
   context.fill();
 
@@ -1299,6 +1314,7 @@ function renderFinishReview() {
   confirmPosterSub.textContent = snapshot.subtitle;
   confirmPosterMeta.textContent = `${snapshot.shop} / ${snapshot.date}`;
   applyTextOffsetToPreview(confirmPosterCopy, confirmPosterPreviewFrame);
+  applyBandOpacity(confirmPosterCopy);
 
   confirmTitle.textContent = snapshot.title;
   confirmSubtitle.textContent = snapshot.subtitle;
@@ -1578,6 +1594,60 @@ document.querySelector("#nextPhoto").addEventListener("click", () => moveDetailP
 
 textOffsetX?.addEventListener("input", () => { if (textOffsetXValue) textOffsetXValue.textContent = textOffsetX.value; updatePoster(); });
 textOffsetY?.addEventListener("input", () => { if (textOffsetYValue) textOffsetYValue.textContent = textOffsetY.value; updatePoster(); });
+
+function applyLayoutProposal(proposal, index) {
+  if (posterPosition && proposal.position) posterPosition.value = proposal.position;
+  if (posterDesign && proposal.design) posterDesign.value = proposal.design;
+  if (posterType && proposal.type) posterType.value = proposal.type;
+  if (textOffsetX) { textOffsetX.value = String(proposal.offset_x ?? 0); if (textOffsetXValue) textOffsetXValue.textContent = textOffsetX.value; }
+  if (textOffsetY) { textOffsetY.value = String(proposal.offset_y ?? 0); if (textOffsetYValue) textOffsetYValue.textContent = textOffsetY.value; }
+  state.proposalBandOpacity = typeof proposal.band_opacity === "number" ? proposal.band_opacity : null;
+  state.activeProposalIndex = index;
+  document.querySelectorAll(".layout-proposal-card").forEach((el, i) => el.classList.toggle("is-active", i === index));
+  updatePoster();
+}
+
+function renderLayoutProposals(proposals, source) {
+  if (!layoutProposalsEl) return;
+  layoutProposalsEl.innerHTML = proposals.map((p, i) => `
+    <div class="layout-proposal-card${state.activeProposalIndex === i ? " is-active" : ""}" data-index="${i}">
+      <div class="layout-proposal-label">${p.label}</div>
+      <div class="layout-proposal-reason">${p.reason}</div>
+    </div>`).join("") + `<p class="layout-proposals-source">${source === "ai" ? "AI提案" : "ローカル提案"}</p>`;
+  layoutProposalsEl.hidden = false;
+  layoutProposalsEl.addEventListener("click", (e) => {
+    const card = e.target.closest(".layout-proposal-card");
+    if (!card) return;
+    const idx = parseInt(card.dataset.index);
+    applyLayoutProposal(proposals[idx], idx);
+  }, { once: false });
+}
+
+layoutSuggestButton?.addEventListener("click", async () => {
+  const size = getPosterBaseSize();
+  const isLandscape = size.width > size.height && !getPosterRotationSetting().rotated;
+  layoutSuggestButton.disabled = true;
+  layoutSuggestButton.textContent = "提案を取得中...";
+  try {
+    const res = await fetch("/api/suggest-layout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: posterMainTitle?.value || "",
+        subtitle: posterSubtitle?.value || "",
+        flower_name: state.selectedFlower?.name || "",
+        is_landscape: isLandscape,
+      }),
+    });
+    const data = await res.json();
+    renderLayoutProposals(data.proposals, data.source);
+  } catch {
+    if (layoutProposalsEl) { layoutProposalsEl.textContent = "提案の取得に失敗しました。"; layoutProposalsEl.hidden = false; }
+  } finally {
+    layoutSuggestButton.disabled = false;
+    layoutSuggestButton.textContent = "AIで文字配置を提案";
+  }
+});
 
 resetImageAdjust.addEventListener("click", () => {
   imageZoom.value = "100";
@@ -2063,6 +2133,9 @@ function applyPosterTemplate(template) {
   uploadedMaterialMode.value = "background";
   if (textOffsetX) { textOffsetX.value = "0"; if (textOffsetXValue) textOffsetXValue.textContent = "0"; }
   if (textOffsetY) { textOffsetY.value = "0"; if (textOffsetYValue) textOffsetYValue.textContent = "0"; }
+  state.proposalBandOpacity = null;
+  state.activeProposalIndex = -1;
+  if (layoutProposalsEl) { layoutProposalsEl.hidden = true; layoutProposalsEl.innerHTML = ""; }
   if (template.poster_position) {
     const opts = Array.from(posterPosition.options);
     if (opts.some((o) => o.value === template.poster_position)) posterPosition.value = template.poster_position;
