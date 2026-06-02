@@ -1,5 +1,13 @@
 {
-  "categories_order": ["春", "夏", "秋", "冬", "母の日", "ギフト", "開店祝い"],
+  "categories_order": [
+    "春",
+    "夏",
+    "秋",
+    "冬",
+    "母の日",
+    "ギフト",
+    "開店祝い"
+  ],
   "templates": [
     {
       "id": "spring-a",
@@ -7,8 +15,13 @@
       "short_label": "春A",
       "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
       "image": null,
-      "categories": ["春"],
-      "tags": ["バラ", "春"],
+      "categories": [
+        "春"
+      ],
+      "tags": [
+        "バラ",
+        "春"
+      ],
       "poster_allowed": false,
       "featured": true,
       "default_main_title": "春の花フェア",
@@ -25,8 +38,13 @@
       "short_label": "春B",
       "gradient": "linear-gradient(135deg, #fff0f3 0%, #f9c6d5 50%, #fce4ec 100%)",
       "image": null,
-      "categories": ["春"],
-      "tags": ["桜", "春"],
+      "categories": [
+        "春"
+      ],
+      "tags": [
+        "桜",
+        "春"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "桜色の季節",
@@ -43,8 +61,13 @@
       "short_label": "春C",
       "gradient": "linear-gradient(135deg, #fce4ec 0%, #f48fb1 35%, #fff9c4 100%)",
       "image": null,
-      "categories": ["春"],
-      "tags": ["チューリップ", "春"],
+      "categories": [
+        "春"
+      ],
+      "tags": [
+        "チューリップ",
+        "春"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "春のチューリップ",
@@ -61,8 +84,13 @@
       "short_label": "春D",
       "gradient": "linear-gradient(135deg, #f1f8e9 0%, #81c784 50%, #fffde7 100%)",
       "image": null,
-      "categories": ["春"],
-      "tags": ["ギフト", "春"],
+      "categories": [
+        "春"
+      ],
+      "tags": [
+        "ギフト",
+        "春"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "春の贈りもの",
@@ -79,8 +107,13 @@
       "short_label": "春E",
       "gradient": "linear-gradient(135deg, #fbe9e7 0%, #ff8a65 50%, #fff3e0 100%)",
       "image": null,
-      "categories": ["春"],
-      "tags": ["ブーケ", "春"],
+      "categories": [
+        "春"
+      ],
+      "tags": [
+        "ブーケ",
+        "春"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "春のブーケフェア",
@@ -97,8 +130,13 @@
       "short_label": "春F",
       "gradient": "linear-gradient(135deg, #ede7f6 0%, #ab47bc 50%, #fce4ec 100%)",
       "image": null,
-      "categories": ["春"],
-      "tags": ["感謝", "春"],
+      "categories": [
+        "春"
+      ],
+      "tags": [
+        "感謝",
+        "春"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "春の感謝祭",
@@ -115,8 +153,13 @@
       "short_label": "夏A",
       "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
       "image": null,
-      "categories": ["夏"],
-      "tags": ["夏", "涼しげ"],
+      "categories": [
+        "夏"
+      ],
+      "tags": [
+        "夏",
+        "涼しげ"
+      ],
       "poster_allowed": false,
       "featured": true,
       "default_main_title": "夏の花フェア",
@@ -133,8 +176,13 @@
       "short_label": "夏B",
       "gradient": "linear-gradient(135deg, #fffde7 0%, #f9a825 50%, #fff9c4 100%)",
       "image": null,
-      "categories": ["夏"],
-      "tags": ["ひまわり", "夏"],
+      "categories": [
+        "夏"
+      ],
+      "tags": [
+        "ひまわり",
+        "夏"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "ひまわりフェア",
@@ -151,8 +199,13 @@
       "short_label": "夏C",
       "gradient": "linear-gradient(135deg, #e8f5e9 0%, #26a69a 50%, #b2dfdb 100%)",
       "image": null,
-      "categories": ["夏"],
-      "tags": ["アレンジ", "夏"],
+      "categories": [
+        "夏"
+      ],
+      "tags": [
+        "アレンジ",
+        "夏"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "夏のアレンジ特集",
@@ -169,8 +222,14 @@
       "short_label": "夏D",
       "gradient": "linear-gradient(135deg, #e0f7fa 0%, #0097a7 50%, #80deea 100%)",
       "image": null,
-      "categories": ["夏", "ギフト"],
-      "tags": ["ギフト", "夏"],
+      "categories": [
+        "夏",
+        "ギフト"
+      ],
+      "tags": [
+        "ギフト",
+        "夏"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "夏のギフト",
@@ -187,8 +246,13 @@
       "short_label": "夏E",
       "gradient": "linear-gradient(135deg, #fce4ec 0%, #ef5350 50%, #ffccbc 100%)",
       "image": null,
-      "categories": ["夏"],
-      "tags": ["南国", "夏"],
+      "categories": [
+        "夏"
+      ],
+      "tags": [
+        "南国",
+        "夏"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "南国フラワー",
@@ -205,8 +269,13 @@
       "short_label": "夏F",
       "gradient": "linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%)",
       "image": null,
-      "categories": ["夏"],
-      "tags": ["高級感", "夏"],
+      "categories": [
+        "夏"
+      ],
+      "tags": [
+        "高級感",
+        "夏"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "夏の夜フェア",
@@ -223,8 +292,13 @@
       "short_label": "秋A",
       "gradient": "linear-gradient(135deg, #fff3e0 0%, #e65100 50%, #ff8f00 100%)",
       "image": null,
-      "categories": ["秋"],
-      "tags": ["秋", "紅葉"],
+      "categories": [
+        "秋"
+      ],
+      "tags": [
+        "秋",
+        "紅葉"
+      ],
       "poster_allowed": false,
       "featured": true,
       "default_main_title": "秋の花フェア",
@@ -241,8 +315,13 @@
       "short_label": "秋B",
       "gradient": "linear-gradient(135deg, #efebe9 0%, #795548 50%, #d7ccc8 100%)",
       "image": null,
-      "categories": ["秋"],
-      "tags": ["コスモス", "秋"],
+      "categories": [
+        "秋"
+      ],
+      "tags": [
+        "コスモス",
+        "秋"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "コスモスフェア",
@@ -259,8 +338,13 @@
       "short_label": "秋C",
       "gradient": "linear-gradient(135deg, #fff8e1 0%, #f9a825 50%, #ffe082 100%)",
       "image": null,
-      "categories": ["秋"],
-      "tags": ["花束", "秋"],
+      "categories": [
+        "秋"
+      ],
+      "tags": [
+        "花束",
+        "秋"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "秋の花束特集",
@@ -277,8 +361,13 @@
       "short_label": "秋D",
       "gradient": "linear-gradient(135deg, #ffebee 0%, #c62828 50%, #ef9a9a 100%)",
       "image": null,
-      "categories": ["秋"],
-      "tags": ["菊", "秋"],
+      "categories": [
+        "秋"
+      ],
+      "tags": [
+        "菊",
+        "秋"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "菊フェア",
@@ -295,8 +384,14 @@
       "short_label": "秋E",
       "gradient": "linear-gradient(135deg, #f3e5f5 0%, #7b1fa2 50%, #ce93d8 100%)",
       "image": null,
-      "categories": ["秋", "ギフト"],
-      "tags": ["ギフト", "秋"],
+      "categories": [
+        "秋",
+        "ギフト"
+      ],
+      "tags": [
+        "ギフト",
+        "秋"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "秋のギフト",
@@ -313,8 +408,13 @@
       "short_label": "秋F",
       "gradient": "linear-gradient(135deg, #fdf3e7 0%, #d4701a 50%, #f7e7b4 100%)",
       "image": null,
-      "categories": ["秋"],
-      "tags": ["高級感", "秋"],
+      "categories": [
+        "秋"
+      ],
+      "tags": [
+        "高級感",
+        "秋"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "秋の上品フェア",
@@ -331,8 +431,13 @@
       "short_label": "冬A",
       "gradient": "linear-gradient(135deg, #eceff1 0%, #90a4ae 50%, #ffffff 100%)",
       "image": null,
-      "categories": ["冬"],
-      "tags": ["冬", "白"],
+      "categories": [
+        "冬"
+      ],
+      "tags": [
+        "冬",
+        "白"
+      ],
       "poster_allowed": false,
       "featured": true,
       "default_main_title": "冬の花フェア",
@@ -349,8 +454,13 @@
       "short_label": "冬B",
       "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1565c0 50%, #bbdefb 100%)",
       "image": null,
-      "categories": ["冬"],
-      "tags": ["シクラメン", "冬"],
+      "categories": [
+        "冬"
+      ],
+      "tags": [
+        "シクラメン",
+        "冬"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "シクラメン特集",
@@ -367,8 +477,13 @@
       "short_label": "冬C",
       "gradient": "linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #a5d6a7 100%)",
       "image": null,
-      "categories": ["冬"],
-      "tags": ["クリスマス", "冬"],
+      "categories": [
+        "冬"
+      ],
+      "tags": [
+        "クリスマス",
+        "冬"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "クリスマスフラワー",
@@ -385,8 +500,13 @@
       "short_label": "冬D",
       "gradient": "linear-gradient(135deg, #455a64 0%, #546e7a 50%, #eceff1 100%)",
       "image": null,
-      "categories": ["冬"],
-      "tags": ["ブーケ", "冬"],
+      "categories": [
+        "冬"
+      ],
+      "tags": [
+        "ブーケ",
+        "冬"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "冬のブーケ",
@@ -403,8 +523,13 @@
       "short_label": "冬E",
       "gradient": "linear-gradient(135deg, #b71c1c 0%, #c62828 50%, #ffcdd2 100%)",
       "image": null,
-      "categories": ["冬"],
-      "tags": ["ポインセチア", "冬"],
+      "categories": [
+        "冬"
+      ],
+      "tags": [
+        "ポインセチア",
+        "冬"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "ポインセチアフェア",
@@ -421,8 +546,13 @@
       "short_label": "冬F",
       "gradient": "linear-gradient(135deg, #212121 0%, #37474f 50%, #ffd54f 100%)",
       "image": null,
-      "categories": ["冬"],
-      "tags": ["感謝", "年末"],
+      "categories": [
+        "冬"
+      ],
+      "tags": [
+        "感謝",
+        "年末"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "年末感謝フェア",
@@ -439,8 +569,14 @@
       "short_label": "母A",
       "gradient": "linear-gradient(135deg, #fce4ec 0%, #f48fb1 55%, #fff9c4 100%)",
       "image": null,
-      "categories": ["母の日", "ギフト"],
-      "tags": ["母の日", "カーネーション"],
+      "categories": [
+        "母の日",
+        "ギフト"
+      ],
+      "tags": [
+        "母の日",
+        "カーネーション"
+      ],
       "poster_allowed": false,
       "featured": true,
       "default_main_title": "母の日ギフト",
@@ -457,8 +593,13 @@
       "short_label": "母B",
       "gradient": "linear-gradient(135deg, #fce4ec 0%, #e91e63 50%, #f8bbd0 100%)",
       "image": null,
-      "categories": ["母の日"],
-      "tags": ["母の日", "バラ"],
+      "categories": [
+        "母の日"
+      ],
+      "tags": [
+        "母の日",
+        "バラ"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "母の日バラ特集",
@@ -475,8 +616,13 @@
       "short_label": "母C",
       "gradient": "linear-gradient(135deg, #fafafa 0%, #f8bbd0 40%, #fff3e0 100%)",
       "image": null,
-      "categories": ["母の日"],
-      "tags": ["母の日", "カーネーション"],
+      "categories": [
+        "母の日"
+      ],
+      "tags": [
+        "母の日",
+        "カーネーション"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "カーネーション",
@@ -493,8 +639,13 @@
       "short_label": "母D",
       "gradient": "linear-gradient(135deg, #fff3e0 0%, #f06292 50%, #fce4ec 100%)",
       "image": null,
-      "categories": ["母の日"],
-      "tags": ["母の日", "花束"],
+      "categories": [
+        "母の日"
+      ],
+      "tags": [
+        "母の日",
+        "花束"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "母へ贈る花束",
@@ -511,8 +662,14 @@
       "short_label": "母E",
       "gradient": "linear-gradient(135deg, #880e4f 0%, #ad1457 50%, #fce4ec 100%)",
       "image": null,
-      "categories": ["母の日", "ギフト"],
-      "tags": ["母の日", "高級感"],
+      "categories": [
+        "母の日",
+        "ギフト"
+      ],
+      "tags": [
+        "母の日",
+        "高級感"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "プレミアムギフト",
@@ -529,8 +686,13 @@
       "short_label": "母F",
       "gradient": "linear-gradient(135deg, #ede7f6 0%, #f48fb1 50%, #e8f5e9 100%)",
       "image": null,
-      "categories": ["母の日"],
-      "tags": ["母の日", "アレンジ"],
+      "categories": [
+        "母の日"
+      ],
+      "tags": [
+        "母の日",
+        "アレンジ"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "母の日アレンジ",
@@ -547,8 +709,13 @@
       "short_label": "ギフトA",
       "gradient": "linear-gradient(135deg, #fff8e1 0%, #ffb74d 50%, #fff3e0 100%)",
       "image": null,
-      "categories": ["ギフト"],
-      "tags": ["ギフト", "通年"],
+      "categories": [
+        "ギフト"
+      ],
+      "tags": [
+        "ギフト",
+        "通年"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "フラワーギフト",
@@ -565,8 +732,13 @@
       "short_label": "ギフトB",
       "gradient": "linear-gradient(135deg, #fce4ec 0%, #c2185b 50%, #f8bbd0 100%)",
       "image": null,
-      "categories": ["ギフト"],
-      "tags": ["記念日", "ギフト"],
+      "categories": [
+        "ギフト"
+      ],
+      "tags": [
+        "記念日",
+        "ギフト"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "記念日ギフト",
@@ -583,8 +755,14 @@
       "short_label": "ギフトC",
       "gradient": "linear-gradient(135deg, #e8f5e9 0%, #388e3c 50%, #fffde7 100%)",
       "image": null,
-      "categories": ["ギフト", "開店祝い"],
-      "tags": ["お祝い", "ギフト"],
+      "categories": [
+        "ギフト",
+        "開店祝い"
+      ],
+      "tags": [
+        "お祝い",
+        "ギフト"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "お祝い花束",
@@ -601,8 +779,13 @@
       "short_label": "開店A",
       "gradient": "linear-gradient(135deg, #e8f5e9 0%, #66bb6a 50%, #fffde7 100%)",
       "image": null,
-      "categories": ["開店祝い"],
-      "tags": ["開店", "お祝い"],
+      "categories": [
+        "開店祝い"
+      ],
+      "tags": [
+        "開店",
+        "お祝い"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "開店お祝い特集",
@@ -619,8 +802,13 @@
       "short_label": "開店B",
       "gradient": "linear-gradient(135deg, #fffde7 0%, #fdd835 50%, #fff176 100%)",
       "image": null,
-      "categories": ["開店祝い"],
-      "tags": ["開業", "スタンド花"],
+      "categories": [
+        "開店祝い"
+      ],
+      "tags": [
+        "開業",
+        "スタンド花"
+      ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "開業祝いスタンド",
@@ -630,6 +818,486 @@
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "バラ"
+    },
+    {
+      "id": "img-0036",
+      "title": "ひまわり 001",
+      "short_label": "ひまわり1",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春__ひまわり001.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "ひまわり",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ひまわり"
+    },
+    {
+      "id": "img-0037",
+      "title": "ひまわり 002",
+      "short_label": "ひまわり2",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_ひまわり002.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "ひまわり",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ひまわり"
+    },
+    {
+      "id": "img-0038",
+      "title": "ひまわり 003",
+      "short_label": "ひまわり3",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_ひまわり003.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "ひまわり",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ひまわり"
+    },
+    {
+      "id": "img-0039",
+      "title": "ひまわり 004",
+      "short_label": "ひまわり4",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_ひまわり004.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "ひまわり",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ひまわり"
+    },
+    {
+      "id": "img-0040",
+      "title": "ひまわり 005",
+      "short_label": "ひまわり5",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_ひまわり005.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "ひまわり",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ひまわり"
+    },
+    {
+      "id": "img-0041",
+      "title": "ひまわり 006",
+      "short_label": "ひまわり6",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_ひまわり006.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "ひまわり",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ひまわり"
+    },
+    {
+      "id": "img-0042",
+      "title": "ひまわり 007",
+      "short_label": "ひまわり7",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_ひまわり007.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "ひまわり",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ひまわり"
+    },
+    {
+      "id": "img-0043",
+      "title": "ラベンダー 001",
+      "short_label": "ラベンダー1",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_ラベンダー001.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "ラベンダー",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "ラベンダーフェア",
+      "default_subtitle": "旬のラベンダーをあなたへ。",
+      "default_note": "ラベンダー入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ラベンダー"
+    },
+    {
+      "id": "img-0044",
+      "title": "ラベンダー 002",
+      "short_label": "ラベンダー2",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_ラベンダー002.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "ラベンダー",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "ラベンダーフェア",
+      "default_subtitle": "旬のラベンダーをあなたへ。",
+      "default_note": "ラベンダー入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ラベンダー"
+    },
+    {
+      "id": "img-0045",
+      "title": "ラベンダー 003",
+      "short_label": "ラベンダー3",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_ラベンダー003.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "ラベンダー",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "ラベンダーフェア",
+      "default_subtitle": "旬のラベンダーをあなたへ。",
+      "default_note": "ラベンダー入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ラベンダー"
+    },
+    {
+      "id": "img-0046",
+      "title": "朝顔 001",
+      "short_label": "朝顔1",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_朝顔001.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "朝顔",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "朝顔フェア",
+      "default_subtitle": "旬の朝顔をあなたへ。",
+      "default_note": "朝顔入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "朝顔"
+    },
+    {
+      "id": "img-0047",
+      "title": "朝顔 002",
+      "short_label": "朝顔2",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_朝顔002.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "朝顔",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "朝顔フェア",
+      "default_subtitle": "旬の朝顔をあなたへ。",
+      "default_note": "朝顔入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "朝顔"
+    },
+    {
+      "id": "img-0048",
+      "title": "朝顔 003",
+      "short_label": "朝顔3",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_朝顔003.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "朝顔",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "朝顔フェア",
+      "default_subtitle": "旬の朝顔をあなたへ。",
+      "default_note": "朝顔入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "朝顔"
+    },
+    {
+      "id": "img-0049",
+      "title": "紫陽花 002",
+      "short_label": "紫陽花2",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_紫陽花002.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "紫陽花",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "紫陽花フェア",
+      "default_subtitle": "旬の紫陽花をあなたへ。",
+      "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "紫陽花"
+    },
+    {
+      "id": "img-0050",
+      "title": "紫陽花 003",
+      "short_label": "紫陽花3",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_紫陽花003.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "紫陽花",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "紫陽花フェア",
+      "default_subtitle": "旬の紫陽花をあなたへ。",
+      "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "紫陽花"
+    },
+    {
+      "id": "img-0051",
+      "title": "紫陽花 004",
+      "short_label": "紫陽花4",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_紫陽花004.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "紫陽花",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "紫陽花フェア",
+      "default_subtitle": "旬の紫陽花をあなたへ。",
+      "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "紫陽花"
+    },
+    {
+      "id": "img-0052",
+      "title": "紫陽花 005",
+      "short_label": "紫陽花5",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_紫陽花005.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "紫陽花",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "紫陽花フェア",
+      "default_subtitle": "旬の紫陽花をあなたへ。",
+      "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "紫陽花"
+    },
+    {
+      "id": "img-0053",
+      "title": "紫陽花 006",
+      "short_label": "紫陽花6",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_紫陽花006.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "紫陽花",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "紫陽花フェア",
+      "default_subtitle": "旬の紫陽花をあなたへ。",
+      "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "紫陽花"
+    },
+    {
+      "id": "img-0054",
+      "title": "紫陽花 007",
+      "short_label": "紫陽花7",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_紫陽花007.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "紫陽花",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "紫陽花フェア",
+      "default_subtitle": "旬の紫陽花をあなたへ。",
+      "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "紫陽花"
+    },
+    {
+      "id": "img-0055",
+      "title": "紫陽花 008",
+      "short_label": "紫陽花8",
+      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
+      "image": "/static/posters/春_紫陽花008.png",
+      "categories": [
+        "春"
+      ],
+      "season": "春",
+      "tags": [
+        "紫陽花",
+        "春"
+      ],
+      "poster_allowed": true,
+      "featured": false,
+      "default_main_title": "紫陽花フェア",
+      "default_subtitle": "旬の紫陽花をあなたへ。",
+      "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "elegant",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "紫陽花"
     }
   ]
 }

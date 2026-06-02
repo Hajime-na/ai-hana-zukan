@@ -1980,9 +1980,9 @@ function renderGalleryShelf() {
           const isSelected = t.id === state.selectedTemplateId;
           return `
           <button class="gallery-thumb${isSelected ? " is-selected" : ""}" data-template-id="${t.id}" type="button" title="${t.title}">
-            <div class="gallery-thumb-preview" style="--gallery-gradient: ${t.gradient}">
+            <div class="gallery-thumb-preview" style="${t.image ? `background-image:url('${t.image}');background-size:cover;background-position:center` : `--gallery-gradient:${t.gradient}`}">
               ${isSelected ? '<span class="gallery-selected-badge">選択中</span>' : ""}
-              <span class="gallery-thumb-title">${t.default_main_title || t.title}</span>
+              ${!t.image ? `<span class="gallery-thumb-title">${t.default_main_title || t.title}</span>` : ""}
             </div>
             <span class="gallery-thumb-label">${t.short_label}</span>
           </button>`;
@@ -2002,14 +2002,15 @@ function renderGalleryShelf() {
 }
 
 function applyPosterTemplate(template) {
+  const hasImage = Boolean(template.image);
   state.templateMaterial = {
-    url: null,
+    url: template.image || null,
     gradient: template.gradient,
-    poster_allowed: template.poster_allowed || false,
-    source: "テンプレート",
-    license: "テンプレートプレースホルダー",
+    poster_allowed: hasImage ? true : (template.poster_allowed || false),
+    source: "テンプレート素材",
+    license: "テンプレート管理画像",
     usage: "template",
-    license_note: template.poster_allowed
+    license_note: (hasImage || template.poster_allowed)
       ? "テンプレート素材として使用可能"
       : "この背景は仮表示です。正式素材をアップロードすればPNG/PDF保存ができます。",
   };
@@ -2071,7 +2072,7 @@ document.querySelector("#heroStartButton").addEventListener("click", () => scrol
 
 async function init() {
   try {
-    const response = await fetch("/static/flowers.json?v=v03landscapetype2");
+    const response = await fetch("/static/flowers.json?v=v1posterimage");
     const data = await response.json();
     state.flowers = data.map(normalizeFlower);
   } catch (error) {
