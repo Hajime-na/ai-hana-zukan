@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v31charquality" />
+    <link rel="stylesheet" href="/static/style.css?v=v32newdesignmodes" />
   </head>
   <body>
     <header class="topbar">
@@ -133,14 +133,16 @@
                     </select>
                   </label>
                   <label class="lettering-only">
-                    ポスターデザイン
+                    文字スタイル
                     <select id="posterDesign">
-                      <option value="photo-full">写真全面タイプ</option>
-                      <option value="bottom-margin">下部余白タイプ</option>
-                      <option value="simple">上品シンプルタイプ</option>
+                      <option value="no-text">文字なし</option>
+                      <option value="minimal" selected>小さく入れる</option>
+                      <option value="direct">写真上に直接入れる</option>
+                      <option value="bottom-margin">下余白に入れる</option>
+                      <option value="pop-band">POP文字帯</option>
                     </select>
                   </label>
-                  <p id="posterDesignHelp" class="field-help lettering-only">写真全面タイプ：写真を大きく見せる店頭向けデザイン</p>
+                  <p id="posterDesignHelp" class="field-help lettering-only">小さく入れる：文字を小さく控えめに配置します</p>
                   <div class="mode-note lettering-only">すでに文字入りの画像を使う場合は「画像をそのまま使う」を選んでください。</div>
                   <label>
                     画像の使い方
@@ -467,6 +469,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v31charquality"></script>
+    <script src="/static/app.js?v=v32newdesignmodes"></script>
   </body>
 </html>

@@ -96,27 +96,27 @@ def _local_layout_suggestions(req: LayoutSuggestRequest) -> list[dict]:
     title_len = len(req.title)
     if req.is_landscape:
         return [
-            {"label": "左下カード案", "position": "bottom-left", "design": "photo-full",
-             "type": "elegant", "band_opacity": 0.76, "offset_x": 0, "offset_y": 0,
-             "reason": "左下に読みやすいカード。写真を活かします。"},
-            {"label": "中央下カード案", "position": "bottom-center", "design": "photo-full",
-             "type": "friendly", "band_opacity": 0.84, "offset_x": 0, "offset_y": 0,
-             "reason": "中央下に配置。写真は加工しません。"},
-            {"label": "写真重視案", "position": "bottom-left", "design": "photo-full",
-             "type": "elegant", "band_opacity": 0.58, "offset_x": 0, "offset_y": 0,
-             "reason": "カードを薄くして写真の色を最大限残します。"},
+            {"label": "写真を活かす案", "position": "bottom-right", "design": "minimal",
+             "type": "elegant", "band_opacity": None, "offset_x": 0, "offset_y": 0,
+             "reason": "文字を小さく控えめに入れます。"},
+            {"label": "最小文字案", "position": "bottom-left", "design": "direct",
+             "type": "elegant", "band_opacity": None, "offset_x": 0, "offset_y": 0,
+             "reason": "カードなし・影文字で直接重ねます。"},
+            {"label": "店頭POP案", "position": "bottom-center", "design": "pop-band",
+             "type": "friendly", "band_opacity": 0.82, "offset_x": 0, "offset_y": 0,
+             "reason": "白帯にまとめた読みやすいPOPデザイン。"},
         ]
     x_hint = -5 if title_len > 7 else 0
     return [
-        {"label": "左下カード案", "position": "bottom-left", "design": "photo-full",
-         "type": "elegant", "band_opacity": 0.76, "offset_x": x_hint, "offset_y": 0,
-         "reason": "左下に読みやすいカード。写真を活かします。"},
-        {"label": "中央下カード案", "position": "bottom-center", "design": "photo-full",
+        {"label": "写真を活かす案", "position": "bottom-left", "design": "minimal",
+         "type": "elegant", "band_opacity": None, "offset_x": x_hint, "offset_y": 0,
+         "reason": "文字を小さく控えめに入れます。"},
+        {"label": "最小文字案", "position": "bottom-left", "design": "direct",
+         "type": "elegant", "band_opacity": None, "offset_x": x_hint, "offset_y": 8,
+         "reason": "カードなし・影文字で直接重ねます。"},
+        {"label": "店頭POP案", "position": "bottom-center", "design": "pop-band",
          "type": "friendly", "band_opacity": 0.84, "offset_x": 0, "offset_y": 0,
-         "reason": "中央下に配置。写真は一切加工しません。"},
-        {"label": "写真重視案", "position": "bottom-left", "design": "photo-full",
-         "type": "elegant", "band_opacity": 0.58, "offset_x": x_hint, "offset_y": 8,
-         "reason": "カードを薄くして写真の色を最大限残します。"},
+         "reason": "白帯にまとめた読みやすいPOPデザイン。"},
     ]
 
 

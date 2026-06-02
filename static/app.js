@@ -138,9 +138,13 @@ const editSections = [
 ].filter(Boolean);
 
 const posterDesignDescriptions = {
+  "no-text": "文字なし：写真だけのポスターとして使えます",
+  "minimal": "小さく入れる：文字を小さく控えめに配置します",
+  "direct": "写真上に直接入れる：背景なしで文字を重ねます",
+  "bottom-margin": "下余白に入れる：写真の下の余白に文字を入れます",
+  "pop-band": "POP文字帯：白い帯に文字を入れる店頭POP向けデザイン",
   "photo-full": "写真全面タイプ：写真を大きく見せる店頭向けデザイン",
-  "bottom-margin": "下部余白タイプ：文字を読みやすく入れる告知向けデザイン",
-  simple: "上品シンプルタイプ：贈り物・高級感向けデザイン",
+  "simple": "上品シンプルタイプ：贈り物・高級感向けデザイン",
 };
 
 const posterSizeSettings = {
@@ -982,7 +986,16 @@ function getCopyBox(position, design, canvasWidth, canvasHeight) {
   return { x: margin, y: canvasHeight - boxHeight - margin, width: boxWidth, height: boxHeight, align: "left" };
 }
 
+function isTextlessDesign(design) {
+  return design === "no-text";
+}
+
+function isNoBoxDesign(design) {
+  return design === "minimal" || design === "direct";
+}
+
 function drawPosterOverlay(context, design, canvasWidth, canvasHeight) {
+  if (design === "no-text") return; // オーバーレイなし
   if (design === "bottom-margin") {
     const gradient = context.createLinearGradient(0, canvasHeight * 0.45, 0, canvasHeight);
     gradient.addColorStop(0, "rgba(255,255,255,0)");
@@ -1023,60 +1036,93 @@ async function renderBasePosterCanvas() {
 
   if (isFinishedImageMode()) return canvas;
 
-  drawPosterOverlay(context, posterDesign.value, canvas.width, canvas.height);
-  const box = getCopyBox(posterPosition.value, posterDesign.value, canvas.width, canvas.height);
+  const _design = posterDesign.value;
+  drawPosterOverlay(context, _design, canvas.width, canvas.height);
+
+  // 文字なしモード
+  if (isTextlessDesign(_design)) return canvas;
+
+  const box = getCopyBox(posterPosition.value, _design, canvas.width, canvas.height);
   box.x += parseInt(textOffsetX?.value) || 0;
   box.y += parseInt(textOffsetY?.value) || 0;
-
-  context.save();
-  const _defaultOpacity = box.band ? 0.78 : canvas.width > canvas.height ? 0.75 : posterDesign.value === "bottom-margin" ? 0.88 : 0.76;
-  const _bandOpacity = state.proposalBandOpacity ?? _defaultOpacity;
-  context.fillStyle = `rgba(255,255,255,${_bandOpacity})`;
-  roundRect(context, Math.round(box.x), Math.round(box.y), Math.round(box.width), Math.round(box.height), 6);
-  context.fill();
-
-  if (posterPosition.value !== "bottom-center" && posterPosition.value !== "center" && posterPosition.value !== "bottom-band") {
-    context.fillStyle = posterType.value === "friendly" ? "rgba(216,154,168,0.7)" : posterType.value === "bold" ? "rgba(38,52,43,0.7)" : "rgba(100,160,120,0.5)";
-    context.fillRect(Math.round(box.x), Math.round(box.y), 5, Math.round(box.height));
-  }
 
   const isLandscapeCanvas = canvas.width > canvas.height;
   const paddingX = isLandscapeCanvas ? 20 : 30;
   const textX = Math.round(box.align === "center" ? box.x + box.width / 2 : box.x + paddingX);
   const maxTextWidth = isLandscapeCanvas ? box.width - paddingX * 2 : Math.min(420, box.width - paddingX * 2);
+
+  context.save();
   context.textAlign = box.align;
   context.textBaseline = "top";
 
-  // サブタイトル（細め・控えめ）
-  context.fillStyle = "#6e8a80";
-  context.font = isLandscapeCanvas ? "400 17px 'Yu Gothic', 'Meiryo', sans-serif" : "400 20px 'Yu Gothic', 'Meiryo', sans-serif";
-  context.fillText(snapshot.subtitle, textX, Math.round(box.y + 20), maxTextWidth);
+  if (isNoBoxDesign(_design)) {
+    // minimal / direct：白いカードなし・テキスト影のみ
+    const isMinimal = _design === "minimal";
+    context.shadowColor = "rgba(0,0,0,0.65)";
+    context.shadowBlur = isMinimal ? 4 : 7;
 
-  // メインタイトル（weight 400・#1f342d・整数座標）
-  context.fillStyle = "#1f342d";
-  const titleLayout = layoutCanvasTitle(context, snapshot.title, maxTextWidth, isLandscapeCanvas ? { baseSize: 40, minSize: 28 } : { baseSize: 50, minSize: 34 });
-  setCanvasTitleFont(context, titleLayout.fontSize);
-  const titleLines = titleLayout.lines;
-  const titleLineHeight = Math.round(titleLayout.fontSize * 1.12);
-  titleLines.forEach((line, index) => {
-    context.fillText(line, textX, Math.round(box.y + 52 + index * titleLineHeight), maxTextWidth);
-  });
+    if (!isMinimal) {
+      // direct: サブタイトルも表示
+      context.fillStyle = "rgba(255,255,255,0.88)";
+      context.font = isLandscapeCanvas ? "400 17px 'Yu Gothic','Meiryo',sans-serif" : "400 20px 'Yu Gothic','Meiryo',sans-serif";
+      context.fillText(snapshot.subtitle, textX, Math.round(box.y + 20), maxTextWidth);
+    }
 
-  // 区切り線
-  context.strokeStyle = "rgba(63,111,80,0.16)";
-  context.lineWidth = 1;
-  context.beginPath();
-  const metaLineY = Math.round(isLandscapeCanvas ? box.y + box.height - 32 : box.y + box.height - 38);
-  context.moveTo(Math.round(box.x + paddingX), metaLineY + 0.5);
-  context.lineTo(Math.round(box.x + box.width - paddingX), metaLineY + 0.5);
-  context.stroke();
+    // タイトル
+    const titleSize = isMinimal ? (isLandscapeCanvas ? 20 : 26) : (isLandscapeCanvas ? 34 : 42);
+    context.fillStyle = "rgba(255,255,255,0.95)";
+    context.font = `300 ${titleSize}px 'Yu Gothic','Meiryo',sans-serif`;
+    const titleY = isMinimal
+      ? Math.round(box.y + box.height - titleSize - 22)
+      : Math.round(box.y + 52);
+    context.fillText(snapshot.title, textX, titleY, maxTextWidth);
 
-  // 店舗名・日付（細め・小さめ）
-  context.fillStyle = "#7a9288";
-  context.font = isLandscapeCanvas ? "300 13px 'Yu Gothic', 'Meiryo', sans-serif" : "300 15px 'Yu Gothic', 'Meiryo', sans-serif";
-  context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, Math.round(isLandscapeCanvas ? box.y + box.height - 22 : box.y + box.height - 26), maxTextWidth);
+    // 店舗名・日付
+    const metaSize = isMinimal ? (isLandscapeCanvas ? 10 : 12) : (isLandscapeCanvas ? 13 : 15);
+    context.fillStyle = "rgba(255,255,255,0.80)";
+    context.font = `300 ${metaSize}px 'Yu Gothic','Meiryo',sans-serif`;
+    context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, Math.round(titleY + titleSize + 5), maxTextWidth);
+
+  } else {
+    // pop-band / photo-full / simple / bottom-margin：白いカード
+    const _defaultOpacity = box.band ? 0.78 : isLandscapeCanvas ? 0.75 : _design === "bottom-margin" ? 0.88 : 0.76;
+    const _bandOpacity = state.proposalBandOpacity ?? _defaultOpacity;
+    context.fillStyle = `rgba(255,255,255,${_bandOpacity})`;
+    roundRect(context, Math.round(box.x), Math.round(box.y), Math.round(box.width), Math.round(box.height), 6);
+    context.fill();
+
+    if (posterPosition.value !== "bottom-center" && posterPosition.value !== "center" && posterPosition.value !== "bottom-band") {
+      context.fillStyle = posterType.value === "friendly" ? "rgba(216,154,168,0.7)" : posterType.value === "bold" ? "rgba(38,52,43,0.7)" : "rgba(100,160,120,0.5)";
+      context.fillRect(Math.round(box.x), Math.round(box.y), 5, Math.round(box.height));
+    }
+
+    context.fillStyle = "#6e8a80";
+    context.font = isLandscapeCanvas ? "400 17px 'Yu Gothic','Meiryo',sans-serif" : "400 20px 'Yu Gothic','Meiryo',sans-serif";
+    context.fillText(snapshot.subtitle, textX, Math.round(box.y + 20), maxTextWidth);
+
+    context.fillStyle = "#1f342d";
+    const titleLayout = layoutCanvasTitle(context, snapshot.title, maxTextWidth, isLandscapeCanvas ? { baseSize: 40, minSize: 28 } : { baseSize: 50, minSize: 34 });
+    setCanvasTitleFont(context, titleLayout.fontSize);
+    const titleLines = titleLayout.lines;
+    const titleLineHeight = Math.round(titleLayout.fontSize * 1.12);
+    titleLines.forEach((line, index) => {
+      context.fillText(line, textX, Math.round(box.y + 52 + index * titleLineHeight), maxTextWidth);
+    });
+
+    context.strokeStyle = "rgba(63,111,80,0.16)";
+    context.lineWidth = 1;
+    context.beginPath();
+    const metaLineY = Math.round(isLandscapeCanvas ? box.y + box.height - 32 : box.y + box.height - 38);
+    context.moveTo(Math.round(box.x + paddingX), metaLineY + 0.5);
+    context.lineTo(Math.round(box.x + box.width - paddingX), metaLineY + 0.5);
+    context.stroke();
+
+    context.fillStyle = "#7a9288";
+    context.font = isLandscapeCanvas ? "300 13px 'Yu Gothic','Meiryo',sans-serif" : "300 15px 'Yu Gothic','Meiryo',sans-serif";
+    context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, Math.round(isLandscapeCanvas ? box.y + box.height - 22 : box.y + box.height - 26), maxTextWidth);
+  }
+
   context.restore();
-
   return canvas;
 }
 
@@ -1651,15 +1697,15 @@ function getLocalLayoutProposals(isLandscape) {
   const xHint = titleLen > 7 ? -5 : 0;
   if (isLandscape) {
     return [
-      { label: "左下カード案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.76, offset_x: 0, offset_y: 0, reason: "左下に読みやすいカード。写真を活かします。" },
-      { label: "中央下カード案", position: "bottom-center", design: "photo-full", type: "friendly", band_opacity: 0.84, offset_x: 0, offset_y: 0, reason: "中央下に配置。写真は加工しません。" },
-      { label: "写真重視案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.58, offset_x: 0, offset_y: 0, reason: "カードを薄くして写真の色を最大限残します。" },
+      { label: "写真を活かす案", position: "bottom-right", design: "minimal", type: "elegant", band_opacity: null, offset_x: 0, offset_y: 0, reason: "文字を小さく控えめに入れます。" },
+      { label: "最小文字案", position: "bottom-left", design: "direct", type: "elegant", band_opacity: null, offset_x: 0, offset_y: 0, reason: "カードなし・影文字で直接重ねます。" },
+      { label: "店頭POP案", position: "bottom-center", design: "pop-band", type: "friendly", band_opacity: 0.82, offset_x: 0, offset_y: 0, reason: "白帯にまとめた読みやすいPOPデザイン。" },
     ];
   }
   return [
-    { label: "左下カード案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.76, offset_x: xHint, offset_y: 0, reason: "左下に読みやすいカード。写真を活かします。" },
-    { label: "中央下カード案", position: "bottom-center", design: "photo-full", type: "friendly", band_opacity: 0.84, offset_x: 0, offset_y: 0, reason: "中央下に配置。写真は一切加工しません。" },
-    { label: "写真重視案", position: "bottom-left", design: "photo-full", type: "elegant", band_opacity: 0.58, offset_x: xHint, offset_y: 8, reason: "カードを薄くして写真の色を最大限残します。" },
+    { label: "写真を活かす案", position: "bottom-left", design: "minimal", type: "elegant", band_opacity: null, offset_x: xHint, offset_y: 0, reason: "文字を小さく控えめに入れます。" },
+    { label: "最小文字案", position: "bottom-left", design: "direct", type: "elegant", band_opacity: null, offset_x: xHint, offset_y: 8, reason: "カードなし・影文字で直接重ねます。" },
+    { label: "店頭POP案", position: "bottom-center", design: "pop-band", type: "friendly", band_opacity: 0.84, offset_x: 0, offset_y: 0, reason: "白帯にまとめた読みやすいPOPデザイン。" },
   ];
 }
 
@@ -2217,7 +2263,11 @@ function applyPosterTemplate(template) {
   posterSubtitle.value = template.default_subtitle || "季節のおすすめ";
   posterNote.value = template.default_note || "";
   if (template.poster_type) posterType.value = template.poster_type;
-  if (template.poster_design) posterDesign.value = template.poster_design;
+  if (template.poster_design) {
+    // 旧デザイン名を新モードにマップ
+    const designMap = { "photo-full": "minimal", simple: "minimal" };
+    posterDesign.value = designMap[template.poster_design] ?? template.poster_design;
+  }
   uploadedMaterialMode.value = "background";
   if (textOffsetX) { textOffsetX.value = "0"; if (textOffsetXValue) textOffsetXValue.textContent = "0"; }
   if (textOffsetY) { textOffsetY.value = "0"; if (textOffsetYValue) textOffsetYValue.textContent = "0"; }
