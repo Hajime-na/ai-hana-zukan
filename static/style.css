@@ -593,15 +593,19 @@ dd {
 .poster-preview-column {
   display: grid;
   gap: 12px;
-  max-width: 460px;
+  max-width: 380px;
   min-width: 0;
   width: 100%;
   z-index: 2;
 }
 
+.poster-preview-column:has(.is-landscape-native) {
+  max-width: 460px;
+}
+
 .poster-order-card .poster-preview-frame {
   max-width: none;
-  min-height: clamp(280px, 36vw, 460px);
+  min-height: 0;
   width: 100%;
 }
 
@@ -1411,7 +1415,7 @@ body.modal-open {
   }
 
   .poster-order-card .poster-preview-frame {
-    min-height: 420px;
+    min-height: 260px;
   }
 }
 
@@ -1442,7 +1446,7 @@ body.modal-open {
   }
 
   .poster-order-card .poster-preview-frame {
-    min-height: 360px;
+    min-height: 220px;
   }
 
   .poster-order-card .poster-preview {
@@ -1452,7 +1456,7 @@ body.modal-open {
 
   .confirm-poster-preview-frame {
     height: auto;
-    min-height: 420px;
+    min-height: 320px;
   }
 
   .confirmation-actions {
