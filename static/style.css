@@ -1195,6 +1195,49 @@ button:disabled {
   display: none;
 }
 
+/* 実解像度拡大確認エリア */
+.zoom-confirm-area {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-top: 20px;
+  padding: 16px;
+}
+
+.zoom-confirm-area[hidden] {
+  display: none;
+}
+
+.zoom-confirm-header {
+  margin-bottom: 12px;
+}
+
+.zoom-confirm-header h3 {
+  font-size: 14px;
+  margin: 2px 0 4px;
+}
+
+.zoom-canvas-wrap {
+  background: #f0f4f0;
+  border-radius: 6px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.zoom-confirm-canvas {
+  border-radius: 4px;
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.zoom-confirm-note {
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 6px;
+  text-align: right;
+}
+
 body.confirm-mode .catalog-panel,
 body.confirm-mode .detail-panel,
 body.confirm-mode .ai-panel,

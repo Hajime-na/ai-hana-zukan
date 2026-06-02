@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v26hideeditorsave" />
+    <link rel="stylesheet" href="/static/style.css?v=v27zoomcheck" />
   </head>
   <body>
     <header class="topbar">
@@ -363,6 +363,19 @@
             <p id="orderStatus" class="order-status" hidden></p>
           </div>
         </div>
+
+        <!-- 実解像度拡大確認 -->
+        <div id="zoomConfirmArea" class="zoom-confirm-area" hidden>
+          <div class="zoom-confirm-header">
+            <p class="eyebrow">Zoom Check</p>
+            <h3>実解像度拡大確認</h3>
+            <p class="field-help">仕上がりの一部を拡大表示しています。文字の読みやすさや画像の細部を確認できます。</p>
+          </div>
+          <div class="zoom-canvas-wrap">
+            <canvas id="zoomConfirmCanvas" class="zoom-confirm-canvas"></canvas>
+          </div>
+          <p id="zoomConfirmNote" class="zoom-confirm-note"></p>
+        </div>
       </section>
 
       <!-- ⑤ 花図鑑（補助） -->
@@ -492,6 +505,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v26hideeditorsave"></script>
+    <script src="/static/app.js?v=v27zoomcheck"></script>
   </body>
 </html>
