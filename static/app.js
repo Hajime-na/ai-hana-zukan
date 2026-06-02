@@ -2085,7 +2085,7 @@ async function init() {
   applyFlowerToPoster();
   requestSuggestions();
   try {
-    const tplResp = await fetch("/static/poster_templates.json");
+    const tplResp = await fetch("/static/poster_templates.json?v=v11posterimage");
     const tplData = await tplResp.json();
     state.posterTemplates = tplData.templates || [];
     state.posterCategoriesOrder = tplData.categories_order || [];
