@@ -903,8 +903,8 @@ function roundRect(context, x, y, width, height, radius) {
 
 function getCopyBox(position, design, canvasWidth, canvasHeight) {
   const isLandscapeCanvas = canvasWidth > canvasHeight;
-  const boxWidth = isLandscapeCanvas ? canvasWidth * 0.38 : design === "simple" ? 420 : 520;
-  const boxHeight = isLandscapeCanvas ? 150 : design === "bottom-margin" ? 190 : 200;
+  const boxWidth = isLandscapeCanvas ? canvasWidth * 0.38 : design === "simple" ? 400 : 480;
+  const boxHeight = isLandscapeCanvas ? 150 : design === "bottom-margin" ? 175 : 175;
   const margin = 56;
   if (isLandscapeCanvas && position === "bottom-band") {
     return {
@@ -994,7 +994,7 @@ async function renderBasePosterCanvas() {
   const box = getCopyBox(posterPosition.value, posterDesign.value, canvas.width, canvas.height);
 
   context.save();
-  context.fillStyle = box.band ? "rgba(255,255,255,0.78)" : canvas.width > canvas.height ? "rgba(255,255,255,0.75)" : posterDesign.value === "bottom-margin" ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.80)";
+  context.fillStyle = box.band ? "rgba(255,255,255,0.78)" : canvas.width > canvas.height ? "rgba(255,255,255,0.75)" : posterDesign.value === "bottom-margin" ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.76)";
   roundRect(context, box.x, box.y, box.width, box.height, 8);
   context.fill();
 

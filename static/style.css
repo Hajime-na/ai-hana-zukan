@@ -673,13 +673,13 @@ dd {
 
 .poster-copy {
   align-self: end;
-  background: rgba(255, 255, 255, 0.80);
+  background: rgba(255, 255, 255, 0.76);
   border-left: 3px solid var(--green);
   justify-self: start;
-  max-width: min(420px, calc(100% - 48px));
+  max-width: min(380px, calc(100% - 48px));
   min-width: 0;
   overflow: visible;
-  padding: 12px 16px;
+  padding: 10px 14px;
   position: relative;
   z-index: 2;
 }
@@ -725,7 +725,7 @@ dd {
 }
 
 .design-photo-full .poster-copy {
-  background: rgba(255, 255, 255, 0.80);
+  background: rgba(255, 255, 255, 0.76);
 }
 
 .design-bottom-margin .poster-copy {
@@ -772,7 +772,7 @@ dd {
 
 .poster-copy strong {
   display: block;
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 500;
   letter-spacing: 0.04em;
   line-height: 1.15;
