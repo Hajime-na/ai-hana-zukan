@@ -1,6 +1,10 @@
-﻿.env
+.env
 __pycache__/
 *.pyc
 *.pyo
 .DS_Store
 orders/
+*.tmp
+*.bak
+node_modules/
+package-lock.json
