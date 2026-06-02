@@ -1334,6 +1334,10 @@ async function renderZoomConfirmArea() {
 
   zoomCanvas.width = dispW;
   zoomCanvas.height = dispH;
+  // CSS サイズを明示して browser scaling を防ぐ
+  zoomCanvas.style.width = dispW + "px";
+  zoomCanvas.style.height = dispH + "px";
+  zoomCanvas.style.maxWidth = "100%";
 
   const ctx = zoomCanvas.getContext("2d");
   ctx.drawImage(full, cropX, cropY, cropW, cropH, 0, 0, dispW, dispH);

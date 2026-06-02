@@ -1199,8 +1199,7 @@ button:disabled {
 .zoom-confirm-area {
   border: 1px solid var(--line);
   border-radius: 8px;
-  margin-top: 20px;
-  padding: 16px;
+  padding: 12px;
 }
 
 .zoom-confirm-area[hidden] {
@@ -1257,8 +1256,10 @@ body.confirm-mode .topbar,
 }
 
 .confirmation-preview-area {
+  align-content: start;
+  display: grid;
+  gap: 12px;
   min-width: 0;
-  overflow: hidden;
   width: 100%;
 }
 

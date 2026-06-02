@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v27zoomcheck" />
+    <link rel="stylesheet" href="/static/style.css?v=v28zoomlayout" />
   </head>
   <body>
     <header class="topbar">
@@ -279,6 +279,8 @@
         </div>
 
         <div id="finishReview" class="finish-review">
+
+          <!-- 左カラム：プレビュー / 拡大確認 / 素材状態 / 保存ボタン -->
           <div class="confirmation-preview-area">
             <div id="confirmPosterPreviewFrame" class="poster-preview-frame confirm-poster-preview-frame">
               <div id="confirmPosterPreview" class="poster-preview confirm-poster-preview">
@@ -290,68 +292,24 @@
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="confirmation-detail-area">
-            <dl class="confirm-summary" aria-label="入力内容一覧">
-              <div>
-                <dt>メインタイトル</dt>
-                <dd id="confirmTitle"></dd>
+            <!-- 実解像度拡大確認（プレビュー直下） -->
+            <div id="zoomConfirmArea" class="zoom-confirm-area" hidden>
+              <div class="zoom-confirm-header">
+                <p class="eyebrow">Zoom Check</p>
+                <h3>実解像度拡大確認</h3>
+                <p class="field-help">保存時に近い品質で、文字まわりを部分拡大しています。</p>
               </div>
-              <div>
-                <dt>サブタイトル</dt>
-                <dd id="confirmSubtitle"></dd>
+              <div class="zoom-canvas-wrap">
+                <canvas id="zoomConfirmCanvas" class="zoom-confirm-canvas"></canvas>
               </div>
-              <div>
-                <dt>店舗名</dt>
-                <dd id="confirmShop"></dd>
-              </div>
-              <div>
-                <dt>日付・期間</dt>
-                <dd id="confirmDate"></dd>
-              </div>
-              <div>
-                <dt>補足文</dt>
-                <dd id="confirmNote"></dd>
-              </div>
-              <div>
-                <dt>文字タイプ</dt>
-                <dd id="confirmType"></dd>
-              </div>
-              <div>
-                <dt>文字位置</dt>
-                <dd id="confirmPosition"></dd>
-              </div>
-              <div>
-                <dt>ポスターサイズ</dt>
-                <dd id="confirmPosterSize"></dd>
-              </div>
-              <div>
-                <dt>画像表示</dt>
-                <dd id="confirmImageFit"></dd>
-              </div>
-              <div>
-                <dt>素材の使い方</dt>
-                <dd id="confirmMaterialMode"></dd>
-              </div>
-              <div>
-                <dt>ポスター回転</dt>
-                <dd id="confirmPosterRotation"></dd>
-              </div>
-            </dl>
-
-            <div id="finishCheckItems" class="finish-checklist">
-              <label><input type="checkbox" /> 誤字脱字を確認しました</label>
-              <label><input type="checkbox" /> 店舗名・日付を確認しました</label>
-              <label><input type="checkbox" /> 文字位置はおまかせ微調整で了承します</label>
-              <label><input type="checkbox" /> 文字位置・サイズは最終調整される場合があります</label>
-              <label><input type="checkbox" /> 印刷時に色味が多少異なる場合があります</label>
+              <p id="zoomConfirmNote" class="zoom-confirm-note"></p>
             </div>
 
+            <!-- 素材状態 & 保存ボタン -->
             <div id="confirmMaterialWarning" class="material-warning" hidden>
               この写真は図鑑参考用です。ポスター発注・PNG出力には使用できません。正式素材をアップロードしてください。
             </div>
-
             <div class="confirmation-actions">
               <button id="backToEditButton" class="secondary-button" type="button">編集に戻る</button>
               <button id="saveConfirmPngButton" class="secondary-button" type="button">PNGで保存</button>
@@ -362,19 +320,30 @@
             <p id="confirmPdfStatus" class="export-status" aria-live="polite"></p>
             <p id="orderStatus" class="order-status" hidden></p>
           </div>
-        </div>
 
-        <!-- 実解像度拡大確認 -->
-        <div id="zoomConfirmArea" class="zoom-confirm-area" hidden>
-          <div class="zoom-confirm-header">
-            <p class="eyebrow">Zoom Check</p>
-            <h3>実解像度拡大確認</h3>
-            <p class="field-help">仕上がりの一部を拡大表示しています。文字の読みやすさや画像の細部を確認できます。</p>
+          <!-- 右カラム：入力内容サマリー / チェックリスト -->
+          <div class="confirmation-detail-area">
+            <dl class="confirm-summary" aria-label="入力内容一覧">
+              <div><dt>メインタイトル</dt><dd id="confirmTitle"></dd></div>
+              <div><dt>サブタイトル</dt><dd id="confirmSubtitle"></dd></div>
+              <div><dt>店舗名</dt><dd id="confirmShop"></dd></div>
+              <div><dt>日付・期間</dt><dd id="confirmDate"></dd></div>
+              <div><dt>補足文</dt><dd id="confirmNote"></dd></div>
+              <div><dt>文字タイプ</dt><dd id="confirmType"></dd></div>
+              <div><dt>文字位置</dt><dd id="confirmPosition"></dd></div>
+              <div><dt>ポスターサイズ</dt><dd id="confirmPosterSize"></dd></div>
+              <div><dt>画像表示</dt><dd id="confirmImageFit"></dd></div>
+              <div><dt>素材の使い方</dt><dd id="confirmMaterialMode"></dd></div>
+              <div><dt>ポスター回転</dt><dd id="confirmPosterRotation"></dd></div>
+            </dl>
+            <div id="finishCheckItems" class="finish-checklist">
+              <label><input type="checkbox" /> 誤字脱字を確認しました</label>
+              <label><input type="checkbox" /> 店舗名・日付を確認しました</label>
+              <label><input type="checkbox" /> 文字位置はおまかせ微調整で了承します</label>
+              <label><input type="checkbox" /> 文字位置・サイズは最終調整される場合があります</label>
+              <label><input type="checkbox" /> 印刷時に色味が多少異なる場合があります</label>
+            </div>
           </div>
-          <div class="zoom-canvas-wrap">
-            <canvas id="zoomConfirmCanvas" class="zoom-confirm-canvas"></canvas>
-          </div>
-          <p id="zoomConfirmNote" class="zoom-confirm-note"></p>
         </div>
       </section>
 
@@ -505,6 +474,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v27zoomcheck"></script>
+    <script src="/static/app.js?v=v28zoomlayout"></script>
   </body>
 </html>
