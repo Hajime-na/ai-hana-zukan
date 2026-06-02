@@ -3,106 +3,46 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AI花図鑑｜花屋さんの販促・ポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v09pdf" />
+    <title>Hana Poster AI | 花屋さんのポスター作成</title>
+    <link rel="stylesheet" href="/static/style.css?v=v10shelf" />
   </head>
   <body>
     <header class="topbar">
       <div>
-        <p class="eyebrow">AI Flower Guide</p>
-        <h1>AI花図鑑｜花屋さんの販促・ポスター作成</h1>
+        <p class="eyebrow">Hana Poster AI</p>
+        <h1>花屋さんのポスター文字入れ</h1>
       </div>
-      <div class="status">試作版</div>
+      <div class="status">v1.0-rc</div>
     </header>
 
     <main class="page">
-      <section class="panel catalog-panel" aria-labelledby="catalog-title">
+
+      <!-- ① ヒーロー -->
+      <section id="heroSection" class="panel hero-panel">
+        <div class="hero-content">
+          <p class="eyebrow">Flower Poster Creator</p>
+          <h2 class="hero-title">花屋さんの販促を、<br>もっと美しく。</h2>
+          <p class="hero-lead">季節の花ポスターに、お店の名前・フェア名・期間を入れて、<br>そのまま告知・印刷に使えます。</p>
+          <div class="hero-actions">
+            <button class="primary-button" id="heroGalleryButton" type="button">ポスターを選ぶ</button>
+            <button class="secondary-button" id="heroStartButton" type="button">文字入れを試す</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ② ポスターギャラリー -->
+      <section id="gallerySection" class="panel gallery-panel" aria-labelledby="gallery-title">
         <div class="section-head">
           <div>
-            <p class="eyebrow">Flower Search</p>
-            <h2 id="catalog-title">花を検索・選択</h2>
+            <p class="eyebrow">Poster Gallery</p>
+            <h2 id="gallery-title">ポスターテンプレートを選ぶ</h2>
+            <p class="section-description">カテゴリから好みのポスターをクリックするだけ。テキストが自動入力されます。正式素材をアップロードすればPNG・PDF保存もできます。</p>
           </div>
-          <input id="searchInput" type="search" placeholder="花名・季節・用途で検索" />
         </div>
-        <div id="flowerGrid" class="flower-grid"></div>
+        <div id="galleryGrid" class="gallery-grid"></div>
       </section>
 
-      <section class="panel detail-panel" aria-labelledby="detail-title">
-        <div class="detail-layout">
-          <div class="photo-column">
-            <div id="flowerHero" class="flower-hero" aria-label="花写真"></div>
-            <div class="detail-photo-toolbar">
-              <button class="icon-button" id="detailPrevPhoto" aria-label="前の写真">‹</button>
-              <span id="detailPhotoCounter" class="photo-counter">1 / 1</span>
-              <button class="icon-button" id="detailNextPhoto" aria-label="次の写真">›</button>
-            </div>
-            <div id="detailThumbnails" class="thumbnail-row"></div>
-            <p id="photoCredit" class="photo-credit"></p>
-          </div>
-          <div class="detail-content">
-            <p class="eyebrow">Flower Detail</p>
-            <h2 id="detail-title">花の特徴</h2>
-            <p id="flowerFeature" class="lead"></p>
-            <dl class="info-grid">
-              <div>
-                <dt>育て方</dt>
-                <dd id="flowerCare"></dd>
-              </div>
-              <div>
-                <dt>花言葉</dt>
-                <dd id="flowerLanguage"></dd>
-              </div>
-              <div>
-                <dt>季節</dt>
-                <dd id="flowerSeason"></dd>
-              </div>
-            </dl>
-            <div id="flowerTags" class="tag-row"></div>
-            <div class="detail-actions">
-              <button id="goPromotion" class="primary-button compact-button">この花で販促文を作る</button>
-              <button id="goPoster" class="secondary-button compact-button">この花でポスターを作る</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="promotionSection" class="panel ai-panel" aria-labelledby="ai-title">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Promotion Draft</p>
-            <h2 id="ai-title">AI販促文を作る</h2>
-          </div>
-        </div>
-
-        <div class="form-grid">
-          <label>
-            花材
-            <input id="flowerInput" value="バラ" />
-          </label>
-          <label>
-            用途
-            <select id="purposeInput">
-              <option>店頭POP</option>
-              <option>Instagram</option>
-              <option>ギフト</option>
-              <option>ポスター</option>
-            </select>
-          </label>
-          <label>
-            雰囲気
-            <select id="toneInput">
-              <option>やさしい</option>
-              <option>高級感</option>
-              <option>かわいい</option>
-              <option>和風</option>
-            </select>
-          </label>
-        </div>
-
-        <button id="suggestButton" class="primary-button">AI案を作る</button>
-        <div id="suggestions" class="suggestions"></div>
-      </section>
-
+      <!-- ③ ポスター文字入れ（メイン機能） -->
       <section id="posterSection" class="panel poster-panel" aria-labelledby="poster-title">
         <div class="section-head">
           <div>
@@ -317,6 +257,7 @@
         </div>
       </section>
 
+      <!-- ④ 仕上がり確認 -->
       <section id="confirmationSection" class="panel confirmation-panel" aria-labelledby="confirm-title" hidden>
         <div class="section-head">
           <div>
@@ -413,6 +354,98 @@
         </div>
       </section>
 
+      <!-- ⑤ 花図鑑（補助） -->
+      <section class="panel catalog-panel" aria-labelledby="catalog-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Flower Guide</p>
+            <h2 id="catalog-title">花の情報を見る</h2>
+            <p class="section-description">花名・季節・用途で検索して、花言葉・育て方を確認できます。</p>
+          </div>
+          <input id="searchInput" type="search" placeholder="花名・季節・用途で検索" />
+        </div>
+        <div id="flowerGrid" class="flower-grid"></div>
+      </section>
+
+      <!-- ⑥ 花の詳細 -->
+      <section class="panel detail-panel" aria-labelledby="detail-title">
+        <div class="detail-layout">
+          <div class="photo-column">
+            <div id="flowerHero" class="flower-hero" aria-label="花写真"></div>
+            <div class="detail-photo-toolbar">
+              <button class="icon-button" id="detailPrevPhoto" aria-label="前の写真">‹</button>
+              <span id="detailPhotoCounter" class="photo-counter">1 / 1</span>
+              <button class="icon-button" id="detailNextPhoto" aria-label="次の写真">›</button>
+            </div>
+            <div id="detailThumbnails" class="thumbnail-row"></div>
+            <p id="photoCredit" class="photo-credit"></p>
+          </div>
+          <div class="detail-content">
+            <p class="eyebrow">Flower Detail</p>
+            <h2 id="detail-title">花の特徴</h2>
+            <p id="flowerFeature" class="lead"></p>
+            <dl class="info-grid">
+              <div>
+                <dt>育て方</dt>
+                <dd id="flowerCare"></dd>
+              </div>
+              <div>
+                <dt>花言葉</dt>
+                <dd id="flowerLanguage"></dd>
+              </div>
+              <div>
+                <dt>季節</dt>
+                <dd id="flowerSeason"></dd>
+              </div>
+            </dl>
+            <div id="flowerTags" class="tag-row"></div>
+            <div class="detail-actions">
+              <button id="goPromotion" class="primary-button compact-button">この花で販促文を作る</button>
+              <button id="goPoster" class="secondary-button compact-button">この花でポスターを作る</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ⑦ AI販促文（補助） -->
+      <section id="promotionSection" class="panel ai-panel" aria-labelledby="ai-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">AI Promotion Draft</p>
+            <h2 id="ai-title">AI販促文を作る</h2>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            花材
+            <input id="flowerInput" value="バラ" />
+          </label>
+          <label>
+            用途
+            <select id="purposeInput">
+              <option>店頭POP</option>
+              <option>Instagram</option>
+              <option>ギフト</option>
+              <option>ポスター</option>
+            </select>
+          </label>
+          <label>
+            雰囲気
+            <select id="toneInput">
+              <option>やさしい</option>
+              <option>高級感</option>
+              <option>かわいい</option>
+              <option>和風</option>
+            </select>
+          </label>
+        </div>
+
+        <button id="suggestButton" class="primary-button">AI案を作る</button>
+        <div id="suggestions" class="suggestions"></div>
+      </section>
+
+      <!-- ⑧ 仮注文履歴 -->
       <section id="orderHistorySection" class="panel history-panel" aria-labelledby="history-title">
         <div class="section-head">
           <div>
@@ -425,6 +458,7 @@
         <div id="orderHistoryList" class="order-history-list"></div>
       </section>
 
+      <!-- ⑨ サーバー保存済み注文 -->
       <section id="serverOrdersSection" class="panel history-panel" aria-labelledby="server-orders-title">
         <div class="section-head">
           <div>
@@ -447,6 +481,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v09pdf"></script>
+    <script src="/static/app.js?v=v10shelf"></script>
   </body>
 </html>

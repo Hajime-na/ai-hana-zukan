@@ -18,9 +18,15 @@ const state = {
   revisionDraft: "",
   revisionProposal: null,
   uploadedMaterial: null,
+  posterTemplates: [],
+  posterCategoriesOrder: [],
+  templateMaterial: null,
+  selectedTemplateId: null,
+  galleryCategoryLimits: {},
 };
 
 const ORDER_HISTORY_KEY = "ai_hana_zukan_order_history";
+const GALLERY_PAGE_SIZE = 6;
 
 const flowerGrid = document.querySelector("#flowerGrid");
 const searchInput = document.querySelector("#searchInput");
@@ -112,6 +118,8 @@ const placeOrderButton = document.querySelector("#placeOrderButton");
 const orderStatus = document.querySelector("#orderStatus");
 const finishCheckItems = document.querySelector("#finishCheckItems");
 const editSections = [
+  document.querySelector("#heroSection"),
+  document.querySelector("#gallerySection"),
   document.querySelector(".catalog-panel"),
   document.querySelector(".detail-panel"),
   document.querySelector(".ai-panel"),
@@ -386,9 +394,15 @@ async function requestSuggestions() {
   suggestButton.textContent = "AI案を作る";
 }
 
+function getPosterImageCss(photo) {
+  if (photo?.url) return `url("${photo.url}")`;
+  if (photo?.gradient) return photo.gradient;
+  return state.selectedFlower.fallback;
+}
+
 function updatePoster() {
   const photo = getCurrentPosterPhoto();
-  const image = photo?.url ? `url("${photo.url}")` : state.selectedFlower.fallback;
+  const image = getPosterImageCss(photo);
   const finished = isFinishedImageMode();
   const nativeLandscape = getPosterBaseSize().width > getPosterBaseSize().height && !getPosterRotationSetting().rotated;
   syncPosterPositionOptions(nativeLandscape);
@@ -527,6 +541,7 @@ function syncPosterSurface(frame, surface, rotated = getPosterRotationSetting().
 
 function getCurrentPosterPhoto() {
   if (state.uploadedMaterial) return state.uploadedMaterial;
+  if (state.templateMaterial) return state.templateMaterial;
   return getPhoto(state.selectedFlower, state.detailPhotoIndex) || getPhoto(state.selectedFlower, 0);
 }
 
@@ -1242,7 +1257,7 @@ async function saveServerOrderPdf(orderId, statusElement) {
 function renderFinishReview() {
   const snapshot = getPosterSnapshot();
   const photo = getCurrentPosterPhoto();
-  const image = photo?.url ? `url("${photo.url}")` : state.selectedFlower.fallback;
+  const image = getPosterImageCss(photo);
   const finished = isFinishedImageMode();
   const nativeLandscape = getPosterBaseSize().width > getPosterBaseSize().height && !getPosterRotationSetting().rotated;
 
@@ -1944,6 +1959,116 @@ document.querySelector("#orderDetailBackdrop").addEventListener("click", closeOr
 
 document.querySelector("#refreshServerOrdersButton").addEventListener("click", renderServerOrders);
 
+function renderGalleryShelf() {
+  const grid = document.querySelector("#galleryGrid");
+  if (!grid) return;
+  const templates = state.posterTemplates;
+  const categoriesOrder = state.posterCategoriesOrder;
+  if (!templates.length) {
+    grid.innerHTML = '<p class="history-empty">テンプレートを読み込んでいます...</p>';
+    return;
+  }
+  const shelves = categoriesOrder
+    .map((category) => {
+      const catTemplates = templates.filter((t) => t.categories.includes(category));
+      if (!catTemplates.length) return "";
+      const limit = state.galleryCategoryLimits[category] || GALLERY_PAGE_SIZE;
+      const visible = catTemplates.slice(0, limit);
+      const hasMore = catTemplates.length > limit;
+      const thumbsHtml = visible
+        .map((t) => {
+          const isSelected = t.id === state.selectedTemplateId;
+          return `
+          <button class="gallery-thumb${isSelected ? " is-selected" : ""}" data-template-id="${t.id}" type="button" title="${t.title}">
+            <div class="gallery-thumb-preview" style="--gallery-gradient: ${t.gradient}">
+              ${isSelected ? '<span class="gallery-selected-badge">選択中</span>' : ""}
+              <span class="gallery-thumb-title">${t.default_main_title || t.title}</span>
+            </div>
+            <span class="gallery-thumb-label">${t.short_label}</span>
+          </button>`;
+        })
+        .join("");
+      const moreHtml = hasMore
+        ? `<button class="gallery-more-btn" data-category="${category}" type="button">もっと見る（あと${catTemplates.length - limit}件）</button>`
+        : "";
+      return `
+        <div class="gallery-shelf" data-category="${category}">
+          <span class="gallery-shelf-label">${category}</span>
+          <div class="gallery-shelf-track">${thumbsHtml}${moreHtml}</div>
+        </div>`;
+    })
+    .join("");
+  grid.innerHTML = shelves || '<p class="history-empty">テンプレートがありません</p>';
+}
+
+function applyPosterTemplate(template) {
+  state.templateMaterial = {
+    url: null,
+    gradient: template.gradient,
+    poster_allowed: template.poster_allowed || false,
+    source: "テンプレート",
+    license: "テンプレートプレースホルダー",
+    usage: "template",
+    license_note: template.poster_allowed
+      ? "テンプレート素材として使用可能"
+      : "この背景は仮表示です。正式素材をアップロードすればPNG/PDF保存ができます。",
+  };
+  state.selectedTemplateId = template.id;
+  if (template.flower_match) {
+    const matchFlower = state.flowers.find((f) => f.name === template.flower_match);
+    if (matchFlower) {
+      state.selectedFlower = matchFlower;
+      state.detailPhotoIndex = 0;
+      renderFlowers();
+      renderFlowerDetail();
+    }
+  }
+  posterMainTitle.value = template.default_main_title || template.title;
+  posterSubtitle.value = template.default_subtitle || "季節のおすすめ";
+  posterNote.value = template.default_note || "";
+  if (template.poster_type) posterType.value = template.poster_type;
+  if (template.poster_design) posterDesign.value = template.poster_design;
+  uploadedMaterialMode.value = "background";
+  if (template.poster_position) {
+    const opts = Array.from(posterPosition.options);
+    if (opts.some((o) => o.value === template.poster_position)) posterPosition.value = template.poster_position;
+  }
+  updatePoster();
+  document.querySelectorAll(".gallery-thumb").forEach((el) => {
+    el.classList.toggle("is-selected", el.dataset.templateId === template.id);
+    const badge = el.querySelector(".gallery-selected-badge");
+    const hasBadge = el.dataset.templateId === template.id;
+    if (hasBadge && !badge) {
+      const preview = el.querySelector(".gallery-thumb-preview");
+      const b = document.createElement("span");
+      b.className = "gallery-selected-badge";
+      b.textContent = "選択中";
+      preview.prepend(b);
+    } else if (!hasBadge && badge) {
+      badge.remove();
+    }
+  });
+  scrollToSection("#posterSection");
+}
+
+document.querySelector("#galleryGrid").addEventListener("click", (event) => {
+  const thumb = event.target.closest(".gallery-thumb");
+  if (thumb?.dataset.templateId) {
+    const template = state.posterTemplates.find((t) => t.id === thumb.dataset.templateId);
+    if (template) applyPosterTemplate(template);
+    return;
+  }
+  const moreBtn = event.target.closest(".gallery-more-btn");
+  if (moreBtn?.dataset.category) {
+    const cat = moreBtn.dataset.category;
+    state.galleryCategoryLimits[cat] = (state.galleryCategoryLimits[cat] || GALLERY_PAGE_SIZE) + GALLERY_PAGE_SIZE;
+    renderGalleryShelf();
+  }
+});
+
+document.querySelector("#heroGalleryButton").addEventListener("click", () => scrollToSection("#gallerySection"));
+document.querySelector("#heroStartButton").addEventListener("click", () => scrollToSection("#posterSection"));
+
 async function init() {
   try {
     const response = await fetch("/static/flowers.json?v=v03landscapetype2");
@@ -1958,6 +2083,16 @@ async function init() {
   renderFlowerDetail();
   applyFlowerToPoster();
   requestSuggestions();
+  try {
+    const tplResp = await fetch("/static/poster_templates.json");
+    const tplData = await tplResp.json();
+    state.posterTemplates = tplData.templates || [];
+    state.posterCategoriesOrder = tplData.categories_order || [];
+  } catch {
+    state.posterTemplates = [];
+    state.posterCategoriesOrder = [];
+  }
+  renderGalleryShelf();
   renderOrderHistory();
   renderServerOrders();
   if (isConfirmModeFromUrl()) {

@@ -1077,13 +1077,18 @@ body.confirm-mode .topbar,
 }
 
 .confirmation-actions {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  grid-template-columns: 1fr 1fr 1.4fr;
 }
 
-.confirmation-actions .secondary-button,
-.confirmation-actions .finish-button {
+.confirmation-actions .secondary-button {
+  flex: 1 1 130px;
+  margin: 0;
+}
+
+.confirmation-actions .primary-button {
+  flex: 1 0 100%;
   margin: 0;
 }
 
@@ -1478,5 +1483,207 @@ body.modal-open {
 @media (max-width: 560px) {
   .flower-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ── Hero section ────────────────────────────────────────────── */
+.hero-panel {
+  background: linear-gradient(140deg, #eef8ee 0%, #d4ecda 50%, #fffaf0 100%);
+  border-color: #c8e0ca;
+  padding: 52px 28px;
+  text-align: center;
+}
+
+.hero-content {
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.hero-title {
+  color: var(--ink);
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.28;
+  margin: 0.5rem 0 1rem;
+}
+
+.hero-lead {
+  color: #4a6450;
+  font-size: 1rem;
+  line-height: 1.8;
+  margin: 0 0 2rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.hero-actions .primary-button,
+.hero-actions .secondary-button {
+  font-size: 15px;
+  margin: 0;
+  min-height: 50px;
+  min-width: 160px;
+  padding: 12px 24px;
+}
+
+/* ── Gallery section (shelf layout) ─────────────────────────── */
+.gallery-panel {
+  background: var(--soft);
+  border-color: #d4e7d5;
+}
+
+.gallery-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 14px;
+}
+
+/* Category shelf row */
+.gallery-shelf {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.gallery-shelf-label {
+  background: var(--green-dark);
+  border-radius: 6px;
+  color: #fff;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 48px;
+  padding: 6px 10px;
+  text-align: center;
+  writing-mode: horizontal-tb;
+}
+
+.gallery-shelf-track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Thumbnail button */
+.gallery-thumb {
+  background: #fff;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 0;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  width: 100px;
+}
+
+.gallery-thumb:hover {
+  border-color: var(--green);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.gallery-thumb.is-selected {
+  border-color: var(--green-dark);
+  box-shadow: 0 0 0 3px #e6f1e8;
+}
+
+.gallery-thumb-preview {
+  aspect-ratio: 3 / 4;
+  background: var(--gallery-gradient, linear-gradient(135deg, #eef6ee, #d4e7d5));
+  position: relative;
+  width: 100%;
+}
+
+.gallery-thumb-preview::after {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 55%);
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.gallery-thumb-title {
+  bottom: 5px;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  left: 5px;
+  line-height: 1.3;
+  position: absolute;
+  right: 5px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.gallery-selected-badge {
+  background: rgba(63, 111, 80, 0.9);
+  border-radius: 3px;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 700;
+  left: 4px;
+  padding: 1px 4px;
+  position: absolute;
+  top: 4px;
+  z-index: 2;
+}
+
+.gallery-thumb-label {
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 700;
+  overflow: hidden;
+  padding: 4px 5px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* "もっと見る" button */
+.gallery-more-btn {
+  align-self: center;
+  background: #fff;
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  color: var(--green-dark);
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 11px;
+  min-height: 34px;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+
+.gallery-more-btn:hover {
+  background: var(--soft);
+}
+
+@media (max-width: 560px) {
+  .gallery-shelf {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .gallery-shelf-label {
+    writing-mode: horizontal-tb;
+  }
+
+  .gallery-shelf-track {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .gallery-thumb {
+    width: 100%;
   }
 }
