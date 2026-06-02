@@ -391,9 +391,19 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 │   ├── style.css
 │   ├── app.js
 │   ├── flowers.json
-│   └── poster_templates.json  ← ポスターテンプレートデータ
+│   ├── poster_templates.json  ← ポスターテンプレートデータ
+│   └── posters/               ← 制作ポスター画像の置き場所
 └── README.md
 ```
+
+---
+
+## ポスター画像の管理
+
+- 制作ポスター画像は `static/posters/` に配置する
+- `poster_templates.json` の `image` には `/static/posters/xxx.png` を指定する
+- 正式販売用ポスターは `poster_allowed: true`
+- デモ・検討中ポスターは `poster_allowed: false`
 
 ---
 
