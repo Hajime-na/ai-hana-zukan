@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v25confirmprotect" />
+    <link rel="stylesheet" href="/static/style.css?v=v26hideeditorsave" />
   </head>
   <body>
     <header class="topbar">
@@ -71,7 +71,8 @@
             <div id="materialWarning" class="material-warning" hidden>
               この写真は図鑑参考用です。ポスター発注・PNG出力には使用できません。正式素材をアップロードしてください。
             </div>
-            <div class="export-actions">
+            <!-- 編集画面の保存ボタンは非表示 / 保存は仕上がり確認画面で行う -->
+            <div class="export-actions" style="display:none" aria-hidden="true">
               <button id="savePngButton" class="secondary-button" type="button">PNGで保存</button>
               <button id="savePdfButton" class="secondary-button" type="button">PDFで保存</button>
               <p id="pngStatus" class="export-status" aria-live="polite"></p>
@@ -491,6 +492,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v25confirmprotect"></script>
+    <script src="/static/app.js?v=v26hideeditorsave"></script>
   </body>
 </html>
