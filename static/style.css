@@ -807,10 +807,57 @@ dd {
   border-radius: 8px;
   box-shadow: none;
   display: grid;
-  gap: 14px;
+  gap: 8px;
   min-width: 0;
-  padding: 18px;
+  padding: 12px;
   width: 100%;
+}
+
+/* Compact form controls inside poster-form */
+.poster-form input,
+.poster-form select,
+.poster-form textarea {
+  font-size: 12px;
+  min-height: 28px;
+  padding: 4px 8px;
+}
+
+.poster-form textarea {
+  min-height: 48px;
+}
+
+.poster-form label {
+  font-size: 11px;
+  gap: 3px;
+}
+
+.poster-form .field-help {
+  font-size: 10px;
+}
+
+.poster-form .form-section {
+  gap: 8px;
+  padding: 10px;
+}
+
+.poster-form .form-grid {
+  gap: 6px;
+}
+
+.poster-form h3 {
+  font-size: 13px;
+  margin: 0 0 2px;
+}
+
+.poster-form .eyebrow {
+  font-size: 9px;
+}
+
+.poster-form .secondary-button,
+.poster-form .primary-button {
+  font-size: 12px;
+  min-height: 30px;
+  padding: 5px 12px;
 }
 
 /* Advanced / AI revision collapsible details */
