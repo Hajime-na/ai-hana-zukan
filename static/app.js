@@ -1306,36 +1306,32 @@ async function renderZoomConfirmArea() {
   const zoomNote = document.querySelector("#zoomConfirmNote");
   if (!zoomArea || !zoomCanvas) return;
 
-  // PNG保存と完全に同じ関数・同じ設定で完成canvasを生成
+  // PNG保存と同じ完成canvas（同一関数・同一設定・追加描画なし）
   const full = await renderPosterCanvas().catch(() => null);
   if (!full) return;
 
   const W = full.width;
   const H = full.height;
 
-  // テキストボックス位置を取得（PNG保存と同じオフセット適用済み）
+  // 文字帯の実座標（renderBasePosterCanvas と同じ計算）
   const box = getCopyBox(posterPosition.value, posterDesign.value, W, H);
   box.x += parseInt(textOffsetX?.value) || 0;
   box.y += parseInt(textOffsetY?.value) || 0;
 
-  // クロップ範囲（文字帯 + コンテキスト）
-  const padX = Math.round(box.width * 0.25);
-  const padTop = Math.round(box.height * 1.4);
-  const padBot = Math.round(box.height * 0.2);
-  const cropX = Math.max(0, box.x - padX);
-  const cropY = Math.max(0, box.y - padTop);
-  const cropW = Math.min(W - cropX, box.width + padX * 2);
-  const cropH = Math.min(H - cropY, box.height + padTop + padBot);
+  // クロップ範囲：固定 80px 余白（狭い範囲 = 明確な拡大）
+  const pad = 80;
+  const cropX = Math.max(0, box.x - pad);
+  const cropY = Math.max(0, box.y - pad);
+  const cropW = Math.min(W - cropX, box.width + pad * 2);
+  const cropH = Math.min(H - cropY, box.height + pad * 2);
 
-  // 1:1 ピクセルコピー（スケーリングなし・追加描画なし）
+  // 1:1 ピクセルコピーのみ（スケーリング・追加描画・透かし再描画なし）
   zoomCanvas.width = cropW;
   zoomCanvas.height = cropH;
-  zoomCanvas.style.width = "";   // CSSの max-width:100% に委ねる
+  zoomCanvas.style.width = "";
   zoomCanvas.style.height = "";
 
-  const ctx = zoomCanvas.getContext("2d");
-  ctx.drawImage(full, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
-  // ↑ fullCanvas から 1:1 でコピーするだけ。文字・透かし・フィルターは一切追加しない。
+  zoomCanvas.getContext("2d").drawImage(full, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
 
   const photo = getCurrentPosterPhoto();
   const isDemo = photo?.usage !== "uploaded" && photo?.poster_allowed !== true;
