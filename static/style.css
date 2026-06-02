@@ -673,37 +673,37 @@ dd {
 
 .poster-copy {
   align-self: end;
-  background: rgba(255, 255, 255, 0.88);
-  border-left: 5px solid var(--green);
+  background: rgba(255, 255, 255, 0.80);
+  border-left: 3px solid var(--green);
   justify-self: start;
-  max-width: min(560px, calc(100% - 52px));
+  max-width: min(420px, calc(100% - 48px));
   min-width: 0;
   overflow: visible;
-  padding: 22px 24px;
+  padding: 12px 16px;
   position: relative;
   z-index: 2;
 }
 
 .poster-preview.is-landscape-native .poster-copy {
-  background: rgba(255, 255, 255, 0.78);
-  max-width: min(48%, 720px);
-  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.75);
+  max-width: min(40%, 520px);
+  padding: 10px 14px;
 }
 
 .poster-preview.is-landscape-native .poster-copy strong {
-  font-size: 30px;
-  line-height: 1.18;
-  margin: 5px 0;
+  font-size: 22px;
+  line-height: 1.15;
+  margin: 3px 0;
 }
 
 .poster-preview.is-landscape-native .poster-copy p {
-  font-size: 14px;
+  font-size: 11px;
 }
 
 .poster-preview.is-landscape-native .poster-copy small {
-  font-size: 12px;
-  margin-top: 6px;
-  padding-top: 6px;
+  font-size: 9px;
+  margin-top: 4px;
+  padding-top: 4px;
 }
 
 .poster-copy.position-bottom-right {
@@ -725,18 +725,18 @@ dd {
 }
 
 .design-photo-full .poster-copy {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.80);
 }
 
 .design-bottom-margin .poster-copy {
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(255, 255, 255, 0.90);
   border-left: 0;
   box-shadow: none;
 }
 
 .design-simple .poster-copy {
   align-self: center;
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.78);
   border-left-color: var(--green-dark);
 }
 
@@ -772,10 +772,11 @@ dd {
 
 .poster-copy strong {
   display: block;
-  font-size: 46px;
-  font-weight: 800;
-  line-height: 1.25;
-  margin: 8px 0;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  margin: 4px 0;
   overflow-wrap: normal;
   text-wrap: balance;
   white-space: normal;
@@ -790,15 +791,15 @@ dd {
 }
 
 .poster-copy p {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .poster-copy small {
-  border-top: 1px solid rgba(63, 111, 80, 0.22);
-  font-size: 14px;
-  margin-top: 10px;
-  padding-top: 8px;
+  border-top: 1px solid rgba(63, 111, 80, 0.18);
+  font-size: 11px;
+  margin-top: 6px;
+  padding-top: 5px;
 }
 
 .poster-form {

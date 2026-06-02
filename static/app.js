@@ -804,10 +804,10 @@ function createTitleMeasureContext() {
 }
 
 function setCanvasTitleFont(context, size) {
-  context.font = `800 ${size}px 'Yu Gothic', 'Meiryo', sans-serif`;
+  context.font = `500 ${size}px 'Yu Gothic', 'Meiryo', sans-serif`;
 }
 
-function fitSingleLineTitle(context, title, maxWidth, baseSize = 64, minSize = 48) {
+function fitSingleLineTitle(context, title, maxWidth, baseSize = 50, minSize = 34) {
   for (let size = baseSize; size >= minSize; size -= 2) {
     setCanvasTitleFont(context, size);
     if (context.measureText(title).width <= maxWidth) {
@@ -848,7 +848,7 @@ function splitTitleNaturally(title) {
   return [chars.slice(0, splitAt).join(""), chars.slice(splitAt).join("")];
 }
 
-function fitTwoLineTitle(context, title, maxWidth, baseSize = 60, minSize = 40) {
+function fitTwoLineTitle(context, title, maxWidth, baseSize = 46, minSize = 30) {
   const lines = splitTitleNaturally(title);
   for (let size = baseSize; size >= minSize; size -= 2) {
     setCanvasTitleFont(context, size);
@@ -861,9 +861,9 @@ function fitTwoLineTitle(context, title, maxWidth, baseSize = 60, minSize = 40) 
 
 function layoutCanvasTitle(context, title, maxWidth, options = {}) {
   const source = String(title || "").replace(/\s+/g, " ").trim();
-  const baseSize = options.baseSize || 64;
-  const minSize = options.minSize || 48;
-  return fitSingleLineTitle(context, source, maxWidth, baseSize, minSize) || fitTwoLineTitle(context, source, maxWidth, Math.max(baseSize - 4, minSize), Math.max(minSize - 8, 34));
+  const baseSize = options.baseSize || 50;
+  const minSize = options.minSize || 34;
+  return fitSingleLineTitle(context, source, maxWidth, baseSize, minSize) || fitTwoLineTitle(context, source, maxWidth, Math.max(baseSize - 4, minSize), Math.max(minSize - 6, 26));
 }
 
 function getDomTitleLayout(title) {
@@ -871,8 +871,8 @@ function getDomTitleLayout(title) {
   const size = getPosterBaseSize();
   const isLandscape = size.width > size.height && !getPosterRotationSetting().rotated;
   const box = getCopyBox(posterPosition.value, posterDesign.value, size.width, size.height);
-  const maxTextWidth = isLandscape ? box.width - 56 : Math.min(560, box.width - 88);
-  return layoutCanvasTitle(context, title, maxTextWidth, isLandscape ? { baseSize: 52, minSize: 38 } : {});
+  const maxTextWidth = isLandscape ? box.width - 40 : Math.min(420, box.width - 60);
+  return layoutCanvasTitle(context, title, maxTextWidth, isLandscape ? { baseSize: 40, minSize: 28 } : { baseSize: 50, minSize: 34 });
 }
 
 function renderPosterTitle(element, title) {
@@ -887,7 +887,7 @@ function renderPosterTitle(element, title) {
       return span;
     }),
   );
-  element.style.fontSize = `${Math.round((layout.fontSize / 64) * (isLandscape ? 36 : 46))}px`;
+  element.style.fontSize = `${Math.round((layout.fontSize / 50) * (isLandscape ? 22 : 30))}px`;
 }
 
 function roundRect(context, x, y, width, height, radius) {
@@ -903,9 +903,9 @@ function roundRect(context, x, y, width, height, radius) {
 
 function getCopyBox(position, design, canvasWidth, canvasHeight) {
   const isLandscapeCanvas = canvasWidth > canvasHeight;
-  const boxWidth = isLandscapeCanvas ? canvasWidth * 0.48 : design === "simple" ? 520 : 680;
-  const boxHeight = isLandscapeCanvas ? 190 : design === "bottom-margin" ? 250 : 270;
-  const margin = 70;
+  const boxWidth = isLandscapeCanvas ? canvasWidth * 0.38 : design === "simple" ? 420 : 520;
+  const boxHeight = isLandscapeCanvas ? 150 : design === "bottom-margin" ? 190 : 200;
+  const margin = 56;
   if (isLandscapeCanvas && position === "bottom-band") {
     return {
       x: margin,
@@ -994,44 +994,45 @@ async function renderBasePosterCanvas() {
   const box = getCopyBox(posterPosition.value, posterDesign.value, canvas.width, canvas.height);
 
   context.save();
-  context.fillStyle = box.band ? "rgba(255,255,255,0.82)" : canvas.width > canvas.height ? "rgba(255,255,255,0.78)" : posterDesign.value === "bottom-margin" ? "rgba(255,255,255,0.96)" : "rgba(255,255,255,0.9)";
+  context.fillStyle = box.band ? "rgba(255,255,255,0.78)" : canvas.width > canvas.height ? "rgba(255,255,255,0.75)" : posterDesign.value === "bottom-margin" ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.80)";
   roundRect(context, box.x, box.y, box.width, box.height, 8);
   context.fill();
 
   if (posterPosition.value !== "bottom-center" && posterPosition.value !== "center" && posterPosition.value !== "bottom-band") {
     context.fillStyle = posterType.value === "friendly" ? "#d89aa8" : posterType.value === "bold" ? "#26342b" : "#7fa98a";
-    context.fillRect(box.x, box.y, 10, box.height);
+    context.fillRect(box.x, box.y, 7, box.height);
   }
 
-  const paddingX = canvas.width > canvas.height ? 28 : 44;
+  const isLandscapeCanvas = canvas.width > canvas.height;
+  const paddingX = isLandscapeCanvas ? 20 : 30;
   const textX = box.align === "center" ? box.x + box.width / 2 : box.x + paddingX;
-  const maxTextWidth = canvas.width > canvas.height ? box.width - paddingX * 2 : Math.min(560, box.width - paddingX * 2);
+  const maxTextWidth = isLandscapeCanvas ? box.width - paddingX * 2 : Math.min(420, box.width - paddingX * 2);
   context.textAlign = box.align;
   context.textBaseline = "top";
 
   context.fillStyle = "#6e7d72";
-  context.font = canvas.width > canvas.height ? "700 24px 'Yu Gothic', 'Meiryo', sans-serif" : "700 30px 'Yu Gothic', 'Meiryo', sans-serif";
-  context.fillText(snapshot.subtitle, textX, box.y + 34, maxTextWidth);
+  context.font = isLandscapeCanvas ? "500 18px 'Yu Gothic', 'Meiryo', sans-serif" : "500 22px 'Yu Gothic', 'Meiryo', sans-serif";
+  context.fillText(snapshot.subtitle, textX, box.y + 20, maxTextWidth);
 
   context.fillStyle = "#26342b";
-  const titleLayout = layoutCanvasTitle(context, snapshot.title, maxTextWidth, canvas.width > canvas.height ? { baseSize: 52, minSize: 38 } : {});
+  const titleLayout = layoutCanvasTitle(context, snapshot.title, maxTextWidth, isLandscapeCanvas ? { baseSize: 40, minSize: 28 } : { baseSize: 50, minSize: 34 });
   setCanvasTitleFont(context, titleLayout.fontSize);
   const titleLines = titleLayout.lines;
-  const titleLineHeight = Math.round(titleLayout.fontSize * 1.16);
+  const titleLineHeight = Math.round(titleLayout.fontSize * 1.12);
   titleLines.forEach((line, index) => {
-    context.fillText(line, textX, box.y + 86 + index * titleLineHeight, maxTextWidth);
+    context.fillText(line, textX, box.y + 52 + index * titleLineHeight, maxTextWidth);
   });
 
-  context.strokeStyle = "rgba(63,111,80,0.24)";
+  context.strokeStyle = "rgba(63,111,80,0.20)";
   context.beginPath();
-  const metaLineY = canvas.width > canvas.height ? box.y + box.height - 42 : box.y + box.height - 58;
+  const metaLineY = isLandscapeCanvas ? box.y + box.height - 32 : box.y + box.height - 38;
   context.moveTo(box.x + paddingX, metaLineY);
   context.lineTo(box.x + box.width - paddingX, metaLineY);
   context.stroke();
 
   context.fillStyle = "#6e7d72";
-  context.font = canvas.width > canvas.height ? "500 20px 'Yu Gothic', 'Meiryo', sans-serif" : "500 24px 'Yu Gothic', 'Meiryo', sans-serif";
-  context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, canvas.width > canvas.height ? box.y + box.height - 30 : box.y + box.height - 42, maxTextWidth);
+  context.font = isLandscapeCanvas ? "400 15px 'Yu Gothic', 'Meiryo', sans-serif" : "400 17px 'Yu Gothic', 'Meiryo', sans-serif";
+  context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, isLandscapeCanvas ? box.y + box.height - 22 : box.y + box.height - 26, maxTextWidth);
   context.restore();
 
   return canvas;
