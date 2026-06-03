@@ -80,6 +80,12 @@ const textOffsetX = document.querySelector("#textOffsetX");
 const textOffsetY = document.querySelector("#textOffsetY");
 const textOffsetXValue = document.querySelector("#textOffsetXValue");
 const textOffsetYValue = document.querySelector("#textOffsetYValue");
+const titleFontScale = document.querySelector("#titleFontScale");
+const subtitleFontScale = document.querySelector("#subtitleFontScale");
+const metaFontScale = document.querySelector("#metaFontScale");
+const titleFontScaleValue = document.querySelector("#titleFontScaleValue");
+const subtitleFontScaleValue = document.querySelector("#subtitleFontScaleValue");
+const metaFontScaleValue = document.querySelector("#metaFontScaleValue");
 const layoutSuggestButton = document.querySelector("#layoutSuggestButton");
 const layoutProposalsEl = document.querySelector("#layoutProposals");
 const uploadTriggerButton = document.querySelector("#uploadTriggerButton");
@@ -442,6 +448,7 @@ function updatePoster() {
   updateWatermark();
   applyTextOffsetToPreview(posterCopy, posterPreviewFrame);
   applyBandOpacity(posterCopy);
+  applyFontScalesToFrame(posterPreviewFrame);
   if (confirmationSection && !confirmationSection.hidden) renderFinishReview();
 }
 
@@ -450,6 +457,21 @@ function applyBandOpacity(copyEl) {
   copyEl.style.background = state.proposalBandOpacity !== null
     ? `rgba(255,255,255,${state.proposalBandOpacity})`
     : "";
+}
+
+function getFontScales() {
+  return {
+    title: Math.max(0.70, Math.min(1.30, Number(titleFontScale?.value || 100) / 100)),
+    subtitle: Math.max(0.70, Math.min(1.30, Number(subtitleFontScale?.value || 100) / 100)),
+    meta: Math.max(0.70, Math.min(1.30, Number(metaFontScale?.value || 100) / 100)),
+  };
+}
+
+function applyFontScalesToFrame(frameEl) {
+  if (!frameEl) return;
+  const s = getFontScales();
+  frameEl.style.setProperty("--subtitle-scale", s.subtitle);
+  frameEl.style.setProperty("--meta-scale", s.meta);
 }
 
 function applyTextOffsetToPreview(copyEl, frameEl) {
@@ -645,6 +667,9 @@ function getPosterSnapshot() {
     text_offset_x: parseInt(textOffsetX?.value) || 0,
     text_offset_y: parseInt(textOffsetY?.value) || 0,
     band_opacity: state.proposalBandOpacity,
+    title_font_scale: getFontScales().title,
+    subtitle_font_scale: getFontScales().subtitle,
+    meta_font_scale: getFontScales().meta,
   };
 }
 
@@ -919,6 +944,7 @@ function renderPosterTitle(element, title) {
   const layout = getDomTitleLayout(title);
   const size = getPosterBaseSize();
   const isLandscape = size.width > size.height && !getPosterRotationSetting().rotated;
+  const titleScale = getFontScales().title;
   element.replaceChildren(
     ...layout.lines.map((line) => {
       const span = document.createElement("span");
@@ -927,7 +953,7 @@ function renderPosterTitle(element, title) {
       return span;
     }),
   );
-  element.style.fontSize = `${Math.round((layout.fontSize / 50) * (isLandscape ? 22 : 30))}px`;
+  element.style.fontSize = `${Math.round((layout.fontSize / 50) * (isLandscape ? 22 : 30) * titleScale)}px`;
 }
 
 function roundRect(context, x, y, width, height, radius) {
@@ -1069,17 +1095,19 @@ async function renderBasePosterCanvas() {
   context.textAlign = box.align;
   context.textBaseline = "top";
 
+  const scales = getFontScales();
+
   if (isNoBoxDesign(_design)) {
     if (_design === "announce") {
       // 全面告知：大きな太文字で訴求
       context.shadowColor = "rgba(0,0,0,0.80)";
       context.shadowBlur = 16;
-      const subSize = isLandscapeCanvas ? 20 : 26;
+      const subSize = Math.round((isLandscapeCanvas ? 20 : 26) * scales.subtitle);
       context.fillStyle = "rgba(255,255,255,0.88)";
       context.font = `600 ${subSize}px 'Yu Gothic','Meiryo',sans-serif`;
       context.fillText(snapshot.subtitle, textX, Math.round(box.y + 20), maxTextWidth);
-      const annTitleBase = isLandscapeCanvas ? 56 : 72;
-      const annTitleMin = isLandscapeCanvas ? 38 : 50;
+      const annTitleBase = Math.round((isLandscapeCanvas ? 56 : 72) * scales.title);
+      const annTitleMin = Math.round((isLandscapeCanvas ? 38 : 50) * scales.title);
       const annLayout = layoutCanvasTitle(context, snapshot.title, maxTextWidth, { baseSize: annTitleBase, minSize: annTitleMin });
       context.fillStyle = "rgba(255,255,255,0.98)";
       context.font = `700 ${annLayout.fontSize}px 'Yu Gothic','Meiryo',sans-serif`;
@@ -1088,7 +1116,7 @@ async function renderBasePosterCanvas() {
       annLayout.lines.forEach((line, i) => {
         context.fillText(line, textX, annTitleY + i * annLineH, maxTextWidth);
       });
-      const annMetaSize = isLandscapeCanvas ? 14 : 18;
+      const annMetaSize = Math.round((isLandscapeCanvas ? 14 : 18) * scales.meta);
       context.fillStyle = "rgba(255,255,255,0.78)";
       context.font = `400 ${annMetaSize}px 'Yu Gothic','Meiryo',sans-serif`;
       context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, annTitleY + annLayout.lines.length * annLineH + 10, maxTextWidth);
@@ -1099,12 +1127,13 @@ async function renderBasePosterCanvas() {
       context.shadowBlur = isMinimal ? 4 : 7;
 
       if (!isMinimal) {
+        const dSubFont = Math.round((isLandscapeCanvas ? 17 : 20) * scales.subtitle);
         context.fillStyle = "rgba(255,255,255,0.88)";
-        context.font = isLandscapeCanvas ? "400 17px 'Yu Gothic','Meiryo',sans-serif" : "400 20px 'Yu Gothic','Meiryo',sans-serif";
+        context.font = `400 ${dSubFont}px 'Yu Gothic','Meiryo',sans-serif`;
         context.fillText(snapshot.subtitle, textX, Math.round(box.y + 20), maxTextWidth);
       }
 
-      const titleSize = isMinimal ? (isLandscapeCanvas ? 20 : 26) : (isLandscapeCanvas ? 34 : 42);
+      const titleSize = Math.round((isMinimal ? (isLandscapeCanvas ? 20 : 26) : (isLandscapeCanvas ? 34 : 42)) * scales.title);
       context.fillStyle = "rgba(255,255,255,0.95)";
       context.font = `300 ${titleSize}px 'Yu Gothic','Meiryo',sans-serif`;
       const titleY = isMinimal
@@ -1112,7 +1141,7 @@ async function renderBasePosterCanvas() {
         : Math.round(box.y + 52);
       context.fillText(snapshot.title, textX, titleY, maxTextWidth);
 
-      const metaSize = isMinimal ? (isLandscapeCanvas ? 10 : 12) : (isLandscapeCanvas ? 13 : 15);
+      const metaSize = Math.round((isMinimal ? (isLandscapeCanvas ? 10 : 12) : (isLandscapeCanvas ? 13 : 15)) * scales.meta);
       context.fillStyle = "rgba(255,255,255,0.80)";
       context.font = `300 ${metaSize}px 'Yu Gothic','Meiryo',sans-serif`;
       context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, Math.round(titleY + titleSize + 5), maxTextWidth);
@@ -1141,18 +1170,19 @@ async function renderBasePosterCanvas() {
       context.fillRect(Math.round(box.x), Math.round(box.y), 5, Math.round(box.height));
     }
 
+    const subFont = Math.round((isLandscapeCanvas ? 17 : 20) * scales.subtitle);
     context.fillStyle = "#6e8a80";
-    context.font = isLandscapeCanvas ? "400 17px 'Yu Gothic','Meiryo',sans-serif" : "400 20px 'Yu Gothic','Meiryo',sans-serif";
+    context.font = `400 ${subFont}px 'Yu Gothic','Meiryo',sans-serif`;
     context.fillText(snapshot.subtitle, textX, Math.round(box.y + 20), maxTextWidth);
 
     context.fillStyle = "#1f342d";
     const titleWeight = _design === "strong-pop" ? "700" : _design === "elegant" ? "300" : "400";
     const titleBaseSize = isLandscapeCanvas
-      ? (_design === "strong-pop" ? 44 : _design === "elegant" ? 36 : 40)
-      : (_design === "strong-pop" ? 56 : _design === "elegant" ? 44 : 50);
+      ? Math.round((_design === "strong-pop" ? 44 : _design === "elegant" ? 36 : 40) * scales.title)
+      : Math.round((_design === "strong-pop" ? 56 : _design === "elegant" ? 44 : 50) * scales.title);
     const titleMinSize = isLandscapeCanvas
-      ? (_design === "strong-pop" ? 30 : _design === "elegant" ? 26 : 28)
-      : (_design === "strong-pop" ? 38 : _design === "elegant" ? 30 : 34);
+      ? Math.round((_design === "strong-pop" ? 30 : _design === "elegant" ? 26 : 28) * scales.title)
+      : Math.round((_design === "strong-pop" ? 38 : _design === "elegant" ? 30 : 34) * scales.title);
     const titleLayout = layoutCanvasTitle(context, snapshot.title, maxTextWidth, { baseSize: titleBaseSize, minSize: titleMinSize });
     context.font = `${titleWeight} ${titleLayout.fontSize}px 'Yu Gothic','Meiryo',sans-serif`;
     const titleLines = titleLayout.lines;
@@ -1169,8 +1199,9 @@ async function renderBasePosterCanvas() {
     context.lineTo(Math.round(box.x + box.width - paddingX), metaLineY + 0.5);
     context.stroke();
 
+    const metaFont = Math.round((isLandscapeCanvas ? 13 : 15) * scales.meta);
     context.fillStyle = "#7a9288";
-    context.font = isLandscapeCanvas ? "300 13px 'Yu Gothic','Meiryo',sans-serif" : "300 15px 'Yu Gothic','Meiryo',sans-serif";
+    context.font = `300 ${metaFont}px 'Yu Gothic','Meiryo',sans-serif`;
     context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, Math.round(isLandscapeCanvas ? box.y + box.height - 22 : box.y + box.height - 26), maxTextWidth);
   }
 
@@ -1236,6 +1267,9 @@ function buildOrderJson(orderId) {
     poster_allowed: isPosterMaterialAllowed(),
     png_filename: `poster_${orderId}.png`,
     pdf_filename: `poster_${orderId}.pdf`,
+    title_font_scale: snapshot.title_font_scale,
+    subtitle_font_scale: snapshot.subtitle_font_scale,
+    meta_font_scale: snapshot.meta_font_scale,
     checks: {
       typo_checked: checkboxes[0]?.checked ?? false,
       shop_date_checked: checkboxes[1]?.checked ?? false,
@@ -1462,6 +1496,7 @@ function renderFinishReview() {
   confirmPosterMeta.textContent = `${snapshot.shop} / ${snapshot.date}`;
   applyTextOffsetToPreview(confirmPosterCopy, confirmPosterPreviewFrame);
   applyBandOpacity(confirmPosterCopy);
+  applyFontScalesToFrame(confirmPosterPreviewFrame);
 
   confirmTitle.textContent = snapshot.title;
   confirmSubtitle.textContent = snapshot.subtitle;
@@ -1741,6 +1776,9 @@ document.querySelector("#nextPhoto").addEventListener("click", () => moveDetailP
 
 textOffsetX?.addEventListener("input", () => { if (textOffsetXValue) textOffsetXValue.textContent = textOffsetX.value; updatePoster(); });
 textOffsetY?.addEventListener("input", () => { if (textOffsetYValue) textOffsetYValue.textContent = textOffsetY.value; updatePoster(); });
+titleFontScale?.addEventListener("input", () => { if (titleFontScaleValue) titleFontScaleValue.textContent = `${titleFontScale.value}%`; updatePoster(); });
+subtitleFontScale?.addEventListener("input", () => { if (subtitleFontScaleValue) subtitleFontScaleValue.textContent = `${subtitleFontScale.value}%`; updatePoster(); });
+metaFontScale?.addEventListener("input", () => { if (metaFontScaleValue) metaFontScaleValue.textContent = `${metaFontScale.value}%`; updatePoster(); });
 
 // フロント側ローカル候補（二重フォールバック用）
 function getLocalLayoutProposals(isLandscape) {
@@ -1748,15 +1786,15 @@ function getLocalLayoutProposals(isLandscape) {
   const xHint = titleLen > 7 ? -5 : 0;
   if (isLandscape) {
     return [
-      { label: "写真を活かす案", position: "bottom-right", design: "minimal", type: "elegant", band_opacity: null, offset_x: 0, offset_y: 0, reason: "写真の隅に小さく入れます。" },
-      { label: "上品文字案", position: "bottom-left", design: "elegant", type: "elegant", band_opacity: null, offset_x: 0, offset_y: 0, reason: "控えめなカードで上品に入れます。" },
-      { label: "強めPOP案", position: "bottom-center", design: "strong-pop", type: "friendly", band_opacity: 0.88, offset_x: 0, offset_y: 0, reason: "太文字でフェア名をしっかり見せます。" },
+      { label: "写真を活かす案", position: "bottom-right", design: "minimal", type: "elegant", band_opacity: null, offset_x: 0, offset_y: 0, title_font_scale: 0.90, reason: "写真の隅に小さく入れます。" },
+      { label: "上品文字案", position: "bottom-left", design: "elegant", type: "elegant", band_opacity: null, offset_x: 0, offset_y: 0, title_font_scale: 1.00, reason: "控えめなカードで上品に入れます。" },
+      { label: "強めPOP案", position: "bottom-center", design: "strong-pop", type: "friendly", band_opacity: 0.88, offset_x: 0, offset_y: 0, title_font_scale: 1.15, reason: "太文字でフェア名をしっかり見せます。" },
     ];
   }
   return [
-    { label: "写真を活かす案", position: "bottom-left", design: "minimal", type: "elegant", band_opacity: null, offset_x: xHint, offset_y: 0, reason: "写真の隅に小さく入れます。" },
-    { label: "上品文字案", position: "bottom-left", design: "elegant", type: "elegant", band_opacity: null, offset_x: xHint, offset_y: 8, reason: "控えめなカードで上品に入れます。" },
-    { label: "強めPOP案", position: "bottom-center", design: "strong-pop", type: "friendly", band_opacity: 0.88, offset_x: 0, offset_y: 0, reason: "太文字でフェア名をしっかり見せます。" },
+    { label: "写真を活かす案", position: "bottom-left", design: "minimal", type: "elegant", band_opacity: null, offset_x: xHint, offset_y: 0, title_font_scale: 0.90, reason: "写真の隅に小さく入れます。" },
+    { label: "上品文字案", position: "bottom-left", design: "elegant", type: "elegant", band_opacity: null, offset_x: xHint, offset_y: 8, title_font_scale: 1.00, reason: "控えめなカードで上品に入れます。" },
+    { label: "強めPOP案", position: "bottom-center", design: "strong-pop", type: "friendly", band_opacity: 0.88, offset_x: 0, offset_y: 0, title_font_scale: 1.15, reason: "太文字でフェア名をしっかり見せます。" },
   ];
 }
 
@@ -1772,6 +1810,21 @@ function applyLayoutProposal(proposal, index) {
   if (textOffsetY) { textOffsetY.value = String(proposal.offset_y ?? 0); if (textOffsetYValue) textOffsetYValue.textContent = textOffsetY.value; }
   state.proposalBandOpacity = typeof opacity === "number" ? opacity : null;
   state.activeProposalIndex = index;
+  if (titleFontScale && proposal.title_font_scale != null) {
+    const pct = Math.round(proposal.title_font_scale * 100);
+    titleFontScale.value = String(pct);
+    if (titleFontScaleValue) titleFontScaleValue.textContent = `${pct}%`;
+  }
+  if (subtitleFontScale && proposal.subtitle_font_scale != null) {
+    const pct = Math.round(proposal.subtitle_font_scale * 100);
+    subtitleFontScale.value = String(pct);
+    if (subtitleFontScaleValue) subtitleFontScaleValue.textContent = `${pct}%`;
+  }
+  if (metaFontScale && proposal.meta_font_scale != null) {
+    const pct = Math.round(proposal.meta_font_scale * 100);
+    metaFontScale.value = String(pct);
+    if (metaFontScaleValue) metaFontScaleValue.textContent = `${pct}%`;
+  }
   document.querySelectorAll(".layout-proposal-card").forEach((el, i) => el.classList.toggle("is-active", i === index));
   updatePoster();
 }
@@ -1829,6 +1882,9 @@ resetImageAdjust.addEventListener("click", () => {
   imageOffsetX.value = "0";
   imageOffsetY.value = "0";
   imageRotation.value = "normal";
+  if (titleFontScale) { titleFontScale.value = "100"; if (titleFontScaleValue) titleFontScaleValue.textContent = "100%"; }
+  if (subtitleFontScale) { subtitleFontScale.value = "100"; if (subtitleFontScaleValue) subtitleFontScaleValue.textContent = "100%"; }
+  if (metaFontScale) { metaFontScale.value = "100"; if (metaFontScaleValue) metaFontScaleValue.textContent = "100%"; }
   updatePoster();
 });
 

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v34newtypes" />
+    <link rel="stylesheet" href="/static/style.css?v=v35fontscale" />
   </head>
   <body>
     <header class="topbar">
@@ -225,6 +225,25 @@
                     <label>
                       縦位置微調整 <span id="textOffsetYValue" class="range-value">0</span>
                       <input id="textOffsetY" type="range" min="-30" max="30" value="0" />
+                    </label>
+                  </div>
+                  <!-- 文字サイズ調整 -->
+                  <div class="font-scale-panel lettering-only">
+                    <p class="eyebrow" style="margin-top:6px">Font Scale</p>
+                    <p class="field-help" style="margin-bottom:4px">各テキストの基本サイズへの倍率（70〜130%）</p>
+                    <div class="form-grid two">
+                      <label>
+                        タイトル <span id="titleFontScaleValue" class="range-value">100%</span>
+                        <input id="titleFontScale" type="range" min="70" max="130" value="100" />
+                      </label>
+                      <label>
+                        サブタイトル <span id="subtitleFontScaleValue" class="range-value">100%</span>
+                        <input id="subtitleFontScale" type="range" min="70" max="130" value="100" />
+                      </label>
+                    </div>
+                    <label>
+                      店舗名・日付 <span id="metaFontScaleValue" class="range-value">100%</span>
+                      <input id="metaFontScale" type="range" min="70" max="130" value="100" />
                     </label>
                   </div>
                   <!-- 自分の画像を使う -->
@@ -470,6 +489,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v34newtypes"></script>
+    <script src="/static/app.js?v=v35fontscale"></script>
   </body>
 </html>
