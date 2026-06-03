@@ -2421,6 +2421,36 @@ document.querySelector("#galleryGrid").addEventListener("click", (event) => {
 document.querySelector("#heroGalleryButton").addEventListener("click", () => scrollToSection("#gallerySection"));
 document.querySelector("#heroStartButton").addEventListener("click", () => scrollToSection("#posterSection"));
 
+function initStickyPreview() {
+  const col = document.querySelector(".poster-preview-column");
+  const card = document.querySelector(".poster-order-card");
+  if (!col || !card) return;
+  const STICKY_TOP = 80;
+
+  function update() {
+    if (window.innerWidth < 901) {
+      col.style.transform = "";
+      return;
+    }
+    col.style.transform = "";
+    const colTop = col.getBoundingClientRect().top;
+    if (colTop < STICKY_TOP) {
+      const push = STICKY_TOP - colTop;
+      const cardBottom = card.getBoundingClientRect().bottom;
+      // maxPush: col が card 下端を超えないよう制限
+      const maxPush = Math.max(0, cardBottom - colTop - col.offsetHeight);
+      const finalPush = Math.min(push, maxPush);
+      if (finalPush > 0) {
+        col.style.transform = `translateY(${finalPush}px)`;
+      }
+    }
+  }
+
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update);
+  setTimeout(update, 300);
+}
+
 async function init() {
   try {
     const response = await fetch("/static/flowers.json?v=v1posterimage");
@@ -2450,6 +2480,7 @@ async function init() {
   if (isConfirmModeFromUrl()) {
     showFinishReview({ updateUrl: false });
   }
+  initStickyPreview();
 }
 
 init();

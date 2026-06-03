@@ -19,7 +19,7 @@
 html,
 body {
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip; /* hidden は scroll container を作り sticky を壊すため clip を使用 */
 }
 
 body {
@@ -1677,10 +1677,43 @@ body.modal-open {
 }
 
 @media (min-width: 901px) {
+  /* プレビューコラム: JS sticky で制御（CSS sticky は overflow-x:clip 環境で不安定なため） */
   .poster-preview-column {
     align-self: flex-start;
-    position: sticky;
-    top: 80px;
+    position: relative;
+  }
+  /* プレビューフレームの最大高さを制限して viewport 内に収める */
+  .poster-order-card .poster-preview-frame {
+    max-height: 72vh;
+    min-height: 0;
+  }
+  /* 右フォーム圧縮 */
+  .poster-form {
+    gap: 5px;
+    padding: 10px;
+  }
+  .poster-form .form-section {
+    gap: 7px;
+    padding: 10px;
+  }
+  .poster-form .secondary-button {
+    margin: 4px 0;
+  }
+  .poster-form .advanced-details,
+  .poster-form .ai-revision-details {
+    margin-top: 4px;
+  }
+  .advanced-inner {
+    gap: 7px;
+    padding-left: 10px;
+  }
+  .image-adjust-panel {
+    gap: 8px;
+    padding: 10px;
+  }
+  .font-scale-panel {
+    gap: 4px;
+    padding-top: 6px;
   }
 }
 
@@ -1707,6 +1740,7 @@ body.modal-open {
 
   .poster-preview-column {
     position: static;
+    transform: none !important;
   }
 
   .poster-order-card .poster-preview-frame {
