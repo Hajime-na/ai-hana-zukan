@@ -139,9 +139,12 @@ const editSections = [
 
 const posterDesignDescriptions = {
   "no-text": "文字なし：写真だけのポスターとして使えます",
-  "minimal": "小さく入れる：文字を小さく控えめに配置します",
+  "minimal": "小さく入れる：写真の隅に小さくタイトルと店舗名を入れます（初期推奨）",
+  "elegant": "上品文字：控えめな半透明カードに細いフォントで上品に入れます",
+  "strong-pop": "強めPOP：太文字で読みやすさ優先。フェア名をしっかり見せます",
+  "announce": "全面告知：タイトルを大きく出す、セール・イベント告知向け",
+  "bottom-margin": "下余白：写真の下に余白を追加して文字を入れます",
   "direct": "写真上に直接入れる：背景なしで文字を重ねます",
-  "bottom-margin": "下余白に入れる：写真の下の余白に文字を入れます",
   "pop-band": "POP文字帯：白い帯に文字を入れる店頭POP向けデザイン",
   "photo-full": "写真全面タイプ：写真を大きく見せる店頭向けデザイン",
   "simple": "上品シンプルタイプ：贈り物・高級感向けデザイン",
@@ -941,7 +944,9 @@ function roundRect(context, x, y, width, height, radius) {
 function getCopyBox(position, design, canvasWidth, canvasHeight) {
   const isLandscapeCanvas = canvasWidth > canvasHeight;
   const boxWidth = isLandscapeCanvas ? canvasWidth * 0.38 : design === "simple" ? 400 : 480;
-  const boxHeight = isLandscapeCanvas ? 150 : design === "bottom-margin" ? 175 : 175;
+  const boxHeight = isLandscapeCanvas
+    ? (design === "strong-pop" ? 170 : 150)
+    : (design === "bottom-margin" || design === "strong-pop" || design === "announce") ? 210 : 175;
   const margin = 56;
   if (isLandscapeCanvas && position === "bottom-band") {
     return {
@@ -991,11 +996,11 @@ function isTextlessDesign(design) {
 }
 
 function isNoBoxDesign(design) {
-  return design === "minimal" || design === "direct";
+  return design === "minimal" || design === "direct" || design === "announce";
 }
 
 function drawPosterOverlay(context, design, canvasWidth, canvasHeight) {
-  if (design === "no-text") return; // オーバーレイなし
+  if (design === "no-text") return;
   if (design === "bottom-margin") {
     const gradient = context.createLinearGradient(0, canvasHeight * 0.45, 0, canvasHeight);
     gradient.addColorStop(0, "rgba(255,255,255,0)");
@@ -1009,6 +1014,15 @@ function drawPosterOverlay(context, design, canvasWidth, canvasHeight) {
     gradient.addColorStop(0, "rgba(255,255,255,0.95)");
     gradient.addColorStop(0.44, "rgba(255,255,255,0.86)");
     gradient.addColorStop(1, "rgba(255,255,255,0.08)");
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, canvasWidth, canvasHeight);
+    return;
+  }
+  if (design === "announce") {
+    // 全面告知：白文字の読みやすさのため濃いめグラデーション
+    const gradient = context.createLinearGradient(0, 0, 0, canvasHeight);
+    gradient.addColorStop(0, "rgba(0,0,0,0.10)");
+    gradient.addColorStop(1, "rgba(0,0,0,0.62)");
     context.fillStyle = gradient;
     context.fillRect(0, 0, canvasWidth, canvasHeight);
     return;
@@ -1056,43 +1070,74 @@ async function renderBasePosterCanvas() {
   context.textBaseline = "top";
 
   if (isNoBoxDesign(_design)) {
-    // minimal / direct：白いカードなし・テキスト影のみ
-    const isMinimal = _design === "minimal";
-    context.shadowColor = "rgba(0,0,0,0.65)";
-    context.shadowBlur = isMinimal ? 4 : 7;
-
-    if (!isMinimal) {
-      // direct: サブタイトルも表示
+    if (_design === "announce") {
+      // 全面告知：大きな太文字で訴求
+      context.shadowColor = "rgba(0,0,0,0.80)";
+      context.shadowBlur = 16;
+      const subSize = isLandscapeCanvas ? 20 : 26;
       context.fillStyle = "rgba(255,255,255,0.88)";
-      context.font = isLandscapeCanvas ? "400 17px 'Yu Gothic','Meiryo',sans-serif" : "400 20px 'Yu Gothic','Meiryo',sans-serif";
+      context.font = `600 ${subSize}px 'Yu Gothic','Meiryo',sans-serif`;
       context.fillText(snapshot.subtitle, textX, Math.round(box.y + 20), maxTextWidth);
+      const annTitleBase = isLandscapeCanvas ? 56 : 72;
+      const annTitleMin = isLandscapeCanvas ? 38 : 50;
+      const annLayout = layoutCanvasTitle(context, snapshot.title, maxTextWidth, { baseSize: annTitleBase, minSize: annTitleMin });
+      context.fillStyle = "rgba(255,255,255,0.98)";
+      context.font = `700 ${annLayout.fontSize}px 'Yu Gothic','Meiryo',sans-serif`;
+      const annTitleY = Math.round(box.y + subSize + 32);
+      const annLineH = Math.round(annLayout.fontSize * 1.15);
+      annLayout.lines.forEach((line, i) => {
+        context.fillText(line, textX, annTitleY + i * annLineH, maxTextWidth);
+      });
+      const annMetaSize = isLandscapeCanvas ? 14 : 18;
+      context.fillStyle = "rgba(255,255,255,0.78)";
+      context.font = `400 ${annMetaSize}px 'Yu Gothic','Meiryo',sans-serif`;
+      context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, annTitleY + annLayout.lines.length * annLineH + 10, maxTextWidth);
+    } else {
+      // minimal / direct：白いカードなし・テキスト影のみ
+      const isMinimal = _design === "minimal";
+      context.shadowColor = "rgba(0,0,0,0.65)";
+      context.shadowBlur = isMinimal ? 4 : 7;
+
+      if (!isMinimal) {
+        context.fillStyle = "rgba(255,255,255,0.88)";
+        context.font = isLandscapeCanvas ? "400 17px 'Yu Gothic','Meiryo',sans-serif" : "400 20px 'Yu Gothic','Meiryo',sans-serif";
+        context.fillText(snapshot.subtitle, textX, Math.round(box.y + 20), maxTextWidth);
+      }
+
+      const titleSize = isMinimal ? (isLandscapeCanvas ? 20 : 26) : (isLandscapeCanvas ? 34 : 42);
+      context.fillStyle = "rgba(255,255,255,0.95)";
+      context.font = `300 ${titleSize}px 'Yu Gothic','Meiryo',sans-serif`;
+      const titleY = isMinimal
+        ? Math.round(box.y + box.height - titleSize - 22)
+        : Math.round(box.y + 52);
+      context.fillText(snapshot.title, textX, titleY, maxTextWidth);
+
+      const metaSize = isMinimal ? (isLandscapeCanvas ? 10 : 12) : (isLandscapeCanvas ? 13 : 15);
+      context.fillStyle = "rgba(255,255,255,0.80)";
+      context.font = `300 ${metaSize}px 'Yu Gothic','Meiryo',sans-serif`;
+      context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, Math.round(titleY + titleSize + 5), maxTextWidth);
     }
 
-    // タイトル
-    const titleSize = isMinimal ? (isLandscapeCanvas ? 20 : 26) : (isLandscapeCanvas ? 34 : 42);
-    context.fillStyle = "rgba(255,255,255,0.95)";
-    context.font = `300 ${titleSize}px 'Yu Gothic','Meiryo',sans-serif`;
-    const titleY = isMinimal
-      ? Math.round(box.y + box.height - titleSize - 22)
-      : Math.round(box.y + 52);
-    context.fillText(snapshot.title, textX, titleY, maxTextWidth);
-
-    // 店舗名・日付
-    const metaSize = isMinimal ? (isLandscapeCanvas ? 10 : 12) : (isLandscapeCanvas ? 13 : 15);
-    context.fillStyle = "rgba(255,255,255,0.80)";
-    context.font = `300 ${metaSize}px 'Yu Gothic','Meiryo',sans-serif`;
-    context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, Math.round(titleY + titleSize + 5), maxTextWidth);
-
   } else {
-    // pop-band / photo-full / simple / bottom-margin：白いカード
-    const _defaultOpacity = box.band ? 0.78 : isLandscapeCanvas ? 0.75 : _design === "bottom-margin" ? 0.88 : 0.76;
+    // カードあり: elegant / strong-pop / pop-band / photo-full / simple / bottom-margin
+    const _defaultOpacity = box.band ? 0.78
+      : isLandscapeCanvas ? 0.75
+      : _design === "bottom-margin" ? 0.88
+      : _design === "strong-pop" ? 0.88
+      : _design === "elegant" ? 0.72
+      : 0.76;
     const _bandOpacity = state.proposalBandOpacity ?? _defaultOpacity;
     context.fillStyle = `rgba(255,255,255,${_bandOpacity})`;
     roundRect(context, Math.round(box.x), Math.round(box.y), Math.round(box.width), Math.round(box.height), 6);
     context.fill();
 
     if (posterPosition.value !== "bottom-center" && posterPosition.value !== "center" && posterPosition.value !== "bottom-band") {
-      context.fillStyle = posterType.value === "friendly" ? "rgba(216,154,168,0.7)" : posterType.value === "bold" ? "rgba(38,52,43,0.7)" : "rgba(100,160,120,0.5)";
+      const stripeColor = posterType.value === "friendly"
+        ? "rgba(216,154,168,0.7)"
+        : (posterType.value === "bold" || _design === "strong-pop")
+          ? "rgba(38,52,43,0.75)"
+          : "rgba(100,160,120,0.5)";
+      context.fillStyle = stripeColor;
       context.fillRect(Math.round(box.x), Math.round(box.y), 5, Math.round(box.height));
     }
 
@@ -1101,8 +1146,15 @@ async function renderBasePosterCanvas() {
     context.fillText(snapshot.subtitle, textX, Math.round(box.y + 20), maxTextWidth);
 
     context.fillStyle = "#1f342d";
-    const titleLayout = layoutCanvasTitle(context, snapshot.title, maxTextWidth, isLandscapeCanvas ? { baseSize: 40, minSize: 28 } : { baseSize: 50, minSize: 34 });
-    setCanvasTitleFont(context, titleLayout.fontSize);
+    const titleWeight = _design === "strong-pop" ? "700" : _design === "elegant" ? "300" : "400";
+    const titleBaseSize = isLandscapeCanvas
+      ? (_design === "strong-pop" ? 44 : _design === "elegant" ? 36 : 40)
+      : (_design === "strong-pop" ? 56 : _design === "elegant" ? 44 : 50);
+    const titleMinSize = isLandscapeCanvas
+      ? (_design === "strong-pop" ? 30 : _design === "elegant" ? 26 : 28)
+      : (_design === "strong-pop" ? 38 : _design === "elegant" ? 30 : 34);
+    const titleLayout = layoutCanvasTitle(context, snapshot.title, maxTextWidth, { baseSize: titleBaseSize, minSize: titleMinSize });
+    context.font = `${titleWeight} ${titleLayout.fontSize}px 'Yu Gothic','Meiryo',sans-serif`;
     const titleLines = titleLayout.lines;
     const titleLineHeight = Math.round(titleLayout.fontSize * 1.12);
     titleLines.forEach((line, index) => {
@@ -1696,15 +1748,15 @@ function getLocalLayoutProposals(isLandscape) {
   const xHint = titleLen > 7 ? -5 : 0;
   if (isLandscape) {
     return [
-      { label: "写真を活かす案", position: "bottom-right", design: "minimal", type: "elegant", band_opacity: null, offset_x: 0, offset_y: 0, reason: "文字を小さく控えめに入れます。" },
-      { label: "最小文字案", position: "bottom-left", design: "direct", type: "elegant", band_opacity: null, offset_x: 0, offset_y: 0, reason: "カードなし・影文字で直接重ねます。" },
-      { label: "店頭POP案", position: "bottom-center", design: "pop-band", type: "friendly", band_opacity: 0.82, offset_x: 0, offset_y: 0, reason: "白帯にまとめた読みやすいPOPデザイン。" },
+      { label: "写真を活かす案", position: "bottom-right", design: "minimal", type: "elegant", band_opacity: null, offset_x: 0, offset_y: 0, reason: "写真の隅に小さく入れます。" },
+      { label: "上品文字案", position: "bottom-left", design: "elegant", type: "elegant", band_opacity: null, offset_x: 0, offset_y: 0, reason: "控えめなカードで上品に入れます。" },
+      { label: "強めPOP案", position: "bottom-center", design: "strong-pop", type: "friendly", band_opacity: 0.88, offset_x: 0, offset_y: 0, reason: "太文字でフェア名をしっかり見せます。" },
     ];
   }
   return [
-    { label: "写真を活かす案", position: "bottom-left", design: "minimal", type: "elegant", band_opacity: null, offset_x: xHint, offset_y: 0, reason: "文字を小さく控えめに入れます。" },
-    { label: "最小文字案", position: "bottom-left", design: "direct", type: "elegant", band_opacity: null, offset_x: xHint, offset_y: 8, reason: "カードなし・影文字で直接重ねます。" },
-    { label: "店頭POP案", position: "bottom-center", design: "pop-band", type: "friendly", band_opacity: 0.84, offset_x: 0, offset_y: 0, reason: "白帯にまとめた読みやすいPOPデザイン。" },
+    { label: "写真を活かす案", position: "bottom-left", design: "minimal", type: "elegant", band_opacity: null, offset_x: xHint, offset_y: 0, reason: "写真の隅に小さく入れます。" },
+    { label: "上品文字案", position: "bottom-left", design: "elegant", type: "elegant", band_opacity: null, offset_x: xHint, offset_y: 8, reason: "控えめなカードで上品に入れます。" },
+    { label: "強めPOP案", position: "bottom-center", design: "strong-pop", type: "friendly", band_opacity: 0.88, offset_x: 0, offset_y: 0, reason: "太文字でフェア名をしっかり見せます。" },
   ];
 }
 
@@ -2264,7 +2316,7 @@ function applyPosterTemplate(template) {
   if (template.poster_type) posterType.value = template.poster_type;
   if (template.poster_design) {
     // 旧デザイン名を新モードにマップ
-    const designMap = { "photo-full": "minimal", simple: "minimal" };
+    const designMap = { "photo-full": "minimal", simple: "minimal", direct: "elegant", "pop-band": "strong-pop" };
     posterDesign.value = designMap[template.poster_design] ?? template.poster_design;
   }
   uploadedMaterialMode.value = "background";
