@@ -1410,7 +1410,6 @@ function renderFinishReview() {
   confirmPosterMeta.textContent = `${snapshot.shop} / ${snapshot.date}`;
   applyTextOffsetToPreview(confirmPosterCopy, confirmPosterPreviewFrame);
   applyBandOpacity(confirmPosterCopy);
-  renderZoomConfirmArea(); // fire-and-forget（非同期）
 
   confirmTitle.textContent = snapshot.title;
   confirmSubtitle.textContent = snapshot.subtitle;
