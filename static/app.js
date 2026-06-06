@@ -22,6 +22,7 @@ const state = {
   posterCategoriesOrder: [],
   templateMaterial: null,
   selectedTemplateId: null,
+  currentPrintCheckId: null,
   galleryCategoryLimits: {},
   proposalBandOpacity: null,
   activeProposalIndex: -1,
@@ -484,7 +485,8 @@ function applyTextOffsetToPreview(copyEl, frameEl) {
 
 function updateWatermark() {
   const photo = getCurrentPosterPhoto();
-  const needsWatermark = photo?.usage !== "uploaded";
+  // uploaded素材 or poster_allowed:true の正式テンプレートにはSAMPLEを出さない
+  const needsWatermark = photo?.usage !== "uploaded" && photo?.poster_allowed !== true;
   posterPreviewFrame.classList.toggle("has-watermark", needsWatermark);
   confirmPosterPreviewFrame?.classList.toggle("has-watermark", needsWatermark);
 }
@@ -681,6 +683,11 @@ function setExportStatus(element, message, isError = false) {
 
 function getCurrentPosterPhotoUrl() {
   return getCurrentPosterPhoto()?.url || "";
+}
+
+function getCurrentPosterExportUrl() {
+  const photo = getCurrentPosterPhoto();
+  return photo?.source_url || photo?.url || "";
 }
 
 function handleOfficialMaterialUpload(event) {
@@ -1067,7 +1074,7 @@ async function renderBasePosterCanvas() {
   canvas.height = size.height;
   const context = canvas.getContext("2d");
   const snapshot = getPosterSnapshot();
-  const image = await loadPosterImage(getCurrentPosterPhotoUrl()).catch(() => null);
+  const image = await loadPosterImage(getCurrentPosterExportUrl()).catch(() => null);
 
   drawFallbackBackground(context, canvas.width, canvas.height);
   if (image) {
@@ -1211,16 +1218,22 @@ async function renderBasePosterCanvas() {
 
 async function renderPosterCanvas() {
   const baseCanvas = await renderBasePosterCanvas();
-  if (!getPosterRotationSetting().rotated) return baseCanvas;
-
-  const rotatedCanvas = document.createElement("canvas");
-  rotatedCanvas.width = baseCanvas.height;
-  rotatedCanvas.height = baseCanvas.width;
-  const context = rotatedCanvas.getContext("2d");
-  context.translate(rotatedCanvas.width, 0);
-  context.rotate(Math.PI / 2);
-  context.drawImage(baseCanvas, 0, 0);
-  return rotatedCanvas;
+  let finalCanvas;
+  if (!getPosterRotationSetting().rotated) {
+    finalCanvas = baseCanvas;
+  } else {
+    const rotatedCanvas = document.createElement("canvas");
+    rotatedCanvas.width = baseCanvas.height;
+    rotatedCanvas.height = baseCanvas.width;
+    const ctx = rotatedCanvas.getContext("2d");
+    ctx.translate(rotatedCanvas.width, 0);
+    ctx.rotate(Math.PI / 2);
+    ctx.drawImage(baseCanvas, 0, 0);
+    finalCanvas = rotatedCanvas;
+  }
+  // 印刷確認ID を右下に描画（PNG/PDF出力に必ず含まれる）
+  drawPrintCheckId(finalCanvas.getContext("2d"), finalCanvas.width, finalCanvas.height, state.currentPrintCheckId);
+  return finalCanvas;
 }
 
 function getExportFileName() {
@@ -1239,6 +1252,79 @@ function generateOrderId() {
   return `${date}_${time}`;
 }
 
+function getTemplatePosterIdLabel() {
+  const templateId = state.selectedTemplateId;
+  if (!templateId) return "UP";
+  const match = templateId.match(/(\d+)$/);
+  return match ? `HP-${String(parseInt(match[1], 10)).padStart(4, "0")}` : `HP-${templateId}`;
+}
+
+function generatePrintCheckId() {
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  const ts = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+  return `${getTemplatePosterIdLabel()} / ${ts}`;
+}
+
+function drawPrintCheckId(context, canvasWidth, canvasHeight, checkId) {
+  if (!checkId) return;
+  const fontSize = Math.max(11, Math.round(Math.min(canvasWidth, canvasHeight) * 0.009));
+  const marginX = Math.round(fontSize * 2.2);
+  const marginY = Math.round(fontSize * 1.8);
+  const x = canvasWidth - marginX;
+  const y = canvasHeight - marginY;
+
+  // サンプリング: 右下コーナーの輝度で文字色を自動切替
+  const sampleSize = Math.round(fontSize * 10);
+  const sx = Math.max(0, canvasWidth - sampleSize);
+  const sy = Math.max(0, canvasHeight - sampleSize);
+  let isDark = true;
+  try {
+    const px = context.getImageData(sx, sy, Math.min(sampleSize, canvasWidth), Math.min(sampleSize, canvasHeight)).data;
+    let total = 0;
+    for (let i = 0; i < px.length; i += 4) {
+      total += px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114;
+    }
+    isDark = total / (px.length / 4) < 140;
+  } catch (_) {}
+
+  const textColor = isDark ? "rgba(255,255,255,0.68)" : "rgba(40,40,40,0.58)";
+  const bgColor   = isDark ? "rgba(0,0,0,0.30)"       : "rgba(255,255,255,0.42)";
+
+  context.save();
+  context.font = `400 ${fontSize}px 'Yu Gothic','Meiryo',monospace`;
+  context.textAlign = "right";
+  context.textBaseline = "bottom";
+
+  const textW = context.measureText(checkId).width;
+  const padX = Math.round(fontSize * 0.5);
+  const padY = Math.round(fontSize * 0.35);
+  const rx = x - textW - padX;
+  const ry = y - fontSize - padY;
+  const rw = textW + padX * 2;
+  const rh = fontSize + padY * 2;
+  const r  = Math.round(rh / 3);
+
+  // 角丸背景
+  context.fillStyle = bgColor;
+  context.beginPath();
+  context.moveTo(rx + r, ry);
+  context.lineTo(rx + rw - r, ry);
+  context.quadraticCurveTo(rx + rw, ry,      rx + rw, ry + r);
+  context.lineTo(rx + rw, ry + rh - r);
+  context.quadraticCurveTo(rx + rw, ry + rh, rx + rw - r, ry + rh);
+  context.lineTo(rx + r, ry + rh);
+  context.quadraticCurveTo(rx, ry + rh,      rx, ry + rh - r);
+  context.lineTo(rx, ry + r);
+  context.quadraticCurveTo(rx, ry,            rx + r, ry);
+  context.closePath();
+  context.fill();
+
+  context.fillStyle = textColor;
+  context.fillText(checkId, x, y);
+  context.restore();
+}
+
 function buildOrderJson(orderId) {
   const now = new Date();
   const snapshot = getPosterSnapshot();
@@ -1246,6 +1332,8 @@ function buildOrderJson(orderId) {
   const checkboxes = Array.from(finishCheckItems.querySelectorAll('input[type="checkbox"]'));
   return {
     order_id: orderId,
+    poster_id: getTemplatePosterIdLabel(),
+    print_check_id: state.currentPrintCheckId || generatePrintCheckId(),
     created_at: now.toISOString(),
     flower_name: state.selectedFlower?.name || "",
     image_usage: getUploadedMaterialModeSetting().label,
@@ -1276,6 +1364,8 @@ function buildOrderJson(orderId) {
       position_adjustment_accepted: checkboxes[2]?.checked ?? false,
       final_adjustment_accepted: checkboxes[3]?.checked ?? false,
       color_difference_accepted: checkboxes[4]?.checked ?? false,
+      print_id_visible_checked: checkboxes[5]?.checked ?? false,
+      print_id_match_checked: checkboxes[6]?.checked ?? false,
     },
   };
 }
@@ -1442,6 +1532,12 @@ async function renderZoomConfirmArea() {
   const zoomCanvas = document.querySelector("#zoomConfirmCanvas");
   if (!zoomArea || !zoomCanvas) return;
 
+  // デモ素材（poster_allowed:false）は高解像度キャンバスを出さない
+  if (!isPosterMaterialAllowed()) {
+    zoomArea.hidden = true;
+    return;
+  }
+
   // PNG保存と同じ完成canvas（同一関数・追加描画なし）
   const full = await renderPosterCanvas().catch(() => null);
   if (!full) return;
@@ -1511,6 +1607,8 @@ function renderFinishReview() {
     : `${snapshot.imageFit} / ${snapshot.imagePosition} / ズーム ${snapshot.imageZoom} / 横 ${snapshot.imageOffsetX} / 縦 ${snapshot.imageOffsetY} / 画像回転 ${snapshot.imageRotation}`;
   confirmMaterialMode.textContent = snapshot.materialMode;
   confirmPosterRotation.textContent = snapshot.posterRotation;
+  const printCheckEl = document.querySelector("#confirmPrintCheckId");
+  if (printCheckEl) printCheckEl.textContent = state.currentPrintCheckId || "―";
   updateMaterialRightsUI();
 }
 
@@ -1532,6 +1630,10 @@ function isConfirmModeFromUrl() {
 }
 
 function showFinishReview({ updateUrl = true } = {}) {
+  // 確認画面に入った時点で印刷確認IDを確定（PNG/PDF保存・注文JSONと同一になる）
+  if (!state.currentPrintCheckId) {
+    state.currentPrintCheckId = generatePrintCheckId();
+  }
   renderFinishReview();
   confirmationSection.hidden = false;
   document.body.classList.add("confirm-mode");
@@ -1558,6 +1660,7 @@ function backToEdit() {
   });
   orderStatus.hidden = true;
   orderStatus.textContent = "";
+  state.currentPrintCheckId = null; // 再編集時に新しいIDを発行する
   setConfirmModeUrl(false);
   document.querySelector("#posterSection").scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -2213,6 +2316,8 @@ async function showOrderDetail(orderId) {
         ${hasPoster ? `<div class="order-detail-poster"><img src="/api/orders/${orderId}/poster" alt="ポスタープレビュー" class="order-detail-poster-img" loading="lazy" /></div>` : ""}
         <dl class="order-detail-fields">
           <div><dt>注文ID</dt><dd>${data.order_id || orderId}</dd></div>
+          <div><dt>ポスターID</dt><dd>${data.poster_id || "―"}</dd></div>
+          <div><dt>印刷確認ID</dt><dd style="font-family:monospace;font-weight:bold">${data.print_check_id || "―"}</dd></div>
           <div><dt>作成日時</dt><dd>${formatHistoryDate(data.created_at)}</dd></div>
           <div><dt>ステータス</dt><dd><span class="order-status-badge status-${status}">${statusLabel}</span></dd></div>
           <div><dt>花名</dt><dd>${data.flower_name || "―"}</dd></div>
@@ -2344,17 +2449,18 @@ function renderGalleryShelf() {
 }
 
 function applyPosterTemplate(template) {
-  const hasImage = Boolean(template.image);
+  const isAllowed = template.poster_allowed === true;
   state.templateMaterial = {
-    url: template.image || null,
+    url: template.preview_image || template.image || null,        // 表示用（将来は低解像度）
+    source_url: template.source_image || template.image || null,  // 保存用高解像度
     gradient: template.gradient,
-    poster_allowed: hasImage ? true : (template.poster_allowed || false),
+    poster_allowed: isAllowed,
     source: "テンプレート素材",
     license: "テンプレート管理画像",
     usage: "template",
-    license_note: (hasImage || template.poster_allowed)
+    license_note: isAllowed
       ? "テンプレート素材として使用可能"
-      : "この背景は仮表示です。正式素材をアップロードすればPNG/PDF保存ができます。",
+      : "確認用サンプルです。正式素材をアップロードすればPNG/PDF保存できます。",
   };
   state.selectedTemplateId = template.id;
   if (template.flower_match) {
@@ -2484,3 +2590,84 @@ async function init() {
 }
 
 init();
+
+// ===== Showroom cards =====
+document.querySelectorAll(".showroom-cta").forEach((btn) => {
+  btn.addEventListener("click", () => scrollToSection("#gallerySection"));
+});
+
+// ===== Wish Form =====
+(function initWishForm() {
+  const wishState = {};
+  const freeText = document.querySelector("#wishFreeText");
+
+  document.querySelectorAll(".wish-chips").forEach((group) => {
+    group.addEventListener("click", (e) => {
+      const chip = e.target.closest(".wish-chip");
+      if (!chip) return;
+      const groupName = group.dataset.group;
+      const wasActive = chip.classList.contains("is-active");
+      group.querySelectorAll(".wish-chip").forEach((c) => c.classList.remove("is-active"));
+      if (!wasActive) {
+        chip.classList.add("is-active");
+        wishState[groupName] = chip.dataset.value;
+      } else {
+        delete wishState[groupName];
+      }
+      renderWishSummary();
+    });
+  });
+
+  if (freeText) freeText.addEventListener("input", renderWishSummary);
+
+  function renderWishSummary() {
+    const summary = document.querySelector("#wishSummary");
+    const content = document.querySelector("#wishSummaryContent");
+    if (!summary || !content) return;
+    const tags = Object.values(wishState);
+    const free = freeText ? freeText.value.trim() : "";
+    if (free) tags.push(free);
+    if (tags.length === 0) { summary.hidden = true; return; }
+    summary.hidden = false;
+    content.innerHTML = tags.map((t) => `<span class="wish-summary-tag">${t}</span>`).join("");
+  }
+
+  const galleryBtn = document.querySelector("#wishGalleryButton");
+  if (galleryBtn) galleryBtn.addEventListener("click", () => scrollToSection("#gallerySection"));
+})();
+
+// ===== BGM =====
+(function initBgm() {
+  const btn = document.querySelector("#bgmButton");
+  if (!btn) return;
+  const audio = new Audio("/static/audio/gentle_flower_bgm.mp3");
+  audio.loop = true;
+  let playing = false;
+  let broken = false;
+
+  audio.addEventListener("error", () => {
+    broken = true;
+    btn.textContent = "BGMは準備中です";
+    btn.disabled = true;
+  });
+
+  btn.addEventListener("click", () => {
+    if (broken) return;
+    if (playing) {
+      audio.pause();
+      playing = false;
+      btn.textContent = "♪ BGM 再生";
+      btn.classList.remove("is-playing");
+    } else {
+      audio.play().then(() => {
+        playing = true;
+        btn.textContent = "♪ BGM 停止";
+        btn.classList.add("is-playing");
+      }).catch(() => {
+        broken = true;
+        btn.textContent = "BGMは準備中です";
+        btn.disabled = true;
+      });
+    }
+  });
+})();

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v36stickyprev" />
+    <link rel="stylesheet" href="/static/style.css?v=v37rc6" />
   </head>
   <body>
     <header class="topbar">
@@ -12,7 +12,8 @@
         <p class="eyebrow">Hana Poster AI</p>
         <h1>花屋さんのポスター文字入れ</h1>
       </div>
-      <div class="status">v1.0-rc</div>
+      <button type="button" id="bgmButton" class="bgm-button" aria-label="BGM 再生/停止">♪ BGM</button>
+      <div class="status">v1.0-rc6</div>
     </header>
 
     <main class="page">
@@ -30,7 +31,138 @@
         </div>
       </section>
 
-      <!-- ② ポスターギャラリー -->
+      <!-- ② 作例エリア -->
+      <section id="showroomSection" class="panel showroom-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Showcase</p>
+            <h2>美しいポスター作例</h2>
+            <p class="section-description">季節・シーンから雰囲気を選んで、そのまま制作をスタートできます。</p>
+          </div>
+        </div>
+        <div class="showroom-grid">
+          <div class="showroom-card">
+            <div class="showroom-card-img" style="background-image:url('/static/posters/春__ひまわり001.png')"></div>
+            <div class="showroom-card-body">
+              <span class="showroom-label">春</span>
+              <p class="showroom-catch">花開く季節の<br>フレッシュな彩り</p>
+              <button type="button" class="showroom-cta" data-scroll-category="春">この雰囲気で作る →</button>
+            </div>
+          </div>
+          <div class="showroom-card">
+            <div class="showroom-card-img showroom-img-summer"></div>
+            <div class="showroom-card-body">
+              <span class="showroom-label">夏</span>
+              <p class="showroom-catch">鮮やかな色と<br>涼しさを届ける</p>
+              <button type="button" class="showroom-cta" data-scroll-category="夏">この雰囲気で作る →</button>
+            </div>
+          </div>
+          <div class="showroom-card">
+            <div class="showroom-card-img showroom-img-mothers"></div>
+            <div class="showroom-card-body">
+              <span class="showroom-label">母の日</span>
+              <p class="showroom-catch">感謝を伝える<br>やさしいポスター</p>
+              <button type="button" class="showroom-cta" data-scroll-category="母の日">この雰囲気で作る →</button>
+            </div>
+          </div>
+          <div class="showroom-card">
+            <div class="showroom-card-img showroom-img-opening"></div>
+            <div class="showroom-card-body">
+              <span class="showroom-label">開店祝い</span>
+              <p class="showroom-catch">特別な日を飾る<br>華やかな一枚</p>
+              <button type="button" class="showroom-cta" data-scroll-category="開店祝い">この雰囲気で作る →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ③ 希望を伝えるフォーム -->
+      <section id="wishSection" class="panel wish-panel">
+        <details id="wishDetails" class="wish-details">
+          <summary>
+            <div class="wish-summary-text">
+              <p class="eyebrow">Your Wish</p>
+              <h2>希望を伝えて探す</h2>
+              <p class="section-description">ボタンを選ぶだけで、理想のポスターイメージが固まります。</p>
+            </div>
+            <div class="wish-summary-actions">
+              <span class="wish-btn-open">希望を入力する ▼</span>
+              <span class="wish-btn-close">閉じる ▲</span>
+            </div>
+          </summary>
+          <div class="wish-form-body">
+            <div class="wish-form">
+              <div class="wish-section">
+                <p class="wish-section-title">用途</p>
+                <div class="wish-chips" data-group="purpose">
+                  <button type="button" class="wish-chip" data-value="店頭POP">店頭POP</button>
+                  <button type="button" class="wish-chip" data-value="ギフト">ギフト</button>
+                  <button type="button" class="wish-chip" data-value="SNS投稿">SNS投稿</button>
+                  <button type="button" class="wish-chip" data-value="記念日">記念日</button>
+                  <button type="button" class="wish-chip" data-value="開店・イベント">開店・イベント</button>
+                </div>
+              </div>
+              <div class="wish-section">
+                <p class="wish-section-title">雰囲気</p>
+                <div class="wish-chips" data-group="mood">
+                  <button type="button" class="wish-chip" data-value="やさしい">やさしい</button>
+                  <button type="button" class="wish-chip" data-value="上品・高級感">上品・高級感</button>
+                  <button type="button" class="wish-chip" data-value="ポップ・かわいい">ポップ・かわいい</button>
+                  <button type="button" class="wish-chip" data-value="ナチュラル">ナチュラル</button>
+                  <button type="button" class="wish-chip" data-value="和風">和風</button>
+                </div>
+              </div>
+              <div class="wish-section">
+                <p class="wish-section-title">花・テーマ</p>
+                <div class="wish-chips" data-group="flower">
+                  <button type="button" class="wish-chip" data-value="バラ">バラ</button>
+                  <button type="button" class="wish-chip" data-value="ひまわり">ひまわり</button>
+                  <button type="button" class="wish-chip" data-value="紫陽花">紫陽花</button>
+                  <button type="button" class="wish-chip" data-value="洋花ミックス">洋花ミックス</button>
+                  <button type="button" class="wish-chip" data-value="季節おまかせ">季節おまかせ</button>
+                </div>
+              </div>
+              <div class="wish-section">
+                <p class="wish-section-title">文字の強さ</p>
+                <div class="wish-chips" data-group="text-strength">
+                  <button type="button" class="wish-chip" data-value="控えめ">控えめ</button>
+                  <button type="button" class="wish-chip" data-value="バランス">バランス</button>
+                  <button type="button" class="wish-chip" data-value="大きく目立つ">大きく目立つ</button>
+                </div>
+              </div>
+              <div class="wish-section">
+                <p class="wish-section-title">色味</p>
+                <div class="wish-chips" data-group="color">
+                  <button type="button" class="wish-chip" data-value="自然な色味">自然な色味</button>
+                  <button type="button" class="wish-chip" data-value="暖色系">暖色系</button>
+                  <button type="button" class="wish-chip" data-value="寒色系">寒色系</button>
+                  <button type="button" class="wish-chip" data-value="モノクロ">モノクロ</button>
+                </div>
+              </div>
+              <div class="wish-section">
+                <p class="wish-section-title">納期</p>
+                <div class="wish-chips" data-group="deadline">
+                  <button type="button" class="wish-chip" data-value="今すぐ使いたい">今すぐ使いたい</button>
+                  <button type="button" class="wish-chip" data-value="今週中">今週中</button>
+                  <button type="button" class="wish-chip" data-value="来週以降">来週以降</button>
+                  <button type="button" class="wish-chip" data-value="相談したい">相談したい</button>
+                </div>
+              </div>
+              <div class="wish-section">
+                <p class="wish-section-title">その他・自由に伝えたいこと</p>
+                <textarea id="wishFreeText" rows="2" placeholder="例：白系でまとめてほしい、英字タイトルにしたい…"></textarea>
+              </div>
+              <div id="wishSummary" class="wish-summary" hidden>
+                <p class="wish-summary-label">選択内容</p>
+                <div id="wishSummaryContent" class="wish-summary-content"></div>
+                <button type="button" class="primary-button" id="wishGalleryButton">この内容でポスターを選ぶ</button>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <!-- ④ ポスターギャラリー -->
       <section id="gallerySection" class="panel gallery-panel" aria-labelledby="gallery-title">
         <div class="section-head">
           <div>
@@ -325,12 +457,15 @@
             <div id="confirmMaterialWarning" class="material-warning" hidden>
               この写真は図鑑参考用です。ポスター発注・PNG出力には使用できません。正式素材をアップロードしてください。
             </div>
+            <p class="print-check-notice">ポスター端に印刷確認IDが小さく印字されます。お問い合わせ時の注文照合に使用します。</p>
             <div id="finishCheckItems" class="finish-checklist">
               <label><input type="checkbox" /> 誤字脱字を確認しました</label>
               <label><input type="checkbox" /> 店舗名・日付を確認しました</label>
               <label><input type="checkbox" /> 文字位置はおまかせ微調整で了承します</label>
               <label><input type="checkbox" /> 文字位置・サイズは最終調整される場合があります</label>
               <label><input type="checkbox" /> 印刷時に色味が多少異なる場合があります</label>
+              <label><input type="checkbox" /> ポスター端の印刷確認IDが入っていることを確認しました</label>
+              <label><input type="checkbox" /> 印刷確認IDが注文データと一致することを確認しました</label>
             </div>
             <div class="confirmation-actions">
               <button id="backToEditButton" class="secondary-button" type="button">編集に戻る</button>
@@ -346,6 +481,7 @@
           <!-- 右カラム：入力内容サマリー -->
           <div class="confirmation-detail-area">
             <dl class="confirm-summary" aria-label="入力内容一覧">
+              <div><dt>印刷確認ID</dt><dd id="confirmPrintCheckId" class="confirm-print-id">―</dd></div>
               <div><dt>メインタイトル</dt><dd id="confirmTitle"></dd></div>
               <div><dt>サブタイトル</dt><dd id="confirmSubtitle"></dd></div>
               <div><dt>店舗名</dt><dd id="confirmShop"></dd></div>
@@ -489,6 +625,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v36stickyprev"></script>
+    <script src="/static/app.js?v=v37rc6"></script>
   </body>
 </html>

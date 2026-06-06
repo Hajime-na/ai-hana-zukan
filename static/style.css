@@ -1278,16 +1278,12 @@ button:disabled {
   width: 100%;
 }
 
-/* 確認画面: demo素材は軽くぼかして確認用と明示（文字確認は可能なレベル） */
-.confirm-poster-preview-frame.has-watermark .confirm-poster-preview {
-  filter: blur(0.4px);
-  opacity: 0.90;
-}
-
 /* Watermark overlay (CSS only — not exported to PNG/PDF) */
 .poster-preview-frame.has-watermark::before,
 .confirm-poster-preview-frame.has-watermark::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='220'%3E%3Ctext x='50%25' y='50%25' transform='rotate(-30 150 110)' text-anchor='middle' dominant-baseline='middle' font-size='15' font-weight='bold' fill='rgba(255%2C255%2C255%2C0.14)' font-family='sans-serif' letter-spacing='8'%3ESAMPLE%3C/text%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120'%3E%3Ctext x='50%25' y='50%25' transform='rotate(-30 100 60)' text-anchor='middle' dominant-baseline='middle' font-size='20' font-weight='bold' fill='rgba(255%2C255%2C255%2C0.26)' font-family='sans-serif' letter-spacing='6'%3ESAMPLE%3C/text%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 120px;
   content: "";
   inset: 0;
   pointer-events: none;
@@ -1834,7 +1830,7 @@ body.modal-open {
 .hero-panel {
   background: linear-gradient(140deg, #eef8ee 0%, #d4ecda 50%, #fffaf0 100%);
   border-color: #c8e0ca;
-  padding: 52px 28px;
+  padding: 28px 28px 22px;
   text-align: center;
 }
 
@@ -1845,7 +1841,7 @@ body.modal-open {
 
 .hero-title {
   color: var(--ink);
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
   font-weight: 800;
   line-height: 1.28;
   margin: 0.5rem 0 1rem;
@@ -1853,25 +1849,25 @@ body.modal-open {
 
 .hero-lead {
   color: #4a6450;
-  font-size: 1rem;
-  line-height: 1.8;
-  margin: 0 0 2rem;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin: 0 0 1rem;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
   justify-content: center;
 }
 
 .hero-actions .primary-button,
 .hero-actions .secondary-button {
-  font-size: 15px;
+  font-size: 14px;
   margin: 0;
-  min-height: 50px;
-  min-width: 160px;
-  padding: 12px 24px;
+  min-height: 40px;
+  min-width: 140px;
+  padding: 9px 20px;
 }
 
 /* ── Gallery section (shelf layout) ─────────────────────────── */
@@ -2045,4 +2041,276 @@ body.modal-open {
   .gallery-thumb {
     width: 100%;
   }
+}
+
+/* ===== Showroom (作例エリア) ===== */
+.showroom-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 860px) {
+  .showroom-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .showroom-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+}
+
+.showroom-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.showroom-card-img {
+  background-position: center;
+  background-size: cover;
+  flex-shrink: 0;
+  width: 90px;
+}
+
+.showroom-img-summer {
+  background: linear-gradient(160deg, #7ecef4 0%, #f5e04a 60%, #ff9843 100%);
+}
+
+.showroom-img-mothers {
+  background: linear-gradient(160deg, #f9c1d8 0%, #f4a2c0 50%, #e06a96 100%);
+}
+
+.showroom-img-opening {
+  background: linear-gradient(160deg, #ffe0a0 0%, #ffb347 50%, #e05c3a 100%);
+}
+
+.showroom-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 6px;
+  min-width: 0;
+  padding: 10px 12px;
+}
+
+.showroom-label {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--green-dark);
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+}
+
+.showroom-catch {
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+  overflow: hidden;
+}
+
+.showroom-cta {
+  background: var(--green-dark);
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: auto;
+  padding: 5px 8px;
+  text-align: center;
+  width: 100%;
+}
+
+.showroom-cta:hover {
+  background: #2d5239;
+}
+
+/* ===== Wish Form (希望フォーム) ===== */
+.wish-details {
+  width: 100%;
+}
+
+.wish-details > summary {
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  justify-content: space-between;
+  list-style: none;
+  outline: none;
+}
+
+.wish-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.wish-summary-text {
+  flex: 1;
+}
+
+.wish-summary-text .eyebrow { margin-bottom: 2px; }
+.wish-summary-text h2 { margin-bottom: 4px; }
+
+.wish-summary-actions {
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+.wish-btn-open,
+.wish-btn-close {
+  background: var(--soft);
+  border: 1px solid #c4d8c6;
+  border-radius: 999px;
+  color: var(--green-dark);
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 14px;
+  white-space: nowrap;
+}
+
+.wish-btn-close { display: none; }
+.wish-details[open] .wish-btn-open { display: none; }
+.wish-details[open] .wish-btn-close { display: inline-block; }
+
+.wish-form-body {
+  margin-top: 16px;
+}
+
+.wish-form {
+  display: grid;
+  gap: 18px;
+}
+
+.wish-section {
+  display: grid;
+  gap: 8px;
+}
+
+.wish-section-title {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.wish-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wish-chip {
+  background: #fff;
+  border: 1.5px solid #c4d8c6;
+  border-radius: 999px;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 7px 16px;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.wish-chip:hover {
+  background: var(--soft);
+  border-color: var(--green);
+}
+
+.wish-chip.is-active {
+  background: var(--green-dark);
+  border-color: var(--green-dark);
+  color: #fff;
+}
+
+.wish-summary {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  display: grid;
+  gap: 12px;
+  padding: 16px 20px;
+}
+
+.wish-summary-label {
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.wish-summary-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.wish-summary-tag {
+  background: var(--green-dark);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 13px;
+  padding: 4px 12px;
+}
+
+/* ===== 印刷確認ID ===== */
+.print-check-notice {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0 0 8px;
+  padding: 7px 12px;
+}
+
+.confirm-print-id {
+  color: var(--green-dark);
+  font-family: monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* ===== BGM Button ===== */
+.bgm-button {
+  background: var(--soft);
+  border: 1px solid #c4d8c6;
+  border-radius: 999px;
+  color: var(--green-dark);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 14px;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.bgm-button:hover {
+  background: #dff0df;
+}
+
+.bgm-button.is-playing {
+  background: var(--green-dark);
+  border-color: var(--green-dark);
+  color: #fff;
+}
+
+.bgm-button:disabled {
+  cursor: default;
+  opacity: 0.6;
 }
