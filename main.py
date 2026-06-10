@@ -135,6 +135,15 @@ def _save_order_json(order_id: str, data: dict) -> None:
 
 # ── Core routes ──────────────────────────────────────────────────────────────
 
+@app.get("/api/poster-templates")
+def get_poster_templates():
+    return FileResponse(
+        STATIC_DIR / "poster_templates.json",
+        media_type="application/json",
+        headers={"Cache-Control": "no-store"},
+    )
+
+
 @app.get("/")
 def read_index():
     return FileResponse(

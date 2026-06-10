@@ -10,179 +10,14 @@
   ],
   "templates": [
     {
-      "id": "img-0036",
-      "title": "ひまわり 001",
-      "short_label": "ひまわり1",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春__ひまわり001.png",
-      "categories": [
-        "春"
-      ],
-      "season": "春",
-      "tags": [
-        "ひまわり",
-        "春"
-      ],
-      "poster_allowed": false,
-      "featured": false,
-      "default_main_title": "ひまわりフェア",
-      "default_subtitle": "旬のひまわりをあなたへ。",
-      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
-      "poster_design": "photo-full",
-      "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
-    },
-    {
-      "id": "img-0037",
-      "title": "ひまわり 002",
-      "short_label": "ひまわり2",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_ひまわり002.png",
-      "categories": [
-        "春"
-      ],
-      "season": "春",
-      "tags": [
-        "ひまわり",
-        "春"
-      ],
-      "poster_allowed": false,
-      "featured": false,
-      "default_main_title": "ひまわりフェア",
-      "default_subtitle": "旬のひまわりをあなたへ。",
-      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
-      "poster_design": "photo-full",
-      "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
-    },
-    {
-      "id": "img-0038",
-      "title": "ひまわり 003",
-      "short_label": "ひまわり3",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_ひまわり003.png",
-      "categories": [
-        "春"
-      ],
-      "season": "春",
-      "tags": [
-        "ひまわり",
-        "春"
-      ],
-      "poster_allowed": false,
-      "featured": false,
-      "default_main_title": "ひまわりフェア",
-      "default_subtitle": "旬のひまわりをあなたへ。",
-      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
-      "poster_design": "photo-full",
-      "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
-    },
-    {
-      "id": "img-0039",
-      "title": "ひまわり 004",
-      "short_label": "ひまわり4",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_ひまわり004.png",
-      "categories": [
-        "春"
-      ],
-      "season": "春",
-      "tags": [
-        "ひまわり",
-        "春"
-      ],
-      "poster_allowed": false,
-      "featured": false,
-      "default_main_title": "ひまわりフェア",
-      "default_subtitle": "旬のひまわりをあなたへ。",
-      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
-      "poster_design": "photo-full",
-      "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
-    },
-    {
-      "id": "img-0040",
-      "title": "ひまわり 005",
-      "short_label": "ひまわり5",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_ひまわり005.png",
-      "categories": [
-        "春"
-      ],
-      "season": "春",
-      "tags": [
-        "ひまわり",
-        "春"
-      ],
-      "poster_allowed": false,
-      "featured": false,
-      "default_main_title": "ひまわりフェア",
-      "default_subtitle": "旬のひまわりをあなたへ。",
-      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
-      "poster_design": "photo-full",
-      "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
-    },
-    {
-      "id": "img-0041",
-      "title": "ひまわり 006",
-      "short_label": "ひまわり6",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_ひまわり006.png",
-      "categories": [
-        "春"
-      ],
-      "season": "春",
-      "tags": [
-        "ひまわり",
-        "春"
-      ],
-      "poster_allowed": false,
-      "featured": false,
-      "default_main_title": "ひまわりフェア",
-      "default_subtitle": "旬のひまわりをあなたへ。",
-      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
-      "poster_design": "photo-full",
-      "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
-    },
-    {
-      "id": "img-0042",
-      "title": "ひまわり 007",
-      "short_label": "ひまわり7",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_ひまわり007.png",
-      "categories": [
-        "春"
-      ],
-      "season": "春",
-      "tags": [
-        "ひまわり",
-        "春"
-      ],
-      "poster_allowed": false,
-      "featured": false,
-      "default_main_title": "ひまわりフェア",
-      "default_subtitle": "旬のひまわりをあなたへ。",
-      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
-      "poster_design": "photo-full",
-      "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
-    },
-    {
       "id": "img-0043",
+      "poster_id": "HP-0043",
       "title": "ラベンダー 001",
       "short_label": "ラベンダー1",
       "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_ラベンダー001.png",
+      "image": "/static/posters_preview/HP-0043_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0043_preview.jpg",
+      "source_image": "/static/posters/春_ラベンダー001.png",
       "categories": [
         "春"
       ],
@@ -203,10 +38,13 @@
     },
     {
       "id": "img-0044",
+      "poster_id": "HP-0044",
       "title": "ラベンダー 002",
       "short_label": "ラベンダー2",
       "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_ラベンダー002.png",
+      "image": "/static/posters_preview/HP-0044_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0044_preview.jpg",
+      "source_image": "/static/posters/春_ラベンダー002.png",
       "categories": [
         "春"
       ],
@@ -227,10 +65,13 @@
     },
     {
       "id": "img-0045",
+      "poster_id": "HP-0045",
       "title": "ラベンダー 003",
       "short_label": "ラベンダー3",
       "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_ラベンダー003.png",
+      "image": "/static/posters_preview/HP-0045_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0045_preview.jpg",
+      "source_image": "/static/posters/春_ラベンダー003.png",
       "categories": [
         "春"
       ],
@@ -250,244 +91,463 @@
       "flower_match": "ラベンダー"
     },
     {
-      "id": "img-0046",
-      "title": "朝顔 001",
-      "short_label": "朝顔1",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_朝顔001.png",
+      "id": "img-0056",
+      "poster_id": "HP-0056",
+      "title": "ひまわり 001",
+      "short_label": "ひまわり1",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0056_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0056_preview.jpg",
+      "source_image": "/static/posters/夏__ひまわり001.png",
       "categories": [
-        "春"
+        "夏"
       ],
-      "season": "春",
+      "season": "夏",
       "tags": [
-        "朝顔",
-        "春"
+        "ひまわり",
+        "夏"
       ],
       "poster_allowed": false,
       "featured": false,
-      "default_main_title": "朝顔フェア",
-      "default_subtitle": "旬の朝顔をあなたへ。",
-      "default_note": "朝顔入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "朝顔"
+      "flower_match": "ひまわり"
     },
     {
-      "id": "img-0047",
-      "title": "朝顔 002",
-      "short_label": "朝顔2",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_朝顔002.png",
+      "id": "img-0057",
+      "poster_id": "HP-0057",
+      "title": "ひまわり 002",
+      "short_label": "ひまわり2",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0057_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0057_preview.jpg",
+      "source_image": "/static/posters/夏_ひまわり002.png",
       "categories": [
-        "春"
+        "夏"
       ],
-      "season": "春",
+      "season": "夏",
       "tags": [
-        "朝顔",
-        "春"
+        "ひまわり",
+        "夏"
       ],
       "poster_allowed": false,
       "featured": false,
-      "default_main_title": "朝顔フェア",
-      "default_subtitle": "旬の朝顔をあなたへ。",
-      "default_note": "朝顔入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "朝顔"
+      "flower_match": "ひまわり"
     },
     {
-      "id": "img-0048",
-      "title": "朝顔 003",
-      "short_label": "朝顔3",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_朝顔003.png",
+      "id": "img-0058",
+      "poster_id": "HP-0058",
+      "title": "ひまわり 003",
+      "short_label": "ひまわり3",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0058_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0058_preview.jpg",
+      "source_image": "/static/posters/夏_ひまわり003.png",
       "categories": [
-        "春"
+        "夏"
       ],
-      "season": "春",
+      "season": "夏",
       "tags": [
-        "朝顔",
-        "春"
+        "ひまわり",
+        "夏"
       ],
       "poster_allowed": false,
       "featured": false,
-      "default_main_title": "朝顔フェア",
-      "default_subtitle": "旬の朝顔をあなたへ。",
-      "default_note": "朝顔入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "朝顔"
+      "flower_match": "ひまわり"
     },
     {
-      "id": "img-0049",
+      "id": "img-0059",
+      "poster_id": "HP-0059",
+      "title": "ひまわり 004",
+      "short_label": "ひまわり4",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0059_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0059_preview.jpg",
+      "source_image": "/static/posters/夏_ひまわり004.png",
+      "categories": [
+        "夏"
+      ],
+      "season": "夏",
+      "tags": [
+        "ひまわり",
+        "夏"
+      ],
+      "poster_allowed": false,
+      "featured": false,
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ひまわり"
+    },
+    {
+      "id": "img-0060",
+      "poster_id": "HP-0060",
+      "title": "ひまわり 005",
+      "short_label": "ひまわり5",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0060_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0060_preview.jpg",
+      "source_image": "/static/posters/夏_ひまわり005.png",
+      "categories": [
+        "夏"
+      ],
+      "season": "夏",
+      "tags": [
+        "ひまわり",
+        "夏"
+      ],
+      "poster_allowed": false,
+      "featured": false,
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ひまわり"
+    },
+    {
+      "id": "img-0061",
+      "poster_id": "HP-0061",
+      "title": "ひまわり 006",
+      "short_label": "ひまわり6",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0061_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0061_preview.jpg",
+      "source_image": "/static/posters/夏_ひまわり006.png",
+      "categories": [
+        "夏"
+      ],
+      "season": "夏",
+      "tags": [
+        "ひまわり",
+        "夏"
+      ],
+      "poster_allowed": false,
+      "featured": false,
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ひまわり"
+    },
+    {
+      "id": "img-0062",
+      "poster_id": "HP-0062",
+      "title": "ひまわり 007",
+      "short_label": "ひまわり7",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0062_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0062_preview.jpg",
+      "source_image": "/static/posters/夏_ひまわり007.png",
+      "categories": [
+        "夏"
+      ],
+      "season": "夏",
+      "tags": [
+        "ひまわり",
+        "夏"
+      ],
+      "poster_allowed": false,
+      "featured": false,
+      "default_main_title": "ひまわりフェア",
+      "default_subtitle": "旬のひまわりをあなたへ。",
+      "default_note": "ひまわり入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ひまわり"
+    },
+    {
+      "id": "img-0063",
+      "poster_id": "HP-0063",
+      "title": "紫陽花 001",
+      "short_label": "紫陽花1",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0063_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0063_preview.jpg",
+      "source_image": "/static/posters/夏_紫陽花008.png",
+      "categories": [
+        "夏"
+      ],
+      "season": "夏",
+      "tags": [
+        "紫陽花",
+        "夏"
+      ],
+      "poster_allowed": false,
+      "featured": false,
+      "default_main_title": "紫陽花フェア",
+      "default_subtitle": "旬の紫陽花をあなたへ。",
+      "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "紫陽花"
+    },
+    {
+      "id": "img-0064",
+      "poster_id": "HP-0064",
       "title": "紫陽花 002",
       "short_label": "紫陽花2",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_紫陽花002.png",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0064_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0064_preview.jpg",
+      "source_image": "/static/posters/夏_紫陽花009.png",
       "categories": [
-        "春"
+        "夏"
       ],
-      "season": "春",
+      "season": "夏",
       "tags": [
         "紫陽花",
-        "春"
+        "夏"
       ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
       "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
+      "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "紫陽花"
     },
     {
-      "id": "img-0050",
+      "id": "img-0065",
+      "poster_id": "HP-0065",
       "title": "紫陽花 003",
       "short_label": "紫陽花3",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_紫陽花003.png",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0065_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0065_preview.jpg",
+      "source_image": "/static/posters/夏_紫陽花010.png",
       "categories": [
-        "春"
+        "夏"
       ],
-      "season": "春",
+      "season": "夏",
       "tags": [
         "紫陽花",
-        "春"
+        "夏"
       ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
       "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
+      "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "紫陽花"
     },
     {
-      "id": "img-0051",
+      "id": "img-0066",
+      "poster_id": "HP-0066",
       "title": "紫陽花 004",
       "short_label": "紫陽花4",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_紫陽花004.png",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0066_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0066_preview.jpg",
+      "source_image": "/static/posters/夏_紫陽花011.png",
       "categories": [
-        "春"
+        "夏"
       ],
-      "season": "春",
+      "season": "夏",
       "tags": [
         "紫陽花",
-        "春"
+        "夏"
       ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
       "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
+      "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "紫陽花"
     },
     {
-      "id": "img-0052",
+      "id": "img-0067",
+      "poster_id": "HP-0067",
       "title": "紫陽花 005",
       "short_label": "紫陽花5",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_紫陽花005.png",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0067_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0067_preview.jpg",
+      "source_image": "/static/posters/夏_紫陽花012.png",
       "categories": [
-        "春"
+        "夏"
       ],
-      "season": "春",
+      "season": "夏",
       "tags": [
         "紫陽花",
-        "春"
+        "夏"
       ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
       "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
+      "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "紫陽花"
     },
     {
-      "id": "img-0053",
+      "id": "img-0068",
+      "poster_id": "HP-0068",
       "title": "紫陽花 006",
       "short_label": "紫陽花6",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_紫陽花006.png",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0068_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0068_preview.jpg",
+      "source_image": "/static/posters/夏_紫陽花013.png",
       "categories": [
-        "春"
+        "夏"
       ],
-      "season": "春",
+      "season": "夏",
       "tags": [
         "紫陽花",
-        "春"
+        "夏"
       ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
       "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
+      "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "紫陽花"
     },
     {
-      "id": "img-0054",
+      "id": "img-0069",
+      "poster_id": "HP-0069",
       "title": "紫陽花 007",
       "short_label": "紫陽花7",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_紫陽花007.png",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0069_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0069_preview.jpg",
+      "source_image": "/static/posters/夏_紫陽花014.png",
       "categories": [
-        "春"
+        "夏"
       ],
-      "season": "春",
+      "season": "夏",
       "tags": [
         "紫陽花",
-        "春"
+        "夏"
       ],
       "poster_allowed": false,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
       "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
+      "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "紫陽花"
     },
     {
-      "id": "img-0055",
-      "title": "紫陽花 008",
-      "short_label": "紫陽花8",
-      "gradient": "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
-      "image": "/static/posters/春_紫陽花008.png",
+      "id": "img-0070",
+      "poster_id": "HP-0070",
+      "title": "朝顔 001",
+      "short_label": "朝顔1",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0070_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0070_preview.jpg",
+      "source_image": "/static/posters/夏_朝顔015.png",
       "categories": [
-        "春"
+        "夏"
       ],
-      "season": "春",
+      "season": "夏",
       "tags": [
-        "紫陽花",
-        "春"
+        "朝顔",
+        "夏"
       ],
       "poster_allowed": false,
       "featured": false,
-      "default_main_title": "紫陽花フェア",
-      "default_subtitle": "旬の紫陽花をあなたへ。",
-      "default_note": "紫陽花入荷中。ご自宅用にも贈りものにもどうぞ。",
-      "poster_type": "elegant",
+      "default_main_title": "朝顔フェア",
+      "default_subtitle": "旬の朝顔をあなたへ。",
+      "default_note": "朝顔入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "紫陽花"
+      "flower_match": "朝顔"
+    },
+    {
+      "id": "img-0071",
+      "poster_id": "HP-0071",
+      "title": "朝顔 002",
+      "short_label": "朝顔2",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0071_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0071_preview.jpg",
+      "source_image": "/static/posters/夏_朝顔016.png",
+      "categories": [
+        "夏"
+      ],
+      "season": "夏",
+      "tags": [
+        "朝顔",
+        "夏"
+      ],
+      "poster_allowed": false,
+      "featured": false,
+      "default_main_title": "朝顔フェア",
+      "default_subtitle": "旬の朝顔をあなたへ。",
+      "default_note": "朝顔入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "朝顔"
+    },
+    {
+      "id": "img-0072",
+      "poster_id": "HP-0072",
+      "title": "朝顔 003",
+      "short_label": "朝顔3",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0072_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0072_preview.jpg",
+      "source_image": "/static/posters/夏_朝顔017.png",
+      "categories": [
+        "夏"
+      ],
+      "season": "夏",
+      "tags": [
+        "朝顔",
+        "夏"
+      ],
+      "poster_allowed": false,
+      "featured": false,
+      "default_main_title": "朝顔フェア",
+      "default_subtitle": "旬の朝顔をあなたへ。",
+      "default_note": "朝顔入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "朝顔"
     }
   ]
 }

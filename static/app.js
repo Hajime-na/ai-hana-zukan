@@ -2572,7 +2572,7 @@ async function init() {
   applyFlowerToPoster();
   requestSuggestions();
   try {
-    const tplResp = await fetch("/static/poster_templates.json?v=v13watermark");
+    const tplResp = await fetch("/api/poster-templates");
     const tplData = await tplResp.json();
     state.posterTemplates = tplData.templates || [];
     state.posterCategoriesOrder = tplData.categories_order || [];
