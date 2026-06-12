@@ -8,3 +8,6 @@ orders/
 *.bak
 node_modules/
 package-lock.json
+
+# 高解像度元画はGit管理しない（SAMPLE入りプレビューのみ管理）
+static/posters/
