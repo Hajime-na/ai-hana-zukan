@@ -1,5 +1,76 @@
 # Release Notes
 
+## v1.0-rc9.1 — 素材保護・プレビュー分離版
+
+**タグ**: `v1.0-rc9.1`  
+**ベース**: v1.0-rc9
+
+### このリリースについて
+
+v1.0-rc9 の poster_master.csv 同期運用を基盤に、高解像度元画像とWeb表示用プレビュー画像を明確に分離し、素材保護を強化したリリースです。
+
+### 変更内容
+
+- **高解像度元画を Git 管理外に**: `static/posters/` を `.gitignore` に追加。元画 PNG は GitHub に push されない
+- **SAMPLE入りプレビューを Git 管理対象に**: `static/posters_preview/` の縮小・透かし入り画像（JPEG）をリポジトリで管理
+- **プレビュー再生成スクリプトを追加**: `scripts/generate_poster_previews.py` をコミット済み。元画から SAMPLE 入りプレビューを再生成できる
+- **tulip.ico**: アプリ内で未参照のため未コミット
+
+### 運用ルール（このリリース以降）
+
+| 種別 | 場所 | Git管理 |
+|---|---|---|
+| 高解像度元画 | `static/posters/` | 管理外（.gitignore） |
+| SAMPLE入り縮小プレビュー | `static/posters_preview/` | 管理する |
+| マスターデータ | `poster_master.csv` | 管理する |
+| 生成スクリプト | `scripts/sync_poster_templates.py` / `scripts/generate_poster_previews.py` | 管理する |
+
+---
+
+## v1.0-rc9 — poster_master.csv 同期運用版
+
+**タグ**: `v1.0-rc9`  
+**ベース**: v1.0-rc8  
+**コミット**: `4477a18`
+
+### このリリースについて
+
+ポスターテンプレートの管理方法を刷新し、`poster_master.csv` を唯一の正としてサーバー起動時に自動同期する運用に移行しました。
+
+### 追加・変更内容
+
+#### poster_master.csv をマスターにした同期運用
+
+- `poster_master.csv` がテンプレートデータの唯一の正（単一ソース・オブ・トゥルース）
+- `scripts/sync_poster_templates.py` が `poster_master.csv` を読み込み、SAMPLE 入りプレビューを生成しつつ `static/poster_templates.json` を再生成する
+- `start_server.bat` がサーバー起動前に自動で `sync_poster_templates.py` を実行するため、CSV を更新するだけでWeb表示に即反映される
+- `/api/poster-templates` は `Cache-Control: no-store` で最新 JSON を毎回配信する
+
+#### 同期フロー
+
+```
+poster_master.csv
+  ↓ scripts/sync_poster_templates.py（起動時自動実行）
+static/poster_templates.json + static/posters_preview/*.jpg
+  ↓ /api/poster-templates（no-store）
+Web画面のカテゴリ棚
+```
+
+#### poster_master.csv のフィールド
+
+| フィールド | 内容 |
+|---|---|
+| `poster_id` | HP-XXXX 形式の一意ID |
+| `source_path` | 高解像度元画のパス |
+| `title` / `short_label` | 表示名 |
+| `season` / `categories` / `tags` | 分類 |
+| `poster_allowed` / `featured` | 公開制御 |
+| `default_main_title` / `default_subtitle` / `default_note` | デフォルト文字 |
+| `poster_type` / `poster_design` / `poster_position` | スタイル設定 |
+| `flower_match` | 対応する花名 |
+
+---
+
 ## v1.0-rc5 — 編集UX改善版
 
 **タグ**: `v1.0-rc5`  

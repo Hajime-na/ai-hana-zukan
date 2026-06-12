@@ -242,6 +242,15 @@ OPENAI_MODEL=gpt-4.1-mini
 
 ---
 
+### `GET /api/poster-templates`
+
+`static/poster_templates.json` を `Cache-Control: no-store` で返します。
+`sync_poster_templates.py` が生成した最新データを毎回配信します。
+
+返却フィールド：`categories_order` / `templates[]`（各テンプレートの id・title・image・categories・poster_type 等）
+
+---
+
 ### `GET /api/orders`
 
 `orders/` フォルダ内の `order_*.json` を新しい順に読み込み一覧を返します。
@@ -398,18 +407,24 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 .
 ├── main.py
 ├── requirements.txt
+├── poster_master.csv          ← テンプレートのマスターデータ（唯一の正）
+├── start_server.bat           ← 起動スクリプト（sync自動実行→uvicorn起動）
 ├── .env.example
 ├── .gitignore
 ├── flowers.json
 ├── RELEASE_NOTES.md
+├── scripts/
+│   ├── sync_poster_templates.py      ← CSV→JSON変換＋プレビュー生成（起動時自動実行）
+│   └── generate_poster_previews.py   ← プレビュー画像の手動再生成用
 ├── orders/                    ← サーバー保存注文（.gitignore 除外）
 ├── static/
 │   ├── index.html
 │   ├── style.css
 │   ├── app.js
 │   ├── flowers.json
-│   ├── poster_templates.json  ← ポスターテンプレートデータ
-│   └── posters/               ← 制作ポスター画像の置き場所
+│   ├── poster_templates.json  ← sync_poster_templates.py が自動生成（直接編集しない）
+│   ├── posters/               ← 高解像度元画（.gitignore 除外・Git管理外）
+│   └── posters_preview/       ← SAMPLE入り縮小プレビュー（Git管理・Web表示用）
 └── README.md
 ```
 
@@ -417,75 +432,74 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 ## ポスター画像の管理
 
-### 保存場所
+### 素材の分離方針（v1.0-rc9.1〜）
+
+| 種別 | 場所 | Git管理 | Web表示 |
+|---|---|---|---|
+| 高解像度元画 | `static/posters/` | 管理外（.gitignore） | 直接使わない |
+| SAMPLE入り縮小プレビュー | `static/posters_preview/` | 管理する | これを使う |
+
+Web画面のカテゴリ棚には常に `posters_preview/` の SAMPLE 入り縮小 JPEG を表示します。
+正式印刷用の高解像度元画（`static/posters/`）はローカルのみで管理し、GitHub には push しません。
+
+### 同期フロー
 
 ```
-static/posters/
-  ├── spring_001.png
-  ├── spring_002.png
-  ├── summer_001.png
-  ├── mothersday_001.png
-  └── ...
+poster_master.csv  ← ここだけ編集する
+  ↓ scripts/sync_poster_templates.py（start_server.bat 起動時に自動実行）
+static/poster_templates.json（自動生成・直接編集しない）
+static/posters_preview/*.jpg（未生成分のみプレビューを新規作成）
+  ↓ GET /api/poster-templates（Cache-Control: no-store）
+Web画面のカテゴリ棚
 ```
 
-- **フォルダ分けはしない** — `static/posters/` に全ポスター画像をフラットに置く
-- カテゴリはファイル名プレフィックスと `poster_templates.json` の `categories` フィールドで管理する
+### poster_master.csv の編集ルール
 
-### ファイル名規則
+- 新しいポスターを追加したいときは `poster_master.csv` に行を追加する
+- `static/poster_templates.json` は直接編集しない（次回起動時に上書きされる）
+- `source_path` に元画のパスを記載すると、起動時にプレビューが自動生成される
 
-| プレフィックス | カテゴリ |
-|---|---|
-| `spring_` | 春 |
-| `summer_` | 夏 |
-| `autumn_` | 秋 |
-| `winter_` | 冬 |
-| `mothersday_` | 母の日 |
-| `gift_` | ギフト |
-| `opening_` | 開店祝い |
+### プレビューの手動再生成
 
-連番は3桁ゼロ埋め（`001`, `002`, ...）
+```bash
+# 未生成のみ処理
+python scripts/sync_poster_templates.py
 
-### poster_templates.json への登録例
+# 全プレビューを強制再生成
+python scripts/sync_poster_templates.py --force
 
-```json
-{
-  "id": "spring-a",
-  "short_label": "春A",
-  "image": "/static/posters/spring_001.png",
-  "categories": ["春"],
-  "season": "春",
-  "poster_allowed": true
-}
+# プレビュー画像のみ手動再生成
+python scripts/generate_poster_previews.py
 ```
-
-- `image`: `/static/posters/xxx.png` 形式で指定
-- `categories`: 複数カテゴリに同時所属可能（例：`["春", "ギフト", "かわいい"]`）
-- `season`: 季節の主カテゴリ（表示ソート用）
-- `poster_allowed: true` — 正式販売用
-- `poster_allowed: false` — デモ・検討中
 
 ### カテゴリ運用の考え方
 
-1枚の画像を複数カテゴリに出せるよう、フォルダではなく `categories` 配列で分類する。
+1枚の画像を複数カテゴリに出せるよう、`poster_master.csv` の `categories` フィールドをセミコロン区切りで指定する。
 
-```json
-"categories": ["春", "ギフト", "かわいい"]
+```
+categories: 春;ギフト
 ```
 
-この場合、春・ギフト・かわいいの3カテゴリ棚に同じ画像が表示される。
+この場合、春・ギフトの両カテゴリ棚に同じ画像が表示される。
 
 ---
 
 ## 現在の状態
 
-**v1.0-rc5** ― 編集UX改善版（ローカル試作版）
+**v1.0-rc9.1** ― poster_master.csv 同期運用・素材保護版（ローカル試作版）
 
 | 機能 | 状態 |
 |------|------|
 | カテゴリ棚型ポスターギャラリー（7カテゴリ） | 実装済み |
 | サムネイルクリックでポスター編集へ即反映 | 実装済み |
 | 選択中バッジ・もっと見るボタン | 実装済み |
-| poster_templates.json によるテンプレート管理 | 実装済み |
+| poster_master.csv をマスターにした同期運用 | 実装済み |
+| 起動時に sync_poster_templates.py を自動実行 | 実装済み |
+| /api/poster-templates で no-store 配信 | 実装済み |
+| 元画PNGは Git 管理外（.gitignore） | 実装済み |
+| SAMPLE入り縮小プレビュー（posters_preview/）をWeb表示に使用 | 実装済み |
+| scripts/generate_poster_previews.py でプレビュー再生成 | 実装済み |
+| poster_templates.json の自動生成（CSV→JSON） | 実装済み |
 | ヒーローエリア（キャッチコピー・CTAボタン） | 実装済み |
 | 花図鑑・検索・詳細表示 | 実装済み |
 | AI販促文（OpenAI API + フォールバック） | 実装済み |
@@ -614,6 +628,9 @@ static/posters/
 | v0.9 | PDF出力 ✅ |
 | v1.0-rc3 | カテゴリ棚型ポスターギャラリー ✅ |
 | v1.0-rc5 | 文字スタイル6種類・サイズスライダー・sticky プレビュー ✅ |
+| v1.0-rc8 | 印刷チェックIDシステム・UI改善・画像保護 ✅ |
+| v1.0-rc9 | poster_master.csv 同期運用・サーバー起動時自動生成 ✅ |
+| v1.0-rc9.1 | 高解像度元画Git管理外・SAMPLEプレビュー分離・素材保護強化 ✅ |
 | v1.1 | 認証・ログイン |
 | v1.2 | 本番DB化（SQLite / PostgreSQL） |
 | v1.3 | 印刷会社連携 |
