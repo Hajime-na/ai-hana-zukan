@@ -1618,6 +1618,10 @@ body.confirm-mode .topbar,
   color: #7a5800;
 }
 
+.editing-order-banner[hidden] {
+  display: none;
+}
+
 .editing-order-banner__text {
   flex: 1;
   min-width: 0;
