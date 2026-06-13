@@ -2031,12 +2031,18 @@ savePngButton.addEventListener("click", () => {
   const fn = state.editingOrderId ? `poster_${state.editingOrderId}.png` : undefined;
   savePosterPng(pngStatus, fn);
 });
-saveConfirmPngButton.addEventListener("click", () => savePosterPng(confirmPngStatus));
+saveConfirmPngButton.addEventListener("click", () => {
+  const fn = state.editingOrderId ? `poster_${state.editingOrderId}.png` : undefined;
+  savePosterPng(confirmPngStatus, fn);
+});
 savePdfButton.addEventListener("click", () => {
   const fn = state.editingOrderId ? getPdfFileName(state.editingOrderId) : undefined;
   savePosterPdf(pdfStatus, fn);
 });
-saveConfirmPdfButton.addEventListener("click", () => savePosterPdf(confirmPdfStatus));
+saveConfirmPdfButton.addEventListener("click", () => {
+  const fn = state.editingOrderId ? getPdfFileName(state.editingOrderId) : undefined;
+  savePosterPdf(confirmPdfStatus, fn);
+});
 
 placeOrderButton.addEventListener("click", () => {
   if (!isPosterMaterialAllowed()) {
