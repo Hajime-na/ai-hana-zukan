@@ -24,6 +24,7 @@ const state = {
   selectedTemplateId: null,
   currentPrintCheckId: null,
   editingOrderId: null,
+  editingShipToType: null,
   galleryCategoryLimits: {},
   proposalBandOpacity: null,
   activeProposalIndex: -1,
@@ -1627,9 +1628,12 @@ function renderFinishReview() {
   confirmPosterRotation.textContent = snapshot.posterRotation;
   const printCheckEl = document.querySelector("#confirmPrintCheckId");
   if (printCheckEl) printCheckEl.textContent = state.currentPrintCheckId || "―";
+  if (confirmPrintVendor) confirmPrintVendor.textContent = "Prio";
   if (confirmPrintSize) confirmPrintSize.textContent = printSize?.value || "A2";
   if (confirmPrintPaper) confirmPrintPaper.textContent = printPaper?.value || "マット紙";
   if (confirmPrintDelivery) confirmPrintDelivery.textContent = printDelivery?.value || "余裕便";
+  if (confirmShipTo) confirmShipTo.textContent = state.editingShipToType || "お客様直送";
+  if (confirmSenderName) confirmSenderName.textContent = "Hana Poster AI";
   updateMaterialRightsUI();
 }
 
@@ -2449,6 +2453,7 @@ function _setSelectByValueOrText(el, val) {
 function loadOrderIntoEditor(orderData) {
   state.editingOrderId = orderData.order_id;
   state.currentPrintCheckId = orderData.print_check_id || null;
+  state.editingShipToType = orderData.ship_to_type || null;
 
   const template = state.posterTemplates.find((t) => t.poster_id === orderData.poster_id);
   if (template) applyPosterTemplate(template);
@@ -2500,6 +2505,7 @@ function loadOrderIntoEditor(orderData) {
 function clearEditingOrder() {
   state.editingOrderId = null;
   state.currentPrintCheckId = null;
+  state.editingShipToType = null;
   const banner = document.querySelector("#editingOrderBanner");
   if (banner) banner.hidden = true;
 }
