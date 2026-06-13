@@ -1605,6 +1605,34 @@ body.confirm-mode .topbar,
   width: 100%;
 }
 
+.editing-order-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  background: #fff8e1;
+  border: 2px solid #f0b429;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #7a5800;
+}
+
+.editing-order-banner-clear {
+  margin-left: auto;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.load-to-editor-button {
+  background: #e8f4f8;
+  border-color: #4a90d9;
+  color: #1a5c8a;
+  font-weight: 600;
+}
+
 body.modal-open {
   overflow: hidden;
 }

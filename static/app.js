@@ -23,6 +23,7 @@ const state = {
   templateMaterial: null,
   selectedTemplateId: null,
   currentPrintCheckId: null,
+  editingOrderId: null,
   galleryCategoryLimits: {},
   proposalBandOpacity: null,
   activeProposalIndex: -1,
@@ -2026,9 +2027,15 @@ advancedSettingsDetails?.addEventListener("toggle", () => {
 });
 document.querySelector("#finishButton").addEventListener("click", showFinishReview);
 backToEditButton.addEventListener("click", backToEdit);
-savePngButton.addEventListener("click", () => savePosterPng(pngStatus));
+savePngButton.addEventListener("click", () => {
+  const fn = state.editingOrderId ? `poster_${state.editingOrderId}.png` : undefined;
+  savePosterPng(pngStatus, fn);
+});
 saveConfirmPngButton.addEventListener("click", () => savePosterPng(confirmPngStatus));
-savePdfButton.addEventListener("click", () => savePosterPdf(pdfStatus));
+savePdfButton.addEventListener("click", () => {
+  const fn = state.editingOrderId ? getPdfFileName(state.editingOrderId) : undefined;
+  savePosterPdf(pdfStatus, fn);
+});
 saveConfirmPdfButton.addEventListener("click", () => savePosterPdf(confirmPdfStatus));
 
 placeOrderButton.addEventListener("click", () => {
@@ -2048,7 +2055,7 @@ placeOrderButton.addEventListener("click", () => {
     orderStatus.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
-  const orderId = generateOrderId();
+  const orderId = state.editingOrderId || generateOrderId();
   const orderData = buildOrderJson(orderId);
   const jsonFileName = `order_${orderId}.json`;
   const pngFileName = `poster_${orderId}.png`;
@@ -2380,6 +2387,7 @@ async function showOrderDetail(orderId) {
           <div class="order-detail-print-actions">
             <button type="button" class="secondary-button" id="savePrintStatusButton">発注情報を保存</button>
             <button type="button" class="secondary-button" id="copyPrioMemoButton">Prio発注用メモをコピー</button>
+            <button type="button" class="secondary-button load-to-editor-button" id="loadOrderToEditorButton">この注文を編集画面に読み込む</button>
           </div>
         </div>
       </div>
@@ -2397,6 +2405,9 @@ async function showOrderDetail(orderId) {
     content.querySelector("#copyPrioMemoButton").addEventListener("click", () => {
       copyPrioMemo(data, orderId);
     });
+    content.querySelector("#loadOrderToEditorButton").addEventListener("click", () => {
+      loadOrderIntoEditor(data);
+    });
   } catch {
     content.innerHTML = '<p class="history-empty">注文データの読み込みに失敗しました</p>';
   }
@@ -2405,6 +2416,68 @@ async function showOrderDetail(orderId) {
 function closeOrderDetail() {
   document.querySelector("#orderDetailModal").hidden = true;
   document.body.classList.remove("modal-open");
+}
+
+function _setSelectByValueOrText(el, val) {
+  if (!el || val == null) return;
+  const s = String(val);
+  const byValue = Array.from(el.options).find((o) => o.value === s);
+  if (byValue) { el.value = s; return; }
+  const byText = Array.from(el.options).find((o) => o.textContent.trim() === s);
+  if (byText) el.value = byText.value;
+}
+
+function loadOrderIntoEditor(orderData) {
+  state.editingOrderId = orderData.order_id;
+  state.currentPrintCheckId = orderData.print_check_id || null;
+
+  const template = state.posterTemplates.find((t) => t.poster_id === orderData.poster_id);
+  if (template) applyPosterTemplate(template);
+
+  if (posterMainTitle) posterMainTitle.value = orderData.main_title ?? "";
+  if (posterSubtitle) posterSubtitle.value = orderData.subtitle ?? "";
+  if (posterShop) posterShop.value = orderData.shop_name ?? "";
+  if (posterDate) posterDate.value = orderData.period ?? "";
+  if (posterNote) posterNote.value = orderData.note ?? "";
+
+  _setSelectByValueOrText(posterType, orderData.text_style);
+  _setSelectByValueOrText(posterPosition, orderData.text_position);
+  _setSelectByValueOrText(imageFit, orderData.image_fit);
+  _setSelectByValueOrText(imagePosition, orderData.image_position);
+
+  const setScale = (sliderEl, labelEl, frac) => {
+    if (!sliderEl || frac == null) return;
+    const pct = Math.round(frac * 100);
+    sliderEl.value = pct;
+    if (labelEl) labelEl.textContent = `${pct}%`;
+  };
+  setScale(titleFontScale, titleFontScaleValue, orderData.title_font_scale);
+  setScale(subtitleFontScale, subtitleFontScaleValue, orderData.subtitle_font_scale);
+  setScale(metaFontScale, metaFontScaleValue, orderData.meta_font_scale);
+
+  const zoom = parseInt(orderData.image_zoom) || 100;
+  if (imageZoom) { imageZoom.value = zoom; if (imageZoomValue) imageZoomValue.textContent = `${zoom}%`; }
+  if (imageOffsetX) { imageOffsetX.value = orderData.image_offset_x ?? 0; if (imageOffsetXValue) imageOffsetXValue.textContent = String(orderData.image_offset_x ?? 0); }
+  if (imageOffsetY) { imageOffsetY.value = orderData.image_offset_y ?? 0; if (imageOffsetYValue) imageOffsetYValue.textContent = String(orderData.image_offset_y ?? 0); }
+
+  closeOrderDetail();
+
+  const banner = document.querySelector("#editingOrderBanner");
+  if (banner) {
+    const label = banner.querySelector("#editingOrderBannerLabel");
+    if (label) label.textContent = `注文 ${orderData.order_id} を編集中`;
+    banner.hidden = false;
+  }
+
+  updatePoster();
+  document.querySelector("#posterSection")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function clearEditingOrder() {
+  state.editingOrderId = null;
+  state.currentPrintCheckId = null;
+  const banner = document.querySelector("#editingOrderBanner");
+  if (banner) banner.hidden = true;
 }
 
 async function updatePrintOrderStatus(orderId, printOrderStatus, printOrderNote) {
@@ -2497,6 +2570,7 @@ document.querySelector("#serverOrdersList").addEventListener("change", (event) =
 
 document.querySelector("#closeOrderDetailButton").addEventListener("click", closeOrderDetail);
 document.querySelector("#orderDetailBackdrop").addEventListener("click", closeOrderDetail);
+document.querySelector("#clearEditingOrderButton").addEventListener("click", clearEditingOrder);
 
 document.querySelector("#refreshServerOrdersButton").addEventListener("click", renderServerOrders);
 
