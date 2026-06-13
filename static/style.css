@@ -2529,3 +2529,101 @@ body.modal-open {
   margin-left: 6px;
   font-weight: 400;
 }
+
+/* ===== お客様情報フォーム ===== */
+.customer-info-section {
+  border: 1px solid #d4e7d5;
+  border-radius: 10px;
+  background: #f7fbf7;
+  padding: 16px 18px;
+  margin: 20px 0 4px;
+}
+
+.customer-info-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin: 0 0 14px;
+}
+
+.customer-info-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.required-mark {
+  color: #c0392b;
+  font-weight: 700;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+.shipping-fields-section {
+  border: 1px solid #e0e8e0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #fff;
+}
+
+.shipping-section-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin: 0 0 8px;
+}
+
+.same-as-customer-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.same-as-customer-label input {
+  width: auto;
+  min-height: auto;
+}
+
+/* ===== 注文確定前チェック ===== */
+.order-confirm-checks {
+  background: #fffbf5;
+  border: 1px solid #f0d080;
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.order-confirm-checks-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #7a5800;
+  margin: 0 0 4px;
+}
+
+.order-confirm-checks label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.order-confirm-checks input[type="checkbox"] {
+  width: auto;
+  min-height: auto;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+/* ===== 管理画面：お客様情報セクション ===== */
+.order-detail-customer-info {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}

@@ -357,15 +357,19 @@ def save_order(request: SaveOrderRequest):
             (ORDERS_DIR / png_file).write_bytes(base64.b64decode(raw))
             saved_png = True
 
+        customer = order_data.get("customer", {})
         _send_slack(
             f"【新規注文保存】\n"
             f"注文ID：{order_id}\n"
             f"印刷確認ID：{order_data.get('print_check_id', '―')}\n"
+            f"店舗名：{customer.get('shop_name', '―')}\n"
+            f"お名前：{customer.get('name', '―')}\n"
+            f"希望納期：{customer.get('desired_delivery_date', '―')}\n"
             f"ポスターID：{order_data.get('poster_id', '―')}\n"
             f"メインタイトル：{order_data.get('main_title', '―')}\n"
-            f"文字スタイル：{order_data.get('text_style', '―')}\n"
             f"印刷サイズ：{order_data.get('print_size', '―')}\n"
             f"用紙：{order_data.get('print_paper', '―')}\n"
+            f"配送種別：{order_data.get('print_delivery_type', '―')}\n"
             f"発注先候補：{order_data.get('print_vendor', 'Prio')}\n"
             f"管理画面で確認してください。"
         )

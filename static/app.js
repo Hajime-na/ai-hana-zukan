@@ -146,6 +146,21 @@ const backToEditButton = document.querySelector("#backToEditButton");
 const placeOrderButton = document.querySelector("#placeOrderButton");
 const orderStatus = document.querySelector("#orderStatus");
 const finishCheckItems = document.querySelector("#finishCheckItems");
+const orderConfirmChecks = document.querySelector("#orderConfirmChecks");
+const customerName = document.querySelector("#customerName");
+const customerShopName = document.querySelector("#customerShopName");
+const customerContactName = document.querySelector("#customerContactName");
+const customerEmail = document.querySelector("#customerEmail");
+const customerPhone = document.querySelector("#customerPhone");
+const customerPostalCode = document.querySelector("#customerPostalCode");
+const customerAddress = document.querySelector("#customerAddress");
+const customerNote = document.querySelector("#customerNote");
+const shippingSameAsCustomer = document.querySelector("#shippingSameAsCustomer");
+const shippingDifferentFields = document.querySelector("#shippingDifferentFields");
+const shippingRecipientName = document.querySelector("#shippingRecipientName");
+const shippingAddressEl = document.querySelector("#shippingAddress");
+const desiredDeliveryDate = document.querySelector("#desiredDeliveryDate");
+const receiptName = document.querySelector("#receiptName");
 const editSections = [
   document.querySelector("#heroSection"),
   document.querySelector("#gallerySection"),
@@ -154,6 +169,10 @@ const editSections = [
   document.querySelector(".ai-panel"),
   document.querySelector("#posterSection"),
 ].filter(Boolean);
+
+shippingSameAsCustomer?.addEventListener("change", () => {
+  if (shippingDifferentFields) shippingDifferentFields.hidden = shippingSameAsCustomer.checked;
+});
 
 const posterDesignDescriptions = {
   "no-text": "文字なし：写真だけのポスターとして使えます",
@@ -1382,10 +1401,39 @@ function buildOrderJson(orderId) {
     print_delivery_type: printDelivery?.value || "余裕便",
     print_size: printSize?.value || "A2",
     print_paper: printPaper?.value || "マット紙",
-    ship_to_type: "お客様直送",
+    ship_to_type: state.editingShipToType || "お客様直送",
     sender_name: "Hana Poster AI",
     print_order_status: "未発注",
     print_order_note: "",
+    customer: {
+      name: customerName?.value?.trim() || "",
+      shop_name: customerShopName?.value?.trim() || "",
+      contact_name: customerContactName?.value?.trim() || "",
+      email: customerEmail?.value?.trim() || "",
+      phone: customerPhone?.value?.trim() || "",
+      postal_code: customerPostalCode?.value?.trim() || "",
+      address: customerAddress?.value?.trim() || "",
+      desired_delivery_date: desiredDeliveryDate?.value || "",
+      note: customerNote?.value?.trim() || "",
+    },
+    shipping: {
+      same_as_customer: shippingSameAsCustomer?.checked ?? true,
+      recipient_name: shippingSameAsCustomer?.checked ? "" : (shippingRecipientName?.value?.trim() || ""),
+      address: shippingSameAsCustomer?.checked ? "" : (shippingAddressEl?.value?.trim() || ""),
+    },
+    billing: {
+      receipt_name: receiptName?.value?.trim() || "",
+    },
+    confirmation_checks: (() => {
+      const cbs = Array.from(orderConfirmChecks?.querySelectorAll('input[type="checkbox"]') || []);
+      return {
+        text_checked: cbs[0]?.checked ?? false,
+        print_options_checked: cbs[1]?.checked ?? false,
+        color_difference_accepted: cbs[2]?.checked ?? false,
+        revision_fee_accepted: cbs[3]?.checked ?? false,
+        print_check_id_accepted: cbs[4]?.checked ?? false,
+      };
+    })(),
   };
 }
 
@@ -2077,6 +2125,25 @@ placeOrderButton.addEventListener("click", () => {
     orderStatus.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
+  const confirmCheckedCount = orderConfirmChecks?.querySelectorAll('input[type="checkbox"]:checked').length || 0;
+  const confirmTotalCount = orderConfirmChecks?.querySelectorAll('input[type="checkbox"]').length || 0;
+  if (confirmCheckedCount !== confirmTotalCount) {
+    orderStatus.textContent = "注文確定前の確認項目をすべてチェックしてください";
+    orderStatus.hidden = false;
+    orderStatus.classList.add("is-warning");
+    orderConfirmChecks?.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  const nameVal = customerName?.value?.trim() || "";
+  const emailVal = customerEmail?.value?.trim() || "";
+  const phoneVal = customerPhone?.value?.trim() || "";
+  if (!nameVal || !emailVal || !phoneVal) {
+    orderStatus.textContent = "お名前・メールアドレス・電話番号は必須です";
+    orderStatus.hidden = false;
+    orderStatus.classList.add("is-warning");
+    document.querySelector(".customer-info-section")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
   const orderId = state.editingOrderId || generateOrderId();
   const orderData = buildOrderJson(orderId);
   const jsonFileName = `order_${orderId}.json`;
@@ -2380,6 +2447,27 @@ async function showOrderDetail(orderId) {
           <div><dt>JSONファイル</dt><dd>${data.png_filename ? `order_${orderId}.json` : "―"}</dd></div>
           <div><dt>PNGファイル</dt><dd>${data.png_filename || "―"}</dd></div>
         </dl>
+        <div class="order-detail-customer-info">
+          <h4>お客様情報</h4>
+          <dl class="order-detail-fields">
+            ${data.customer?.name ? `<div><dt>お名前</dt><dd>${data.customer.name}</dd></div>` : ""}
+            ${data.customer?.shop_name ? `<div><dt>店舗名</dt><dd>${data.customer.shop_name}</dd></div>` : ""}
+            ${data.customer?.contact_name ? `<div><dt>担当者名</dt><dd>${data.customer.contact_name}</dd></div>` : ""}
+            ${data.customer?.email ? `<div><dt>メール</dt><dd>${data.customer.email}</dd></div>` : ""}
+            ${data.customer?.phone ? `<div><dt>電話番号</dt><dd>${data.customer.phone}</dd></div>` : ""}
+            ${data.customer?.postal_code || data.customer?.address ? `<div><dt>住所</dt><dd>${[data.customer.postal_code, data.customer.address].filter(Boolean).join(" ")}</dd></div>` : ""}
+            ${(() => {
+              const ship = data.shipping || {};
+              if (ship.same_as_customer === false && (ship.recipient_name || ship.address)) {
+                return `<div><dt>配送先名</dt><dd>${ship.recipient_name || "―"}</dd></div><div><dt>配送先住所</dt><dd>${ship.address || "―"}</dd></div>`;
+              }
+              return `<div><dt>配送先</dt><dd>注文者住所と同じ</dd></div>`;
+            })()}
+            ${data.customer?.desired_delivery_date ? `<div><dt>希望納期</dt><dd>${data.customer.desired_delivery_date}</dd></div>` : ""}
+            ${data.billing?.receipt_name ? `<div><dt>領収書宛名</dt><dd>${data.billing.receipt_name}</dd></div>` : ""}
+            ${data.customer?.note ? `<div><dt>備考</dt><dd>${data.customer.note}</dd></div>` : ""}
+          </dl>
+        </div>
         <div class="order-detail-checks">
           <h4>確認チェック項目</h4>
           <dl class="order-history-detail">${checkHtml}</dl>
@@ -2487,6 +2575,29 @@ function loadOrderIntoEditor(orderData) {
   if (imageOffsetX) { imageOffsetX.value = orderData.image_offset_x ?? 0; if (imageOffsetXValue) imageOffsetXValue.textContent = String(orderData.image_offset_x ?? 0); }
   if (imageOffsetY) { imageOffsetY.value = orderData.image_offset_y ?? 0; if (imageOffsetYValue) imageOffsetYValue.textContent = String(orderData.image_offset_y ?? 0); }
 
+  const c = orderData.customer || {};
+  if (customerName) customerName.value = c.name || "";
+  if (customerShopName) customerShopName.value = c.shop_name || "";
+  if (customerContactName) customerContactName.value = c.contact_name || "";
+  if (customerEmail) customerEmail.value = c.email || "";
+  if (customerPhone) customerPhone.value = c.phone || "";
+  if (customerPostalCode) customerPostalCode.value = c.postal_code || "";
+  if (customerAddress) customerAddress.value = c.address || "";
+  if (desiredDeliveryDate) desiredDeliveryDate.value = c.desired_delivery_date || "";
+  if (customerNote) customerNote.value = c.note || "";
+
+  const s = orderData.shipping || {};
+  const sameAs = s.same_as_customer !== false;
+  if (shippingSameAsCustomer) shippingSameAsCustomer.checked = sameAs;
+  if (shippingDifferentFields) shippingDifferentFields.hidden = sameAs;
+  if (!sameAs) {
+    if (shippingRecipientName) shippingRecipientName.value = s.recipient_name || "";
+    if (shippingAddressEl) shippingAddressEl.value = s.address || "";
+  }
+
+  const b = orderData.billing || {};
+  if (receiptName) receiptName.value = b.receipt_name || "";
+
   closeOrderDetail();
 
   const banner = document.querySelector("#editingOrderBanner");
@@ -2508,6 +2619,20 @@ function clearEditingOrder() {
   state.editingShipToType = null;
   const banner = document.querySelector("#editingOrderBanner");
   if (banner) banner.hidden = true;
+  if (customerName) customerName.value = "";
+  if (customerShopName) customerShopName.value = "";
+  if (customerContactName) customerContactName.value = "";
+  if (customerEmail) customerEmail.value = "";
+  if (customerPhone) customerPhone.value = "";
+  if (customerPostalCode) customerPostalCode.value = "";
+  if (customerAddress) customerAddress.value = "";
+  if (desiredDeliveryDate) desiredDeliveryDate.value = "";
+  if (customerNote) customerNote.value = "";
+  if (receiptName) receiptName.value = "";
+  if (shippingSameAsCustomer) shippingSameAsCustomer.checked = true;
+  if (shippingDifferentFields) shippingDifferentFields.hidden = true;
+  if (shippingRecipientName) shippingRecipientName.value = "";
+  if (shippingAddressEl) shippingAddressEl.value = "";
 }
 
 async function updatePrintOrderStatus(orderId, printOrderStatus, printOrderNote) {
@@ -2523,13 +2648,25 @@ async function updatePrintOrderStatus(orderId, printOrderStatus, printOrderNote)
 }
 
 function copyPrioMemo(data, orderId) {
+  const ship = data.shipping || {};
+  const cust = data.customer || {};
+  const bill = data.billing || {};
+  const sameAs = ship.same_as_customer !== false;
+  const recipientName = sameAs ? (cust.name || "") : (ship.recipient_name || "");
+  const recipientAddr = sameAs ? (cust.address || "") : (ship.address || "");
   const text = [
     `発注先：${data.print_vendor || "Prio"}`,
     `配送種別：${data.print_delivery_type || "余裕便"}`,
     `印刷サイズ：${data.print_size || "A2"}`,
     `用紙：${data.print_paper || "マット紙"}`,
-    `発送先：${data.ship_to_type || "お客様直送"}`,
+    `発送先種別：${data.ship_to_type || "お客様直送"}`,
+    `配送先名：${recipientName}`,
+    `配送先住所：${recipientAddr}`,
+    `電話番号：${cust.phone || ""}`,
     `発送元名：${data.sender_name || "Hana Poster AI"}`,
+    `領収書宛名：${bill.receipt_name || ""}`,
+    `希望納期：${cust.desired_delivery_date || ""}`,
+    `備考：${cust.note || ""}`,
     `注文ID：${data.order_id || orderId}`,
     `印刷確認ID：${data.print_check_id || ""}`,
     `ポスターID：${data.poster_id || ""}`,

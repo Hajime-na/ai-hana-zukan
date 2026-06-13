@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v41rc13" />
+    <link rel="stylesheet" href="/static/style.css?v=v42rc1" />
   </head>
   <body>
     <header class="topbar">
@@ -13,7 +13,7 @@
         <h1>花屋さんのポスター文字入れ</h1>
       </div>
       <button type="button" id="bgmButton" class="bgm-button" aria-label="BGM 再生/停止">♪ BGM</button>
-      <div class="status">v1.0-rc13.1</div>
+      <div class="status">v1.1-rc1</div>
     </header>
 
     <main class="page">
@@ -454,6 +454,44 @@
               </div>
             </div>
 
+            <!-- お客様情報 -->
+            <div class="customer-info-section">
+              <p class="eyebrow" style="margin-bottom:6px">Customer Info</p>
+              <h3 class="customer-info-title">お客様情報</h3>
+              <div class="customer-info-grid">
+                <div class="form-grid two">
+                  <label>お名前<span class="required-mark">*</span><input id="customerName" type="text" placeholder="例：山田 花子" /></label>
+                  <label>店舗名<input id="customerShopName" type="text" placeholder="例：花の店 ○○" /></label>
+                </div>
+                <label>担当者名<input id="customerContactName" type="text" placeholder="" /></label>
+                <div class="form-grid two">
+                  <label>メールアドレス<span class="required-mark">*</span><input id="customerEmail" type="email" placeholder="例：hana@example.com" /></label>
+                  <label>電話番号<span class="required-mark">*</span><input id="customerPhone" type="tel" placeholder="例：090-1234-5678" /></label>
+                </div>
+                <div class="form-grid two">
+                  <label>郵便番号<input id="customerPostalCode" type="text" placeholder="例：100-0001" /></label>
+                  <label>住所<input id="customerAddress" type="text" placeholder="例：東京都千代田区○○ 1-1-1" /></label>
+                </div>
+                <div class="shipping-fields-section">
+                  <p class="shipping-section-label">配送先</p>
+                  <label class="same-as-customer-label">
+                    <input type="checkbox" id="shippingSameAsCustomer" checked /> 注文者住所と同じ
+                  </label>
+                  <div id="shippingDifferentFields" hidden>
+                    <div class="form-grid two" style="margin-top:10px">
+                      <label>配送先名<input id="shippingRecipientName" type="text" placeholder="例：○○ 花子" /></label>
+                      <label>配送先住所<input id="shippingAddress" type="text" placeholder="例：東京都千代田区○○ 1-1-1" /></label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-grid two">
+                  <label>希望納期<input id="desiredDeliveryDate" type="date" /></label>
+                  <label>領収書宛名<input id="receiptName" type="text" placeholder="不要の場合は空欄" /></label>
+                </div>
+                <label>備考<textarea id="customerNote" rows="3" placeholder="特記事項など"></textarea></label>
+              </div>
+            </div>
+
             <div class="form-section finish-section">
               <button id="finishButton" class="primary-button finish-button">仕上がり確認へ</button>
               <div id="finishChecklist" class="finish-checklist" hidden>
@@ -511,6 +549,14 @@
               <label><input type="checkbox" /> 印刷時に色味が多少異なる場合があります</label>
               <label><input type="checkbox" /> ポスター端の印刷確認IDが入っていることを確認しました</label>
               <label><input type="checkbox" /> 印刷確認IDが注文データと一致することを確認しました</label>
+            </div>
+            <div id="orderConfirmChecks" class="order-confirm-checks">
+              <p class="order-confirm-checks-title">注文確定前の確認</p>
+              <label><input type="checkbox" class="order-confirm-check" /> 文字内容に誤りがないことを確認しました</label>
+              <label><input type="checkbox" class="order-confirm-check" /> 印刷サイズ・用紙・配送方法を確認しました</label>
+              <label><input type="checkbox" class="order-confirm-check" /> 画面表示と印刷色が異なる場合があることを了承しました</label>
+              <label><input type="checkbox" class="order-confirm-check" /> 注文確定後の修正には費用がかかる場合があることを了承しました</label>
+              <label><input type="checkbox" class="order-confirm-check" /> 印刷確認IDを問い合わせ時の照合に使用することを了承しました</label>
             </div>
             <div class="confirmation-actions">
               <button id="backToEditButton" class="secondary-button" type="button">編集に戻る</button>
@@ -690,6 +736,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v41rc13a"></script>
+    <script src="/static/app.js?v=v42rc1"></script>
   </body>
 </html>
