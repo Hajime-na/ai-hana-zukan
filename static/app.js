@@ -2321,6 +2321,8 @@ async function showOrderDetail(orderId) {
       position_adjustment_accepted: "文字位置おまかせ微調整を了承",
       final_adjustment_accepted: "文字位置・サイズ最終調整を了承",
       color_difference_accepted: "色味の差異を了承",
+      print_id_visible_checked: "印刷確認ID 画面表示確認",
+      print_id_match_checked: "印刷確認ID 一致確認",
     };
     const checks = data.checks || {};
     const checkHtml = Object.entries(checkLabels)
