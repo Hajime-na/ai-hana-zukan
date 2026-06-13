@@ -85,6 +85,20 @@ class UpdatePrintOrderStatusRequest(BaseModel):
     print_order_note: str | None = None
 
 
+class UpdatePaymentRequest(BaseModel):
+    method: str = "未選択"
+    status: str = "未請求"
+    amount_total: str = ""
+    amount_design: str = ""
+    amount_print: str = ""
+    amount_shipping: str = ""
+    amount_tax: str = ""
+    payment_due_date: str = ""
+    paid_at: str = ""
+    payment_note: str = ""
+    payment_link: str = ""
+
+
 class LayoutSuggestRequest(BaseModel):
     title: str = ""
     subtitle: str = ""
@@ -393,6 +407,7 @@ def list_orders():
                     data = json.load(f)
                 order_id = data.get("order_id", json_path.stem.replace("order_", ""))
                 png_file = f"poster_{order_id}.png"
+                payment = data.get("payment", {})
                 orders.append({
                     "order_id": order_id,
                     "created_at": data.get("created_at", ""),
@@ -404,6 +419,9 @@ def list_orders():
                     "status": data.get("status", "new"),
                     "json_file": json_path.name,
                     "png_file": png_file if (ORDERS_DIR / png_file).exists() else None,
+                    "payment_status": payment.get("status", "未請求"),
+                    "payment_method": payment.get("method", "未選択"),
+                    "amount_total": payment.get("amount_total", ""),
                 })
             except Exception:
                 continue
@@ -465,6 +483,45 @@ def update_print_order_status(order_id: str, request: UpdatePrintOrderStatusRequ
             f"状態：{old_print_status} → {request.print_order_status}"
         )
         return {"ok": True, "order_id": order_id, "print_order_status": request.print_order_status}
+    except HTTPException:
+        return {"ok": False, "error": "Order not found"}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@app.post("/api/orders/{order_id}/payment")
+def update_payment(order_id: str, request: UpdatePaymentRequest):
+    try:
+        data = _load_order_json(order_id)
+        old_payment = data.get("payment", {})
+        old_status = old_payment.get("status", "未請求")
+        payment = {
+            "method": request.method,
+            "status": request.status,
+            "amount_total": request.amount_total,
+            "amount_design": request.amount_design,
+            "amount_print": request.amount_print,
+            "amount_shipping": request.amount_shipping,
+            "amount_tax": request.amount_tax,
+            "payment_due_date": request.payment_due_date,
+            "paid_at": request.paid_at,
+            "payment_note": request.payment_note,
+            "payment_link": request.payment_link,
+        }
+        data["payment"] = payment
+        _save_order_json(order_id, data)
+        if old_status != request.status:
+            customer = data.get("customer", {})
+            _send_slack(
+                f"【支払いステータス変更】\n"
+                f"注文ID：{order_id}\n"
+                f"印刷確認ID：{data.get('print_check_id', '―')}\n"
+                f"店舗名：{customer.get('shop_name', '―')}\n"
+                f"支払い方法：{request.method}\n"
+                f"ステータス：{old_status} → {request.status}\n"
+                f"合計金額：{request.amount_total or '―'}"
+            )
+        return {"ok": True, "order_id": order_id, "payment": payment}
     except HTTPException:
         return {"ok": False, "error": "Order not found"}
     except Exception as e:

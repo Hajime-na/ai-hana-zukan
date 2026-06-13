@@ -2347,6 +2347,9 @@ const PRINT_STATUS_LABELS = {
 };
 const PRINT_STATUS_VALUES = Object.keys(PRINT_STATUS_LABELS);
 
+const PAYMENT_METHOD_VALUES = ["未選択", "銀行振込", "PayPay", "Square決済リンク", "Stripe決済リンク", "その他"];
+const PAYMENT_STATUS_VALUES = ["未請求", "請求済み", "入金待ち", "入金済み", "返金", "キャンセル"];
+
 async function renderServerOrders() {
   const list = document.querySelector("#serverOrdersList");
   if (!list) return;
@@ -2364,12 +2367,16 @@ async function renderServerOrders() {
         const statusOptions = STATUS_VALUES.map(
           (v) => `<option value="${v}"${v === status ? " selected" : ""}>${STATUS_LABELS[v]}</option>`,
         ).join("");
+        const payStatus = order.payment_status || "未請求";
+        const amountTotal = order.amount_total ? `¥${order.amount_total}` : "";
         return `
           <article class="order-history-item server-order-item" data-order-id="${order.order_id}">
             <div class="order-history-header">
               <strong class="order-history-id">注文ID：${order.order_id}</strong>
               <span class="order-history-date">${formatHistoryDate(order.created_at)}</span>
               <span class="order-status-badge status-${status}">${statusLabel}</span>
+              <span class="payment-status-badge pay-${payStatus}">${payStatus}</span>
+              ${amountTotal ? `<span class="payment-amount-badge">${amountTotal}</span>` : ""}
             </div>
             <dl class="order-history-detail">
               <div><dt>花名</dt><dd>${order.flower_name || "―"}</dd></div>
@@ -2425,6 +2432,7 @@ async function showOrderDetail(orderId) {
       .map(([key, label]) => `<div><dt>${label}</dt><dd>${checks[key] ? "済" : "未"}</dd></div>`)
       .join("");
     const hasPoster = Boolean(data.png_filename);
+    const pay = data.payment || {};
 
     content.innerHTML = `
       <h3 class="order-detail-title">注文詳細</h3>
@@ -2501,6 +2509,45 @@ async function showOrderDetail(orderId) {
             <button type="button" class="secondary-button load-to-editor-button" id="loadOrderToEditorButton">この注文を編集画面に読み込む</button>
           </div>
         </div>
+        <div class="order-detail-payment-info">
+          <h4>支払い情報</h4>
+          <dl class="order-detail-fields">
+            <div>
+              <dt>支払い方法</dt>
+              <dd>
+                <select id="paymentMethodSelect" class="print-status-select">
+                  ${PAYMENT_METHOD_VALUES.map((v) => `<option value="${v}"${v === (pay.method || "未選択") ? " selected" : ""}>${v}</option>`).join("")}
+                </select>
+              </dd>
+            </div>
+            <div>
+              <dt>支払いステータス</dt>
+              <dd>
+                <select id="paymentStatusSelect" class="print-status-select">
+                  ${PAYMENT_STATUS_VALUES.map((v) => `<option value="${v}"${v === (pay.status || "未請求") ? " selected" : ""}>${v}</option>`).join("")}
+                </select>
+              </dd>
+            </div>
+            <div><dt>合計金額</dt><dd><input id="paymentAmountTotal" class="payment-amount-input" type="text" value="${pay.amount_total || ""}" placeholder="例：15000" /></dd></div>
+            <div><dt>デザイン費</dt><dd><input id="paymentAmountDesign" class="payment-amount-input" type="text" value="${pay.amount_design || ""}" placeholder="" /></dd></div>
+            <div><dt>印刷費</dt><dd><input id="paymentAmountPrint" class="payment-amount-input" type="text" value="${pay.amount_print || ""}" placeholder="" /></dd></div>
+            <div><dt>送料</dt><dd><input id="paymentAmountShipping" class="payment-amount-input" type="text" value="${pay.amount_shipping || ""}" placeholder="" /></dd></div>
+            <div><dt>消費税</dt><dd><input id="paymentAmountTax" class="payment-amount-input" type="text" value="${pay.amount_tax || ""}" placeholder="" /></dd></div>
+            <div><dt>支払期限</dt><dd><input id="paymentDueDate" class="payment-amount-input" type="date" value="${pay.payment_due_date || ""}" /></dd></div>
+            <div><dt>入金日</dt><dd><input id="paymentPaidAt" class="payment-amount-input" type="date" value="${pay.paid_at || ""}" /></dd></div>
+            <div style="grid-column: 1 / -1">
+              <dt>決済リンク</dt>
+              <dd style="flex: 1"><input id="paymentLink" class="payment-link-input" type="url" value="${pay.payment_link || ""}" placeholder="https://..." /></dd>
+            </div>
+            <div style="grid-column: 1 / -1">
+              <dt>支払いメモ</dt>
+              <dd style="flex: 1"><textarea id="paymentNoteTextarea" class="print-note-textarea"></textarea></dd>
+            </div>
+          </dl>
+          <div class="order-detail-print-actions">
+            <button type="button" class="secondary-button" id="savePaymentButton">支払い情報を保存</button>
+          </div>
+        </div>
       </div>
     `;
     content.querySelector("#printNoteTextarea").value = data.print_order_note || "";
@@ -2514,10 +2561,30 @@ async function showOrderDetail(orderId) {
       if (btn) { btn.textContent = "保存しました"; setTimeout(() => { btn.textContent = "発注情報を保存"; }, 2000); }
     });
     content.querySelector("#copyPrioMemoButton").addEventListener("click", () => {
-      copyPrioMemo(data, orderId);
+      copyPrioMemo(data, orderId, content);
     });
     content.querySelector("#loadOrderToEditorButton").addEventListener("click", () => {
       loadOrderIntoEditor(data);
+    });
+
+    content.querySelector("#paymentNoteTextarea").value = pay.payment_note || "";
+    content.querySelector("#savePaymentButton").addEventListener("click", async () => {
+      await updatePayment(orderId, {
+        method: content.querySelector("#paymentMethodSelect").value,
+        status: content.querySelector("#paymentStatusSelect").value,
+        amount_total: content.querySelector("#paymentAmountTotal").value,
+        amount_design: content.querySelector("#paymentAmountDesign").value,
+        amount_print: content.querySelector("#paymentAmountPrint").value,
+        amount_shipping: content.querySelector("#paymentAmountShipping").value,
+        amount_tax: content.querySelector("#paymentAmountTax").value,
+        payment_due_date: content.querySelector("#paymentDueDate").value,
+        paid_at: content.querySelector("#paymentPaidAt").value,
+        payment_note: content.querySelector("#paymentNoteTextarea").value,
+        payment_link: content.querySelector("#paymentLink").value,
+      });
+      const btn = content.querySelector("#savePaymentButton");
+      if (btn) { btn.textContent = "保存しました"; setTimeout(() => { btn.textContent = "支払い情報を保存"; }, 2000); }
+      renderServerOrders();
     });
   } catch {
     content.innerHTML = '<p class="history-empty">注文データの読み込みに失敗しました</p>';
@@ -2647,13 +2714,28 @@ async function updatePrintOrderStatus(orderId, printOrderStatus, printOrderNote)
   }
 }
 
-function copyPrioMemo(data, orderId) {
+async function updatePayment(orderId, paymentData) {
+  try {
+    await fetch(`/api/orders/${orderId}/payment`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(paymentData),
+    });
+  } catch {
+    // silent fail
+  }
+}
+
+function copyPrioMemo(data, orderId, content) {
   const ship = data.shipping || {};
   const cust = data.customer || {};
   const bill = data.billing || {};
   const sameAs = ship.same_as_customer !== false;
   const recipientName = sameAs ? (cust.name || "") : (ship.recipient_name || "");
   const recipientAddr = sameAs ? (cust.address || "") : (ship.address || "");
+  const payMethod = content?.querySelector("#paymentMethodSelect")?.value || (data.payment?.method || "未選択");
+  const payStatus = content?.querySelector("#paymentStatusSelect")?.value || (data.payment?.status || "未請求");
+  const amountTotal = content?.querySelector("#paymentAmountTotal")?.value || (data.payment?.amount_total || "");
   const text = [
     `発注先：${data.print_vendor || "Prio"}`,
     `配送種別：${data.print_delivery_type || "余裕便"}`,
@@ -2672,9 +2754,13 @@ function copyPrioMemo(data, orderId) {
     `ポスターID：${data.poster_id || ""}`,
     `PNGファイル名：${data.png_filename || ""}`,
     `PDFファイル名：${data.pdf_filename || ""}`,
+    `---管理用---`,
+    `支払い状態：${payStatus}`,
+    `支払い方法：${payMethod}`,
+    `合計金額：${amountTotal}`,
   ].join("\n");
   navigator.clipboard.writeText(text).then(() => {
-    const btn = document.querySelector("#copyPrioMemoButton");
+    const btn = content?.querySelector("#copyPrioMemoButton") || document.querySelector("#copyPrioMemoButton");
     if (btn) {
       btn.textContent = "コピーしました";
       setTimeout(() => { btn.textContent = "Prio発注用メモをコピー"; }, 2000);
