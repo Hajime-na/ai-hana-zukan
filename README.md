@@ -343,6 +343,26 @@ orders/
 
 ---
 
+### `POST /api/orders/{order_id}/print-status`
+
+注文 JSON 内の `print_order_status` と `print_order_note` を更新します。
+
+入力：`{ "print_order_status": "入稿済み", "print_order_note": "補足メモ" }`
+
+成功レスポンス：`{ "ok": true, "order_id": "...", "print_order_status": "..." }`
+
+Slack 通知が有効な場合、変更前後の状態を通知します。
+
+---
+
+### `POST /api/slack-test`
+
+Slack へテスト通知を送ります（`SLACK_NOTIFY_ENABLED=true` のときのみ実際に送信）。
+
+成功レスポンス：`{ "ok": true, "slack_enabled": true|false }`
+
+---
+
 ## 画像素材の扱い
 
 | 種別 | 用途 | PNG保存 | 仮注文 |
@@ -521,7 +541,7 @@ categories: 春;ギフト
 
 ## 現在の状態
 
-**v1.0-rc9.1** ― poster_master.csv 同期運用・素材保護版（ローカル試作版）
+**v1.0-rc10** ― Prio発注管理・Slack共有管理対応版（ローカル試作版）
 
 | 機能 | 状態 |
 |------|------|
@@ -535,6 +555,12 @@ categories: 春;ギフト
 | SAMPLE入り縮小プレビュー（posters_preview/）をWeb表示に使用 | 実装済み |
 | scripts/generate_poster_previews.py でプレビュー再生成 | 実装済み |
 | poster_templates.json の自動生成（CSV→JSON） | 実装済み |
+| 注文JSONに印刷発注用フィールドを追加（Prio発注対応） | 実装済み |
+| 管理画面の注文詳細に印刷発注情報セクション追加 | 実装済み |
+| 印刷発注ステータス変更（POST /api/orders/{id}/print-status） | 実装済み |
+| Prio発注用メモをコピーボタン | 実装済み |
+| Slack通知（注文保存・ステータス変更・印刷発注ステータス変更） | 実装済み |
+| Slack通知テスト（POST /api/slack-test） | 実装済み |
 | ヒーローエリア（キャッチコピー・CTAボタン） | 実装済み |
 | 花図鑑・検索・詳細表示 | 実装済み |
 | AI販促文（OpenAI API + フォールバック） | 実装済み |
@@ -666,6 +692,7 @@ categories: 春;ギフト
 | v1.0-rc8 | 印刷チェックIDシステム・UI改善・画像保護 ✅ |
 | v1.0-rc9 | poster_master.csv 同期運用・サーバー起動時自動生成 ✅ |
 | v1.0-rc9.1 | 高解像度元画Git管理外・SAMPLEプレビュー分離・素材保護強化 ✅ |
+| v1.0-rc10 | Prio発注管理・Slack共有管理 ✅ |
 | v1.1 | 認証・ログイン |
 | v1.2 | 本番DB化（SQLite / PostgreSQL） |
 | v1.3 | 印刷会社連携 |
