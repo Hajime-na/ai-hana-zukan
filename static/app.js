@@ -2862,6 +2862,7 @@ function copyCustomerMessage(data, orderId, content) {
   const estPrint    = g("#estimatePrintFee",     data.estimate?.print_fee);
   const estShipping = g("#estimateShippingFee",  data.estimate?.shipping_fee);
   const estTax      = g("#estimateTax",          data.estimate?.tax);
+  const estDiscount = g("#estimateDiscount",     data.estimate?.discount);
   const estTotal    = g("#estimateTotal",        data.estimate?.total);
   const payMethod   = g("#paymentMethodSelect",  data.payment?.method);
   const payStatus   = g("#paymentStatusSelect",  data.payment?.status);
@@ -2885,6 +2886,7 @@ function copyCustomerMessage(data, orderId, content) {
     `印刷費：${fmt(estPrint)}`,
     `送料：${fmt(estShipping)}`,
     `消費税：${fmt(estTax)}`,
+    ...(estDiscount ? [`値引き：${fmt(estDiscount)}`] : []),
     `合計：${fmt(estTotal)}`,
     ``,
     `【お支払い】`,
