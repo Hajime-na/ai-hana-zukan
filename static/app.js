@@ -93,6 +93,9 @@ const layoutProposalsEl = document.querySelector("#layoutProposals");
 const uploadTriggerButton = document.querySelector("#uploadTriggerButton");
 const advancedSettingsDetails = document.querySelector("#advancedSettingsDetails");
 const posterRotation = document.querySelector("#posterRotation");
+const printSize = document.querySelector("#printSize");
+const printPaper = document.querySelector("#printPaper");
+const printDelivery = document.querySelector("#printDelivery");
 const uploadedMaterialMode = document.querySelector("#uploadedMaterialMode");
 const uploadedMaterialModeHelp = document.querySelector("#uploadedMaterialModeHelp");
 const posterDesign = document.querySelector("#posterDesign");
@@ -130,6 +133,12 @@ const confirmPosterSize = document.querySelector("#confirmPosterSize");
 const confirmImageFit = document.querySelector("#confirmImageFit");
 const confirmMaterialMode = document.querySelector("#confirmMaterialMode");
 const confirmPosterRotation = document.querySelector("#confirmPosterRotation");
+const confirmPrintVendor = document.querySelector("#confirmPrintVendor");
+const confirmPrintSize = document.querySelector("#confirmPrintSize");
+const confirmPrintPaper = document.querySelector("#confirmPrintPaper");
+const confirmPrintDelivery = document.querySelector("#confirmPrintDelivery");
+const confirmShipTo = document.querySelector("#confirmShipTo");
+const confirmSenderName = document.querySelector("#confirmSenderName");
 const confirmMaterialWarning = document.querySelector("#confirmMaterialWarning");
 const confirmationSection = document.querySelector("#confirmationSection");
 const backToEditButton = document.querySelector("#backToEditButton");
@@ -1369,9 +1378,9 @@ function buildOrderJson(orderId) {
       print_id_match_checked: checkboxes[6]?.checked ?? false,
     },
     print_vendor: "Prio",
-    print_delivery_type: "余裕便",
-    print_size: "A2",
-    print_paper: "マット紙",
+    print_delivery_type: printDelivery?.value || "余裕便",
+    print_size: printSize?.value || "A2",
+    print_paper: printPaper?.value || "マット紙",
     ship_to_type: "お客様直送",
     sender_name: "Hana Poster AI",
     print_order_status: "未発注",
@@ -1618,6 +1627,9 @@ function renderFinishReview() {
   confirmPosterRotation.textContent = snapshot.posterRotation;
   const printCheckEl = document.querySelector("#confirmPrintCheckId");
   if (printCheckEl) printCheckEl.textContent = state.currentPrintCheckId || "―";
+  if (confirmPrintSize) confirmPrintSize.textContent = printSize?.value || "A2";
+  if (confirmPrintPaper) confirmPrintPaper.textContent = printPaper?.value || "マット紙";
+  if (confirmPrintDelivery) confirmPrintDelivery.textContent = printDelivery?.value || "余裕便";
   updateMaterialRightsUI();
 }
 
@@ -2370,11 +2382,12 @@ async function showOrderDetail(orderId) {
         </div>
         <div class="order-detail-print-info">
           <h4>印刷発注情報</h4>
+          <p class="print-order-admin-notice">発注前に印刷条件を確認してください。画面上の色と実際の印刷色は異なる場合があります。初回はテスト印刷を推奨します。</p>
           <dl class="order-detail-fields">
             <div><dt>発注先</dt><dd>${data.print_vendor || "Prio"}</dd></div>
-            <div><dt>配送種別</dt><dd>${data.print_delivery_type || "余裕便"}</dd></div>
-            <div><dt>印刷サイズ</dt><dd>${data.print_size || "A2"}</dd></div>
-            <div><dt>用紙</dt><dd>${data.print_paper || "マット紙"}</dd></div>
+            <div><dt>配送種別</dt><dd>${data.print_delivery_type || "余裕便"}<span class="admin-field-note">（急ぎでなければ余裕便推奨）</span></dd></div>
+            <div><dt>印刷サイズ</dt><dd>${data.print_size || "A2"}<span class="admin-field-note">（A2：標準 / A3：小 / A1：大）</span></dd></div>
+            <div><dt>用紙</dt><dd>${data.print_paper || "マット紙"}<span class="admin-field-note">（マット紙：落ち着いた質感 / 光沢紙：発色重視 / パールフォト紙：高級感）</span></dd></div>
             <div><dt>発送先種別</dt><dd>${data.ship_to_type || "お客様直送"}</dd></div>
             <div><dt>発送元名</dt><dd>${data.sender_name || "Hana Poster AI"}</dd></div>
             <div>
@@ -2450,6 +2463,9 @@ function loadOrderIntoEditor(orderData) {
   _setSelectByValueOrText(posterPosition, orderData.text_position);
   _setSelectByValueOrText(imageFit, orderData.image_fit);
   _setSelectByValueOrText(imagePosition, orderData.image_position);
+  if (printSize && orderData.print_size) _setSelectByValueOrText(printSize, orderData.print_size);
+  if (printPaper && orderData.print_paper) _setSelectByValueOrText(printPaper, orderData.print_paper);
+  if (printDelivery && orderData.print_delivery_type) _setSelectByValueOrText(printDelivery, orderData.print_delivery_type);
 
   const setScale = (sliderEl, labelEl, frac) => {
     if (!sliderEl || frac == null) return;

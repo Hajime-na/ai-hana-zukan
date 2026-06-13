@@ -2423,3 +2423,109 @@ body.modal-open {
   cursor: default;
   opacity: 0.6;
 }
+
+/* ===== 印刷設定セクション ===== */
+.print-settings-section {
+  border: 1px solid #d4e7d5;
+  border-radius: 10px;
+  background: #f7fbf7;
+  padding: 16px 18px;
+  margin: 20px 0 4px;
+}
+
+.print-settings-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin: 0 0 14px;
+}
+
+.print-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.print-setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.print-setting-item select {
+  margin-top: 2px;
+  font-size: 0.9rem;
+}
+
+.print-setting-item .field-help {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ===== 確認画面：印刷条件セクション ===== */
+.confirm-print-section {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.confirm-section-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+.confirm-print-dl {
+  margin-top: 0;
+}
+
+/* ===== 発注前注意文 ===== */
+.print-order-notice {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: #fffbf0;
+  border: 1px solid #f0d080;
+  border-radius: 8px;
+}
+
+.print-order-notice__title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #7a5800;
+  margin: 0 0 6px;
+}
+
+.print-order-notice__list {
+  margin: 0;
+  padding-left: 1.2em;
+  font-size: 0.8rem;
+  color: #6b5200;
+  line-height: 1.7;
+}
+
+/* ===== 管理画面：印刷発注情報の補足 ===== */
+.print-order-admin-notice {
+  font-size: 0.82rem;
+  color: #7a5800;
+  background: #fffbf0;
+  border: 1px solid #f0d080;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 0 0 12px;
+}
+
+.admin-field-note {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-left: 6px;
+  font-weight: 400;
+}

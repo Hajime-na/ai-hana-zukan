@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v40rc12d" />
+    <link rel="stylesheet" href="/static/style.css?v=v41rc13" />
   </head>
   <body>
     <header class="topbar">
@@ -419,6 +419,41 @@
               </div>
             </details>
 
+            <!-- 印刷設定 -->
+            <div class="print-settings-section">
+              <p class="eyebrow" style="margin-bottom:6px">Print Settings</p>
+              <h3 class="print-settings-title">印刷設定</h3>
+              <div class="print-settings-grid">
+                <label class="print-setting-item">
+                  印刷サイズ
+                  <select id="printSize">
+                    <option value="A2" selected>A2（推奨）</option>
+                    <option value="A3">A3</option>
+                    <option value="A1">A1</option>
+                  </select>
+                  <span class="field-help">A2：店頭ポスターとして見やすい標準サイズ。A3：小さめ掲示向け。A1：大きく目立たせたい場合。</span>
+                </label>
+                <label class="print-setting-item">
+                  用紙
+                  <select id="printPaper">
+                    <option value="マット紙" selected>マット紙（推奨）</option>
+                    <option value="光沢紙">光沢紙</option>
+                    <option value="パールフォト紙">パールフォト紙</option>
+                  </select>
+                  <span class="field-help">マット紙：落ち着いた質感で花に合いやすい。光沢紙：発色を強く見せたい場合。パールフォト紙：高級感を出したい場合。</span>
+                </label>
+                <label class="print-setting-item">
+                  配送種別
+                  <select id="printDelivery">
+                    <option value="余裕便" selected>余裕便（推奨）</option>
+                    <option value="通常便">通常便</option>
+                    <option value="急ぎ">急ぎ</option>
+                  </select>
+                  <span class="field-help">急ぎでなければ余裕便推奨。納期優先なら通常便・急ぎ。</span>
+                </label>
+              </div>
+            </div>
+
             <div class="form-section finish-section">
               <button id="finishButton" class="primary-button finish-button">仕上がり確認へ</button>
               <div id="finishChecklist" class="finish-checklist" hidden>
@@ -504,6 +539,26 @@
               <div><dt>素材の使い方</dt><dd id="confirmMaterialMode"></dd></div>
               <div><dt>ポスター回転</dt><dd id="confirmPosterRotation"></dd></div>
             </dl>
+            <div class="confirm-print-section">
+              <p class="confirm-section-label">印刷条件</p>
+              <dl class="confirm-summary confirm-print-dl">
+                <div><dt>発注先</dt><dd id="confirmPrintVendor">Prio</dd></div>
+                <div><dt>印刷サイズ</dt><dd id="confirmPrintSize">―</dd></div>
+                <div><dt>用紙</dt><dd id="confirmPrintPaper">―</dd></div>
+                <div><dt>配送種別</dt><dd id="confirmPrintDelivery">―</dd></div>
+                <div><dt>発送先</dt><dd id="confirmShipTo">自宅</dd></div>
+                <div><dt>発送元名</dt><dd id="confirmSenderName">Hana Poster AI</dd></div>
+              </dl>
+            </div>
+            <div class="print-order-notice">
+              <p class="print-order-notice__title">発注前のご確認</p>
+              <ul class="print-order-notice__list">
+                <li>画面上の色味と実際の印刷色は異なる場合があります。</li>
+                <li>初回はテスト印刷をおすすめします。</li>
+                <li>余白・裁ち落とし・用紙の質感により仕上がり印象が変わる場合があります。</li>
+                <li>印刷確認IDはお問い合わせ時の照合に使用します。</li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -635,6 +690,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v40rc12e"></script>
+    <script src="/static/app.js?v=v41rc13"></script>
   </body>
 </html>
