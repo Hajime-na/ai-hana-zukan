@@ -1367,6 +1367,14 @@ function buildOrderJson(orderId) {
       print_id_visible_checked: checkboxes[5]?.checked ?? false,
       print_id_match_checked: checkboxes[6]?.checked ?? false,
     },
+    print_vendor: "Prio",
+    print_delivery_type: "余裕便",
+    print_size: "A2",
+    print_paper: "マット紙",
+    ship_to_type: "お客様直送",
+    sender_name: "Hana Poster AI",
+    print_order_status: "未発注",
+    print_order_note: "",
   };
 }
 
@@ -2233,6 +2241,16 @@ const STATUS_LABELS = {
 };
 const STATUS_VALUES = Object.keys(STATUS_LABELS);
 
+const PRINT_STATUS_LABELS = {
+  未発注: "未発注",
+  入稿済み: "入稿済み",
+  発送待ち: "発送待ち",
+  発送済み: "発送済み",
+  完了: "完了",
+  キャンセル: "キャンセル",
+};
+const PRINT_STATUS_VALUES = Object.keys(PRINT_STATUS_LABELS);
+
 async function renderServerOrders() {
   const list = document.querySelector("#serverOrdersList");
   if (!list) return;
@@ -2335,8 +2353,48 @@ async function showOrderDetail(orderId) {
           <h4>確認チェック項目</h4>
           <dl class="order-history-detail">${checkHtml}</dl>
         </div>
+        <div class="order-detail-print-info">
+          <h4>印刷発注情報</h4>
+          <dl class="order-detail-fields">
+            <div><dt>発注先</dt><dd>${data.print_vendor || "Prio"}</dd></div>
+            <div><dt>配送種別</dt><dd>${data.print_delivery_type || "余裕便"}</dd></div>
+            <div><dt>印刷サイズ</dt><dd>${data.print_size || "A2"}</dd></div>
+            <div><dt>用紙</dt><dd>${data.print_paper || "マット紙"}</dd></div>
+            <div><dt>発送先種別</dt><dd>${data.ship_to_type || "お客様直送"}</dd></div>
+            <div><dt>発送元名</dt><dd>${data.sender_name || "Hana Poster AI"}</dd></div>
+            <div>
+              <dt>発注状態</dt>
+              <dd>
+                <select id="printStatusSelect" class="print-status-select">
+                  ${PRINT_STATUS_VALUES.map((v) => `<option value="${v}"${v === (data.print_order_status || "未発注") ? " selected" : ""}>${v}</option>`).join("")}
+                </select>
+              </dd>
+            </div>
+            <div style="grid-column: 1 / -1">
+              <dt>発注メモ</dt>
+              <dd style="flex: 1"><textarea id="printNoteTextarea" class="print-note-textarea"></textarea></dd>
+            </div>
+          </dl>
+          <div class="order-detail-print-actions">
+            <button type="button" class="secondary-button" id="savePrintStatusButton">発注情報を保存</button>
+            <button type="button" class="secondary-button" id="copyPrioMemoButton">Prio発注用メモをコピー</button>
+          </div>
+        </div>
       </div>
     `;
+    content.querySelector("#printNoteTextarea").value = data.print_order_note || "";
+    content.querySelector("#savePrintStatusButton").addEventListener("click", async () => {
+      await updatePrintOrderStatus(
+        orderId,
+        content.querySelector("#printStatusSelect").value,
+        content.querySelector("#printNoteTextarea").value,
+      );
+      const btn = content.querySelector("#savePrintStatusButton");
+      if (btn) { btn.textContent = "保存しました"; setTimeout(() => { btn.textContent = "発注情報を保存"; }, 2000); }
+    });
+    content.querySelector("#copyPrioMemoButton").addEventListener("click", () => {
+      copyPrioMemo(data, orderId);
+    });
   } catch {
     content.innerHTML = '<p class="history-empty">注文データの読み込みに失敗しました</p>';
   }
@@ -2345,6 +2403,41 @@ async function showOrderDetail(orderId) {
 function closeOrderDetail() {
   document.querySelector("#orderDetailModal").hidden = true;
   document.body.classList.remove("modal-open");
+}
+
+async function updatePrintOrderStatus(orderId, printOrderStatus, printOrderNote) {
+  try {
+    await fetch(`/api/orders/${orderId}/print-status`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ print_order_status: printOrderStatus, print_order_note: printOrderNote }),
+    });
+  } catch {
+    // silent fail
+  }
+}
+
+function copyPrioMemo(data, orderId) {
+  const text = [
+    `発注先：${data.print_vendor || "Prio"}`,
+    `配送種別：${data.print_delivery_type || "余裕便"}`,
+    `印刷サイズ：${data.print_size || "A2"}`,
+    `用紙：${data.print_paper || "マット紙"}`,
+    `発送先：${data.ship_to_type || "お客様直送"}`,
+    `発送元名：${data.sender_name || "Hana Poster AI"}`,
+    `注文ID：${data.order_id || orderId}`,
+    `印刷確認ID：${data.print_check_id || ""}`,
+    `ポスターID：${data.poster_id || ""}`,
+    `PNGファイル名：${data.png_filename || ""}`,
+    `PDFファイル名：${data.pdf_filename || ""}`,
+  ].join("\n");
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector("#copyPrioMemoButton");
+    if (btn) {
+      btn.textContent = "コピーしました";
+      setTimeout(() => { btn.textContent = "Prio発注用メモをコピー"; }, 2000);
+    }
+  });
 }
 
 async function updateOrderStatus(orderId, status) {

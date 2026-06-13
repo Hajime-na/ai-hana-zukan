@@ -67,6 +67,11 @@ class UpdateStatusRequest(BaseModel):
     status: str
 
 
+class UpdatePrintOrderStatusRequest(BaseModel):
+    print_order_status: str = ""
+    print_order_note: str | None = None
+
+
 class LayoutSuggestRequest(BaseModel):
     title: str = ""
     subtitle: str = ""
@@ -384,6 +389,21 @@ def update_order_status(order_id: str, request: UpdateStatusRequest):
         data["status"] = request.status
         _save_order_json(order_id, data)
         return {"ok": True, "order_id": order_id, "status": request.status}
+    except HTTPException:
+        return {"ok": False, "error": "Order not found"}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@app.post("/api/orders/{order_id}/print-status")
+def update_print_order_status(order_id: str, request: UpdatePrintOrderStatusRequest):
+    try:
+        data = _load_order_json(order_id)
+        data["print_order_status"] = request.print_order_status
+        if request.print_order_note is not None:
+            data["print_order_note"] = request.print_order_note
+        _save_order_json(order_id, data)
+        return {"ok": True, "order_id": order_id, "print_order_status": request.print_order_status}
     except HTTPException:
         return {"ok": False, "error": "Order not found"}
     except Exception as e:
