@@ -1608,22 +1608,63 @@ body.confirm-mode .topbar,
 .editing-order-banner {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   padding: 10px 16px;
   margin-bottom: 16px;
   background: #fff8e1;
   border: 2px solid #f0b429;
   border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 700;
   color: #7a5800;
 }
 
-.editing-order-banner-clear {
-  margin-left: auto;
+.editing-order-banner__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.editing-order-banner__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.editing-order-banner__sub {
   font-size: 0.8rem;
-  padding: 4px 10px;
+  font-weight: 400;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.editing-order-banner__actions {
+  flex-shrink: 0;
+}
+
+.editing-order-banner__clear-btn {
+  cursor: pointer;
+  background: #fff3cd;
+  border: 1px solid #d4a017;
+  border-radius: 6px;
+  color: #7a5800;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
   white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.editing-order-banner__clear-btn:hover {
+  background: #ffe082;
+}
+
+@media (max-width: 600px) {
+  .editing-order-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .editing-order-banner__actions {
+    align-self: flex-end;
+  }
 }
 
 .load-to-editor-button {

@@ -2464,8 +2464,10 @@ function loadOrderIntoEditor(orderData) {
 
   const banner = document.querySelector("#editingOrderBanner");
   if (banner) {
-    const label = banner.querySelector("#editingOrderBannerLabel");
-    if (label) label.textContent = `注文 ${orderData.order_id} を編集中`;
+    const title = banner.querySelector("#editingOrderBannerLabel");
+    const sub = banner.querySelector("#editingOrderBannerSubLabel");
+    if (title) title.textContent = `注文 ${orderData.order_id} を編集中`;
+    if (sub) sub.textContent = `確認ID：${orderData.print_check_id || "―"}`;
     banner.hidden = false;
   }
 
