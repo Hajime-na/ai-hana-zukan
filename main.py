@@ -99,6 +99,17 @@ class UpdatePaymentRequest(BaseModel):
     payment_link: str = ""
 
 
+class UpdateEstimateRequest(BaseModel):
+    design_fee: str = ""
+    print_fee: str = ""
+    shipping_fee: str = ""
+    tax: str = ""
+    discount: str = ""
+    total: str = ""
+    estimate_note: str = ""
+    admin_note: str = ""
+
+
 class LayoutSuggestRequest(BaseModel):
     title: str = ""
     subtitle: str = ""
@@ -408,6 +419,7 @@ def list_orders():
                 order_id = data.get("order_id", json_path.stem.replace("order_", ""))
                 png_file = f"poster_{order_id}.png"
                 payment = data.get("payment", {})
+                estimate = data.get("estimate", {})
                 orders.append({
                     "order_id": order_id,
                     "created_at": data.get("created_at", ""),
@@ -422,6 +434,7 @@ def list_orders():
                     "payment_status": payment.get("status", "未請求"),
                     "payment_method": payment.get("method", "未選択"),
                     "amount_total": payment.get("amount_total", ""),
+                    "estimate_total": estimate.get("total", ""),
                 })
             except Exception:
                 continue
@@ -522,6 +535,29 @@ def update_payment(order_id: str, request: UpdatePaymentRequest):
                 f"合計金額：{request.amount_total or '―'}"
             )
         return {"ok": True, "order_id": order_id, "payment": payment}
+    except HTTPException:
+        return {"ok": False, "error": "Order not found"}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@app.post("/api/orders/{order_id}/estimate")
+def update_estimate(order_id: str, request: UpdateEstimateRequest):
+    try:
+        data = _load_order_json(order_id)
+        estimate = {
+            "design_fee": request.design_fee,
+            "print_fee": request.print_fee,
+            "shipping_fee": request.shipping_fee,
+            "tax": request.tax,
+            "discount": request.discount,
+            "total": request.total,
+            "estimate_note": request.estimate_note,
+        }
+        data["estimate"] = estimate
+        data["admin_note"] = request.admin_note
+        _save_order_json(order_id, data)
+        return {"ok": True, "order_id": order_id, "estimate": estimate}
     except HTTPException:
         return {"ok": False, "error": "Order not found"}
     except Exception as e:

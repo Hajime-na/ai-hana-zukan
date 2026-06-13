@@ -2368,7 +2368,14 @@ async function renderServerOrders() {
           (v) => `<option value="${v}"${v === status ? " selected" : ""}>${STATUS_LABELS[v]}</option>`,
         ).join("");
         const payStatus = order.payment_status || "未請求";
-        const amountTotal = order.amount_total ? `¥${order.amount_total}` : "";
+        const estimateTotal = order.estimate_total || "";
+        const amountTotal = order.amount_total || "";
+        const estimateBadge = estimateTotal
+          ? `<span class="estimate-total-badge">見積：¥${estimateTotal}</span>`
+          : "";
+        const payAmountBadge = (amountTotal && amountTotal !== estimateTotal)
+          ? `<span class="payment-amount-badge">支払：¥${amountTotal}</span>`
+          : (!estimateTotal && amountTotal ? `<span class="payment-amount-badge">¥${amountTotal}</span>` : "");
         return `
           <article class="order-history-item server-order-item" data-order-id="${order.order_id}">
             <div class="order-history-header">
@@ -2376,7 +2383,7 @@ async function renderServerOrders() {
               <span class="order-history-date">${formatHistoryDate(order.created_at)}</span>
               <span class="order-status-badge status-${status}">${statusLabel}</span>
               <span class="payment-status-badge pay-${payStatus}">${payStatus}</span>
-              ${amountTotal ? `<span class="payment-amount-badge">${amountTotal}</span>` : ""}
+              ${estimateBadge}${payAmountBadge}
             </div>
             <dl class="order-history-detail">
               <div><dt>花名</dt><dd>${order.flower_name || "―"}</dd></div>
@@ -2433,6 +2440,7 @@ async function showOrderDetail(orderId) {
       .join("");
     const hasPoster = Boolean(data.png_filename);
     const pay = data.payment || {};
+    const est = data.estimate || {};
 
     content.innerHTML = `
       <h3 class="order-detail-title">注文詳細</h3>
@@ -2509,6 +2517,30 @@ async function showOrderDetail(orderId) {
             <button type="button" class="secondary-button load-to-editor-button" id="loadOrderToEditorButton">この注文を編集画面に読み込む</button>
           </div>
         </div>
+        <div class="order-detail-estimate">
+          <h4>見積もり・請求メモ</h4>
+          <dl class="order-detail-fields">
+            <div><dt>制作費</dt><dd><input id="estimateDesignFee" class="payment-amount-input" type="text" value="${est.design_fee || ""}" placeholder="例：5000" /></dd></div>
+            <div><dt>印刷費</dt><dd><input id="estimatePrintFee" class="payment-amount-input" type="text" value="${est.print_fee || ""}" placeholder="" /></dd></div>
+            <div><dt>送料</dt><dd><input id="estimateShippingFee" class="payment-amount-input" type="text" value="${est.shipping_fee || ""}" placeholder="" /></dd></div>
+            <div><dt>消費税</dt><dd><input id="estimateTax" class="payment-amount-input" type="text" value="${est.tax || ""}" placeholder="" /></dd></div>
+            <div><dt>値引き</dt><dd><input id="estimateDiscount" class="payment-amount-input" type="text" value="${est.discount || ""}" placeholder="" /></dd></div>
+            <div><dt>合計 <span class="admin-field-note">（自動計算）</span></dt><dd><input id="estimateTotal" class="payment-amount-input estimate-total-input" type="text" value="${est.total || ""}" placeholder="" /></dd></div>
+            <div style="grid-column: 1 / -1">
+              <dt>見積もりメモ</dt>
+              <dd style="flex: 1"><textarea id="estimateNoteTextarea" class="print-note-textarea"></textarea></dd>
+            </div>
+            <div style="grid-column: 1 / -1">
+              <dt>管理メモ <span class="admin-field-note">（内部用・お客様案内文には含まれません）</span></dt>
+              <dd style="flex: 1"><textarea id="adminNoteTextarea" class="print-note-textarea"></textarea></dd>
+            </div>
+          </dl>
+          <div class="order-detail-print-actions">
+            <button type="button" class="secondary-button" id="saveEstimateButton">見積もりを保存</button>
+            <button type="button" class="secondary-button" id="applyEstimateToPaymentButton">見積もり合計を支払い合計に反映</button>
+            <button type="button" class="secondary-button" id="copyCustomerMessageButton">お客様向け案内文をコピー</button>
+          </div>
+        </div>
         <div class="order-detail-payment-info">
           <h4>支払い情報</h4>
           <dl class="order-detail-fields">
@@ -2565,6 +2597,47 @@ async function showOrderDetail(orderId) {
     });
     content.querySelector("#loadOrderToEditorButton").addEventListener("click", () => {
       loadOrderIntoEditor(data);
+    });
+
+    content.querySelector("#estimateNoteTextarea").value = est.estimate_note || "";
+    content.querySelector("#adminNoteTextarea").value = data.admin_note || "";
+
+    function recalcEstimate() {
+      const d = (id) => { const v = content.querySelector(id)?.value; return v ? (Number(v) || 0) : 0; };
+      const total = d("#estimateDesignFee") + d("#estimatePrintFee") + d("#estimateShippingFee") + d("#estimateTax") - d("#estimateDiscount");
+      const totalEl = content.querySelector("#estimateTotal");
+      if (totalEl) totalEl.value = total > 0 ? String(total) : "";
+    }
+    ["#estimateDesignFee", "#estimatePrintFee", "#estimateShippingFee", "#estimateTax", "#estimateDiscount"].forEach((id) => {
+      content.querySelector(id)?.addEventListener("input", recalcEstimate);
+    });
+
+    content.querySelector("#saveEstimateButton").addEventListener("click", async () => {
+      await updateEstimate(orderId, {
+        design_fee: content.querySelector("#estimateDesignFee").value,
+        print_fee: content.querySelector("#estimatePrintFee").value,
+        shipping_fee: content.querySelector("#estimateShippingFee").value,
+        tax: content.querySelector("#estimateTax").value,
+        discount: content.querySelector("#estimateDiscount").value,
+        total: content.querySelector("#estimateTotal").value,
+        estimate_note: content.querySelector("#estimateNoteTextarea").value,
+        admin_note: content.querySelector("#adminNoteTextarea").value,
+      });
+      const btn = content.querySelector("#saveEstimateButton");
+      if (btn) { btn.textContent = "保存しました"; setTimeout(() => { btn.textContent = "見積もりを保存"; }, 2000); }
+      renderServerOrders();
+    });
+
+    content.querySelector("#applyEstimateToPaymentButton").addEventListener("click", () => {
+      const estTotal = content.querySelector("#estimateTotal")?.value || "";
+      const payTotalEl = content.querySelector("#paymentAmountTotal");
+      if (payTotalEl) payTotalEl.value = estTotal;
+      const btn = content.querySelector("#applyEstimateToPaymentButton");
+      if (btn) { btn.textContent = "反映しました"; setTimeout(() => { btn.textContent = "見積もり合計を支払い合計に反映"; }, 1500); }
+    });
+
+    content.querySelector("#copyCustomerMessageButton").addEventListener("click", () => {
+      copyCustomerMessage(data, orderId, content);
     });
 
     content.querySelector("#paymentNoteTextarea").value = pay.payment_note || "";
@@ -2726,6 +2799,18 @@ async function updatePayment(orderId, paymentData) {
   }
 }
 
+async function updateEstimate(orderId, estimateData) {
+  try {
+    await fetch(`/api/orders/${orderId}/estimate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(estimateData),
+    });
+  } catch {
+    // silent fail
+  }
+}
+
 function copyPrioMemo(data, orderId, content) {
   const ship = data.shipping || {};
   const cust = data.customer || {};
@@ -2764,6 +2849,60 @@ function copyPrioMemo(data, orderId, content) {
     if (btn) {
       btn.textContent = "コピーしました";
       setTimeout(() => { btn.textContent = "Prio発注用メモをコピー"; }, 2000);
+    }
+  });
+}
+
+function copyCustomerMessage(data, orderId, content) {
+  const cust = data.customer || {};
+  const customerName = cust.name || "お客様";
+  const fmt = (v) => { if (!v) return "―"; const n = Number(v); return isNaN(n) ? v : `¥${n.toLocaleString()}`; };
+  const g = (id, fallback) => content?.querySelector(id)?.value || fallback || "";
+  const estDesign   = g("#estimateDesignFee",   data.estimate?.design_fee);
+  const estPrint    = g("#estimatePrintFee",     data.estimate?.print_fee);
+  const estShipping = g("#estimateShippingFee",  data.estimate?.shipping_fee);
+  const estTax      = g("#estimateTax",          data.estimate?.tax);
+  const estTotal    = g("#estimateTotal",        data.estimate?.total);
+  const payMethod   = g("#paymentMethodSelect",  data.payment?.method);
+  const payStatus   = g("#paymentStatusSelect",  data.payment?.status);
+  const payDueDate  = g("#paymentDueDate",       data.payment?.payment_due_date);
+  const payLink     = g("#paymentLink",          data.payment?.payment_link);
+  const lines = [
+    `${customerName}様`,
+    ``,
+    `ポスター制作のご依頼ありがとうございます。`,
+    `以下の内容で承ります。`,
+    ``,
+    `【ご注文内容】`,
+    `ポスター：${data.main_title || "―"}`,
+    `印刷サイズ：${data.print_size || "―"}`,
+    `用紙：${data.print_paper || "―"}`,
+    `配送方法：${data.print_delivery_type || "―"}`,
+    `印刷確認ID：${data.print_check_id || "―"}`,
+    ``,
+    `【お見積り】`,
+    `制作費：${fmt(estDesign)}`,
+    `印刷費：${fmt(estPrint)}`,
+    `送料：${fmt(estShipping)}`,
+    `消費税：${fmt(estTax)}`,
+    `合計：${fmt(estTotal)}`,
+    ``,
+    `【お支払い】`,
+    `支払い方法：${payMethod || "―"}`,
+    `支払い状態：${payStatus || "―"}`,
+    `支払期限：${payDueDate || "―"}`,
+    ...(payLink ? [`決済リンク：${payLink}`] : []),
+    ``,
+    `画面上の色味と実際の印刷色は異なる場合があります。`,
+    `内容をご確認のうえ、ご不明点がありましたらお知らせください。`,
+    ``,
+    `Hana Poster AI`,
+  ];
+  navigator.clipboard.writeText(lines.join("\n")).then(() => {
+    const btn = content?.querySelector("#copyCustomerMessageButton");
+    if (btn) {
+      btn.textContent = "コピーしました";
+      setTimeout(() => { btn.textContent = "お客様向け案内文をコピー"; }, 2000);
     }
   });
 }
