@@ -1,6 +1,8 @@
 import base64
 import json
 import os
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +25,17 @@ except ImportError:
     _openai_client = None
 
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
+
+SLACK_WEBHOOK_URL    = os.getenv("SLACK_WEBHOOK_URL", "")
+SLACK_NOTIFY_ENABLED = os.getenv("SLACK_NOTIFY_ENABLED", "false").lower() == "true"
+
+STATUS_LABELS_JP = {
+    "new":      "新規",
+    "checking": "確認中",
+    "ready":    "準備完了",
+    "done":     "完了",
+    "canceled": "キャンセル",
+}
 
 app = FastAPI(title="AI花図鑑")
 
@@ -136,6 +149,23 @@ def _load_order_json(order_id: str) -> dict:
 def _save_order_json(order_id: str, data: dict) -> None:
     with open(ORDERS_DIR / f"order_{order_id}.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def _send_slack(message: str) -> None:
+    if not SLACK_NOTIFY_ENABLED or not SLACK_WEBHOOK_URL:
+        return
+    try:
+        payload = json.dumps({"text": message}).encode("utf-8")
+        req = urllib.request.Request(
+            SLACK_WEBHOOK_URL,
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=5):
+            pass
+    except Exception as e:
+        print(f"[Slack通知失敗] {e}")
 
 
 # ── Core routes ──────────────────────────────────────────────────────────────
@@ -327,6 +357,18 @@ def save_order(request: SaveOrderRequest):
             (ORDERS_DIR / png_file).write_bytes(base64.b64decode(raw))
             saved_png = True
 
+        _send_slack(
+            f"【新規注文保存】\n"
+            f"注文ID：{order_id}\n"
+            f"印刷確認ID：{order_data.get('print_check_id', '―')}\n"
+            f"ポスターID：{order_data.get('poster_id', '―')}\n"
+            f"メインタイトル：{order_data.get('main_title', '―')}\n"
+            f"文字スタイル：{order_data.get('text_style', '―')}\n"
+            f"印刷サイズ：{order_data.get('print_size', '―')}\n"
+            f"用紙：{order_data.get('print_paper', '―')}\n"
+            f"発注先候補：{order_data.get('print_vendor', 'Prio')}\n"
+            f"管理画面で確認してください。"
+        )
         return {
             "ok": True,
             "order_id": order_id,
@@ -386,8 +428,15 @@ def get_order_json(order_id: str):
 def update_order_status(order_id: str, request: UpdateStatusRequest):
     try:
         data = _load_order_json(order_id)
+        old_status = data.get("status", "new")
         data["status"] = request.status
         _save_order_json(order_id, data)
+        _send_slack(
+            f"【注文ステータス変更】\n"
+            f"注文ID：{order_id}\n"
+            f"印刷確認ID：{data.get('print_check_id', '―')}\n"
+            f"ステータス：{STATUS_LABELS_JP.get(old_status, old_status)} → {STATUS_LABELS_JP.get(request.status, request.status)}"
+        )
         return {"ok": True, "order_id": order_id, "status": request.status}
     except HTTPException:
         return {"ok": False, "error": "Order not found"}
@@ -399,15 +448,30 @@ def update_order_status(order_id: str, request: UpdateStatusRequest):
 def update_print_order_status(order_id: str, request: UpdatePrintOrderStatusRequest):
     try:
         data = _load_order_json(order_id)
+        old_print_status = data.get("print_order_status", "未発注")
         data["print_order_status"] = request.print_order_status
         if request.print_order_note is not None:
             data["print_order_note"] = request.print_order_note
         _save_order_json(order_id, data)
+        _send_slack(
+            f"【印刷発注ステータス変更】\n"
+            f"注文ID：{order_id}\n"
+            f"印刷確認ID：{data.get('print_check_id', '―')}\n"
+            f"発注先：{data.get('print_vendor', 'Prio')}\n"
+            f"状態：{old_print_status} → {request.print_order_status}"
+        )
         return {"ok": True, "order_id": order_id, "print_order_status": request.print_order_status}
     except HTTPException:
         return {"ok": False, "error": "Order not found"}
     except Exception as e:
         return {"ok": False, "error": str(e)}
+
+
+@app.post("/api/slack-test")
+def slack_test():
+    _send_slack("【Slack通知テスト】Hana Poster AI からのテスト通知です。")
+    enabled = SLACK_NOTIFY_ENABLED and bool(SLACK_WEBHOOK_URL)
+    return {"ok": True, "slack_enabled": enabled}
 
 
 @app.delete("/api/orders/{order_id}")

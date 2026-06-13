@@ -205,6 +205,41 @@ OPENAI_MODEL=gpt-4.1-mini
 
 ---
 
+## Slack 通知設定（任意）
+
+注文保存・ステータス変更・印刷発注ステータス変更のタイミングで Slack へ通知できます。
+
+### 設定方法
+
+`.env` に以下を追加してください：
+
+```
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/your/webhook/url
+SLACK_NOTIFY_ENABLED=true
+```
+
+### 通知タイミングと内容
+
+| イベント | 通知内容 |
+|---|---|
+| 注文保存（POST /api/save-order） | 注文ID・印刷確認ID・ポスターID・タイトル・印刷サイズ・用紙・発注先 |
+| 注文ステータス変更 | 注文ID・印刷確認ID・変更前→変更後ステータス |
+| 印刷発注ステータス変更 | 注文ID・印刷確認ID・発注先・変更前→変更後状態 |
+
+### 未設定時の動作
+
+`SLACK_WEBHOOK_URL` が空、または `SLACK_NOTIFY_ENABLED=false` の場合は通知しません。アプリは通常どおり動作します。
+
+### 通知失敗時の動作
+
+Slack 通知に失敗しても注文保存・ステータス変更は失敗しません。サーバーログに失敗内容が記録されます。
+
+### 通知テスト
+
+`POST /api/slack-test` を叩くと Slack へテスト通知を送ります（`SLACK_NOTIFY_ENABLED=true` のときのみ実際に送信）。
+
+---
+
 ## API エンドポイント一覧
 
 ### `POST /api/generate-copy`
