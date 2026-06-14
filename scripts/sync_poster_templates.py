@@ -25,6 +25,7 @@ except ImportError:
 
 PROJECT_DIR    = Path(__file__).parent.parent
 MASTER_CSV     = PROJECT_DIR / "poster_master.csv"
+POSTERS_DIR    = PROJECT_DIR / "static" / "posters"
 PREVIEW_DIR    = PROJECT_DIR / "static" / "posters_preview"
 TEMPLATES_JSON = PROJECT_DIR / "static" / "poster_templates.json"
 
@@ -162,10 +163,11 @@ def main() -> None:
 
     PREVIEW_DIR.mkdir(parents=True, exist_ok=True)
 
-    templates  = []
-    skipped    = 0
-    generated  = 0
-    kept       = 0
+    templates         = []
+    skipped           = 0
+    generated         = 0
+    kept              = 0
+    registered_sources: set[Path] = set()
 
     with open(MASTER_CSV, encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
@@ -174,6 +176,8 @@ def main() -> None:
             source_rel = row.get("source_path", "").strip()
 
             source_path  = (PROJECT_DIR / source_rel) if source_rel else None
+            if source_path:
+                registered_sources.add(source_path.resolve())
             preview_name = f"{poster_id}_preview.jpg"
             preview_path = PREVIEW_DIR / preview_name
             preview_url  = f"/static/posters_preview/{preview_name}"
@@ -231,6 +235,18 @@ def main() -> None:
                 "poster_position":     row["poster_position"].strip(),
                 "flower_match":        row["flower_match"].strip(),
             })
+
+    # static/posters/ に存在するが poster_master.csv 未登録の画像を検出
+    if POSTERS_DIR.exists():
+        IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
+        unlisted = sorted(
+            p for p in POSTERS_DIR.iterdir()
+            if p.suffix.lower() in IMAGE_EXTS and p.resolve() not in registered_sources
+        )
+        if unlisted:
+            print("\n未登録画像があります：")
+            for p in unlisted:
+                print(f"  - static/posters/{p.name}")
 
     out = {
         "categories_order": CATEGORIES_ORDER,
