@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v44rc3" />
+    <link rel="stylesheet" href="/static/style.css?v=v44rc4" />
   </head>
   <body>
     <header class="topbar">
@@ -710,9 +710,10 @@
           <p class="unregistered-alert-title">⚠ 未登録のポスター画像があります</p>
           <p class="unregistered-alert-desc">poster_master.csv に登録されていない画像があります。登録しない限りWebには表示されません。</p>
           <ul id="unregisteredFilesList" class="unregistered-files-list"></ul>
+          <p class="unregistered-alert-hint">poster_master.csv に手動追記 → 同期でWebに反映されます</p>
           <div class="unregistered-alert-actions">
-            <button type="button" id="recheckUnregisteredButton" class="secondary-button compact-button">未登録画像を再確認</button>
-            <button type="button" id="runSyncButton" class="secondary-button compact-button">同期を実行</button>
+            <button type="button" id="recheckUnregisteredButton" class="secondary-button compact-button">再確認</button>
+            <button type="button" id="runSyncButton" class="secondary-button compact-button">CSV→プレビュー同期</button>
           </div>
           <p id="syncResultMsg" class="unregistered-sync-result" hidden></p>
         </div>

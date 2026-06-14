@@ -2324,16 +2324,17 @@ body.modal-open {
 
 /* ===== Unregistered posters alert ===== */
 .unregistered-alert {
-  background: #fffbeb;
-  border: 2px solid #f59e0b;
-  border-radius: 8px;
-  padding: 16px 20px;
+  background: #fef3c7;
+  border: 2px solid #d97706;
+  border-left: 6px solid #d97706;
+  border-radius: 6px;
+  padding: 14px 18px;
   margin-bottom: 16px;
 }
 
 .unregistered-alert-title {
   color: #92400e;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 700;
   margin: 0 0 6px;
 }
@@ -2350,6 +2351,13 @@ body.modal-open {
   line-height: 1.9;
   margin: 0 0 12px 1.25rem;
   padding: 0;
+}
+
+.unregistered-alert-hint {
+  color: #92400e;
+  font-size: 0.75rem;
+  margin: 0 0 10px;
+  opacity: 0.8;
 }
 
 .unregistered-alert-actions {

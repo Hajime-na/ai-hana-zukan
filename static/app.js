@@ -2980,9 +2980,16 @@ async function runSyncPosters() {
     const resp = await fetch("/api/sync-posters", { method: "POST" });
     const data = await resp.json();
     if (msg) {
-      msg.textContent = data.ok
-        ? `✅ 同期完了\n${(data.stdout || "").trim()}`
-        : `❌ 同期失敗\n${data.error || data.stderr || ""}`;
+      if (data.ok) {
+        const summary = (data.stdout || "")
+          .split("\n")
+          .filter((l) => l.includes("件") || l.includes("エントリ"))
+          .join("\n")
+          .trim();
+        msg.textContent = `✅ 同期完了\n${summary}`;
+      } else {
+        msg.textContent = `❌ エラー\n${data.error || data.stderr || ""}`;
+      }
       msg.hidden = false;
     }
     if (data.ok) {
