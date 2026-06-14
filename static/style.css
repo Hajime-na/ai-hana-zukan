@@ -2322,6 +2322,48 @@ body.modal-open {
   width: 100%;
 }
 
+/* ===== Unregistered posters alert ===== */
+.unregistered-alert {
+  background: #fffbeb;
+  border: 2px solid #f59e0b;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.unregistered-alert-title {
+  color: #92400e;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.unregistered-alert-desc {
+  color: #78350f;
+  font-size: 0.8125rem;
+  margin: 0 0 10px;
+}
+
+.unregistered-files-list {
+  color: #78350f;
+  font-size: 0.8125rem;
+  line-height: 1.9;
+  margin: 0 0 12px 1.25rem;
+  padding: 0;
+}
+
+.unregistered-alert-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.unregistered-sync-result {
+  font-size: 0.8125rem;
+  margin: 10px 0 0;
+  white-space: pre-wrap;
+}
+
 .wish-details > summary {
   cursor: pointer;
   display: flex;

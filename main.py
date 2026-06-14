@@ -1,6 +1,9 @@
 import base64
+import csv as csv_mod
 import json
 import os
+import subprocess
+import sys
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -39,9 +42,11 @@ STATUS_LABELS_JP = {
 
 app = FastAPI(title="AI花図鑑")
 
-BASE_DIR = Path(__file__).resolve().parent
-STATIC_DIR = BASE_DIR / "static"
-ORDERS_DIR = BASE_DIR / "orders"
+BASE_DIR    = Path(__file__).resolve().parent
+STATIC_DIR  = BASE_DIR / "static"
+POSTERS_DIR = STATIC_DIR / "posters"
+MASTER_CSV  = BASE_DIR / "poster_master.csv"
+ORDERS_DIR  = BASE_DIR / "orders"
 ORDERS_DIR.mkdir(exist_ok=True)
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -194,6 +199,55 @@ def _send_slack(message: str) -> None:
 
 
 # ── Core routes ──────────────────────────────────────────────────────────────
+
+@app.get("/api/posters/unregistered")
+def get_unregistered_posters():
+    registered: set[Path] = set()
+    if MASTER_CSV.exists():
+        with open(MASTER_CSV, encoding="utf-8-sig", newline="") as f:
+            for row in csv_mod.DictReader(f):
+                src = row.get("source_path", "").strip()
+                if src:
+                    registered.add((BASE_DIR / Path(src)).resolve())
+
+    IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
+    unlisted: list[str] = []
+    if POSTERS_DIR.exists():
+        for p in sorted(POSTERS_DIR.iterdir()):
+            if p.name.startswith("."):
+                continue
+            if p.suffix.lower() in IMAGE_EXTS and p.resolve() not in registered:
+                unlisted.append(f"static/posters/{p.name}")
+
+    return {"ok": True, "count": len(unlisted), "files": unlisted}
+
+
+@app.post("/api/sync-posters")
+def sync_posters():
+    script = BASE_DIR / "scripts" / "sync_poster_templates.py"
+    if not script.exists():
+        return {"ok": False, "error": "sync script not found"}
+    try:
+        result = subprocess.run(
+            [sys.executable, str(script)],
+            capture_output=True,
+            text=True,
+            timeout=120,
+            encoding="utf-8",
+            errors="replace",
+            cwd=str(BASE_DIR),
+            env={**os.environ, "PYTHONIOENCODING": "utf-8"},
+        )
+        return {
+            "ok": result.returncode == 0,
+            "stdout": result.stdout,
+            "stderr": result.stderr,
+        }
+    except subprocess.TimeoutExpired:
+        return {"ok": False, "error": "sync timed out (120s)"}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
 
 @app.get("/api/poster-templates")
 def get_poster_templates():

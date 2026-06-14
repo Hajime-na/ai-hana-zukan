@@ -2950,6 +2950,58 @@ document.querySelector("#orderDetailBackdrop").addEventListener("click", closeOr
 document.querySelector("#clearEditingOrderButton").addEventListener("click", clearEditingOrder);
 
 document.querySelector("#refreshServerOrdersButton").addEventListener("click", renderServerOrders);
+document.querySelector("#recheckUnregisteredButton")?.addEventListener("click", checkUnregisteredPosters);
+document.querySelector("#runSyncButton")?.addEventListener("click", runSyncPosters);
+
+async function checkUnregisteredPosters() {
+  const alert = document.querySelector("#unregisteredPostersAlert");
+  if (!alert) return;
+  try {
+    const resp = await fetch("/api/posters/unregistered");
+    const data = await resp.json();
+    if (data.count > 0) {
+      const list = document.querySelector("#unregisteredFilesList");
+      list.innerHTML = data.files.map((f) => `<li>${f}</li>`).join("");
+      alert.hidden = false;
+    } else {
+      alert.hidden = true;
+    }
+  } catch {
+    // サーバー未起動時は表示しない
+  }
+}
+
+async function runSyncPosters() {
+  const btn = document.querySelector("#runSyncButton");
+  const msg = document.querySelector("#syncResultMsg");
+  if (btn) { btn.disabled = true; btn.textContent = "同期中..."; }
+  if (msg) { msg.hidden = true; }
+  try {
+    const resp = await fetch("/api/sync-posters", { method: "POST" });
+    const data = await resp.json();
+    if (msg) {
+      msg.textContent = data.ok
+        ? `✅ 同期完了\n${(data.stdout || "").trim()}`
+        : `❌ 同期失敗\n${data.error || data.stderr || ""}`;
+      msg.hidden = false;
+    }
+    if (data.ok) {
+      // テンプレート再読み込みして警告を再チェック
+      try {
+        const tplResp = await fetch("/api/poster-templates");
+        const tplData = await tplResp.json();
+        state.posterTemplates = tplData.templates || [];
+        state.posterCategoriesOrder = tplData.categories_order || [];
+        renderGalleryShelf();
+      } catch { /* ignore */ }
+      await checkUnregisteredPosters();
+    }
+  } catch (e) {
+    if (msg) { msg.textContent = `❌ エラー: ${e.message}`; msg.hidden = false; }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = "同期を実行"; }
+  }
+}
 
 function renderGalleryShelf() {
   const grid = document.querySelector("#galleryGrid");
@@ -3129,6 +3181,7 @@ async function init() {
   renderGalleryShelf();
   renderOrderHistory();
   renderServerOrders();
+  checkUnregisteredPosters();
   if (isConfirmModeFromUrl()) {
     showFinishReview({ updateUrl: false });
   }
