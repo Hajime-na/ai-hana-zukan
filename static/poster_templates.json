@@ -6,7 +6,8 @@
     "冬",
     "母の日",
     "ギフト",
-    "開店祝い"
+    "開店祝い",
+    "他"
   ],
   "templates": [
     {
@@ -602,6 +603,32 @@
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "花火"
+    },
+    {
+      "id": "img-0075",
+      "poster_id": "HP-0075",
+      "title": "他_胡蝶蘭",
+      "short_label": "胡蝶蘭1",
+      "gradient": "linear-gradient(135deg, #fdfbf7 0%, #c8b89a 50%, #f7f3ec 100%)",
+      "image": "/static/posters_preview/HP-0075_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0075_preview.jpg",
+      "source_image": "/static/posters/他_胡蝶蘭.jpg",
+      "categories": [
+        "他"
+      ],
+      "season": "他",
+      "tags": [
+        "胡蝶蘭"
+      ],
+      "poster_allowed": false,
+      "featured": false,
+      "default_main_title": "胡蝶蘭フェア",
+      "default_subtitle": "上品な胡蝶蘭をあなたへ。",
+      "default_note": "胡蝶蘭入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "胡蝶蘭"
     }
   ]
 }

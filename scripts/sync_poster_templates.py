@@ -29,7 +29,7 @@ POSTERS_DIR    = PROJECT_DIR / "static" / "posters"
 PREVIEW_DIR    = PROJECT_DIR / "static" / "posters_preview"
 TEMPLATES_JSON = PROJECT_DIR / "static" / "poster_templates.json"
 
-CATEGORIES_ORDER = ["春", "夏", "秋", "冬", "母の日", "ギフト", "開店祝い"]
+CATEGORIES_ORDER = ["春", "夏", "秋", "冬", "母の日", "ギフト", "開店祝い", "他"]
 
 SEASON_GRADIENT = {
     "春":     "linear-gradient(135deg, #fde8ed 0%, #f0a8b8 50%, #fff0f3 100%)",
@@ -39,6 +39,7 @@ SEASON_GRADIENT = {
     "母の日": "linear-gradient(135deg, #fce4ec 0%, #f48fb1 55%, #fff9c4 100%)",
     "ギフト": "linear-gradient(135deg, #fff8e1 0%, #ffb74d 50%, #fff3e0 100%)",
     "開店祝い": "linear-gradient(135deg, #e8f5e9 0%, #66bb6a 50%, #fffde7 100%)",
+    "他":     "linear-gradient(135deg, #fdfbf7 0%, #c8b89a 50%, #f7f3ec 100%)",
 }
 
 MAX_LONG_SIDE = 1000
