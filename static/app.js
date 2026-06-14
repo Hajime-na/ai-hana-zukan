@@ -2954,20 +2954,27 @@ document.querySelector("#recheckUnregisteredButton")?.addEventListener("click", 
 document.querySelector("#runSyncButton")?.addEventListener("click", runSyncPosters);
 
 async function checkUnregisteredPosters() {
-  const alert = document.querySelector("#unregisteredPostersAlert");
-  if (!alert) return;
+  const alertEl = document.querySelector("#unregisteredPostersAlert");
+  const btn = document.querySelector("#recheckUnregisteredButton");
+  if (!alertEl) return;
+
+  if (btn) { btn.disabled = true; btn.textContent = "確認中…"; }
   try {
     const resp = await fetch("/api/posters/unregistered");
     const data = await resp.json();
+    const ts = new Date().toLocaleTimeString("ja-JP");
     if (data.count > 0) {
       const list = document.querySelector("#unregisteredFilesList");
       list.innerHTML = data.files.map((f) => `<li>${f}</li>`).join("");
-      alert.hidden = false;
+      alertEl.hidden = false;
     } else {
-      alert.hidden = true;
+      alertEl.hidden = true;
     }
+    if (btn) { btn.textContent = `再確認 (${ts})`; }
   } catch {
-    // サーバー未起動時は表示しない
+    if (btn) { btn.textContent = "再確認"; }
+  } finally {
+    if (btn) btn.disabled = false;
   }
 }
 
