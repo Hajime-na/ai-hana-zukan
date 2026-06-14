@@ -145,7 +145,6 @@ const confirmationSection = document.querySelector("#confirmationSection");
 const backToEditButton = document.querySelector("#backToEditButton");
 const placeOrderButton = document.querySelector("#placeOrderButton");
 const orderStatus = document.querySelector("#orderStatus");
-const finishCheckItems = document.querySelector("#finishCheckItems");
 const orderConfirmChecks = document.querySelector("#orderConfirmChecks");
 const customerName = document.querySelector("#customerName");
 const customerShopName = document.querySelector("#customerShopName");
@@ -1359,7 +1358,7 @@ function buildOrderJson(orderId) {
   const now = new Date();
   const snapshot = getPosterSnapshot();
   const photo = getCurrentPosterPhoto();
-  const checkboxes = Array.from(finishCheckItems.querySelectorAll('input[type="checkbox"]'));
+  const cbs = Array.from(orderConfirmChecks?.querySelectorAll('input[type="checkbox"]') || []);
   return {
     order_id: orderId,
     poster_id: getTemplatePosterIdLabel(),
@@ -1389,13 +1388,13 @@ function buildOrderJson(orderId) {
     subtitle_font_scale: snapshot.subtitle_font_scale,
     meta_font_scale: snapshot.meta_font_scale,
     checks: {
-      typo_checked: checkboxes[0]?.checked ?? false,
-      shop_date_checked: checkboxes[1]?.checked ?? false,
-      position_adjustment_accepted: checkboxes[2]?.checked ?? false,
-      final_adjustment_accepted: checkboxes[3]?.checked ?? false,
-      color_difference_accepted: checkboxes[4]?.checked ?? false,
-      print_id_visible_checked: checkboxes[5]?.checked ?? false,
-      print_id_match_checked: checkboxes[6]?.checked ?? false,
+      typo_checked: cbs[0]?.checked ?? false,
+      shop_date_checked: cbs[0]?.checked ?? false,
+      position_adjustment_accepted: false,
+      final_adjustment_accepted: false,
+      color_difference_accepted: cbs[2]?.checked ?? false,
+      print_id_visible_checked: cbs[3]?.checked ?? false,
+      print_id_match_checked: cbs[3]?.checked ?? false,
     },
     print_vendor: "Prio",
     print_delivery_type: printDelivery?.value || "余裕便",
@@ -1424,16 +1423,13 @@ function buildOrderJson(orderId) {
     billing: {
       receipt_name: receiptName?.value?.trim() || "",
     },
-    confirmation_checks: (() => {
-      const cbs = Array.from(orderConfirmChecks?.querySelectorAll('input[type="checkbox"]') || []);
-      return {
-        text_checked: cbs[0]?.checked ?? false,
-        print_options_checked: cbs[1]?.checked ?? false,
-        color_difference_accepted: cbs[2]?.checked ?? false,
-        revision_fee_accepted: cbs[3]?.checked ?? false,
-        print_check_id_accepted: cbs[4]?.checked ?? false,
-      };
-    })(),
+    confirmation_checks: {
+      text_checked: cbs[0]?.checked ?? false,
+      print_options_checked: cbs[1]?.checked ?? false,
+      color_difference_accepted: cbs[2]?.checked ?? false,
+      print_check_id_accepted: cbs[3]?.checked ?? false,
+      revision_fee_accepted: cbs[4]?.checked ?? false,
+    },
   };
 }
 
@@ -1717,7 +1713,7 @@ function showFinishReview({ updateUrl = true } = {}) {
   if (finishChecklist) finishChecklist.hidden = true;
   orderStatus.hidden = true;
   orderStatus.textContent = "";
-  finishCheckItems.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+  orderConfirmChecks?.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
     checkbox.checked = false;
   });
   if (updateUrl) setConfirmModeUrl(true);
@@ -2116,19 +2112,10 @@ placeOrderButton.addEventListener("click", () => {
     orderStatus.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
-  const checkedCount = finishCheckItems.querySelectorAll('input[type="checkbox"]:checked').length;
-  const totalCount = finishCheckItems.querySelectorAll('input[type="checkbox"]').length;
+  const checkedCount = orderConfirmChecks?.querySelectorAll('input[type="checkbox"]:checked').length || 0;
+  const totalCount = orderConfirmChecks?.querySelectorAll('input[type="checkbox"]').length || 0;
   if (checkedCount !== totalCount) {
-    orderStatus.textContent = "確認項目をすべてチェックしてください";
-    orderStatus.hidden = false;
-    orderStatus.classList.add("is-warning");
-    orderStatus.scrollIntoView({ behavior: "smooth", block: "center" });
-    return;
-  }
-  const confirmCheckedCount = orderConfirmChecks?.querySelectorAll('input[type="checkbox"]:checked').length || 0;
-  const confirmTotalCount = orderConfirmChecks?.querySelectorAll('input[type="checkbox"]').length || 0;
-  if (confirmCheckedCount !== confirmTotalCount) {
-    orderStatus.textContent = "注文確定前の確認項目をすべてチェックしてください";
+    orderStatus.textContent = "注文前確認の項目をすべてチェックしてください";
     orderStatus.hidden = false;
     orderStatus.classList.add("is-warning");
     orderConfirmChecks?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -2426,13 +2413,9 @@ async function showOrderDetail(orderId) {
     const status = data.status || "new";
     const statusLabel = STATUS_LABELS[status] || status;
     const checkLabels = {
-      typo_checked: "誤字脱字確認",
-      shop_date_checked: "店舗名・日付確認",
-      position_adjustment_accepted: "文字位置おまかせ微調整を了承",
-      final_adjustment_accepted: "文字位置・サイズ最終調整を了承",
-      color_difference_accepted: "色味の差異を了承",
-      print_id_visible_checked: "印刷確認ID 画面表示確認",
-      print_id_match_checked: "印刷確認ID 一致確認",
+      typo_checked: "文字内容・店舗名・日付確認",
+      color_difference_accepted: "色味・余白差異を了承",
+      print_id_visible_checked: "印刷確認ID照合を了承",
     };
     const checks = data.checks || {};
     const checkHtml = Object.entries(checkLabels)
