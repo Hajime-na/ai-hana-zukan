@@ -3000,7 +3000,6 @@ async function runSyncPosters() {
       msg.hidden = false;
     }
     if (data.ok) {
-      // テンプレート再読み込みして警告を再チェック
       try {
         const tplResp = await fetch("/api/poster-templates");
         const tplData = await tplResp.json();
@@ -3008,8 +3007,8 @@ async function runSyncPosters() {
         state.posterCategoriesOrder = tplData.categories_order || [];
         renderGalleryShelf();
       } catch { /* ignore */ }
-      await checkUnregisteredPosters();
     }
+    await checkUnregisteredPosters();
   } catch (e) {
     if (msg) { msg.textContent = `❌ エラー: ${e.message}`; msg.hidden = false; }
   } finally {
