@@ -548,6 +548,60 @@
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "朝顔"
+    },
+    {
+      "id": "img-0073",
+      "poster_id": "HP-0073",
+      "title": "夏_ツツジ",
+      "short_label": "ツツジ1",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0073_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0073_preview.jpg",
+      "source_image": "/static/posters/夏_ツツジ.png",
+      "categories": [
+        "夏"
+      ],
+      "season": "夏",
+      "tags": [
+        "ツツジ",
+        "夏"
+      ],
+      "poster_allowed": false,
+      "featured": false,
+      "default_main_title": "ツツジフェア",
+      "default_subtitle": "旬のツツジをあなたへ。",
+      "default_note": "ツツジ入荷中。ご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "ツツジ"
+    },
+    {
+      "id": "img-0074",
+      "poster_id": "HP-0074",
+      "title": "夏_花火",
+      "short_label": "花火1",
+      "gradient": "linear-gradient(135deg, #e3f2fd 0%, #1976d2 50%, #b3e5fc 100%)",
+      "image": "/static/posters_preview/HP-0074_preview.jpg",
+      "preview_image": "/static/posters_preview/HP-0074_preview.jpg",
+      "source_image": "/static/posters/夏_花火.png",
+      "categories": [
+        "夏"
+      ],
+      "season": "夏",
+      "tags": [
+        "花火",
+        "夏"
+      ],
+      "poster_allowed": false,
+      "featured": false,
+      "default_main_title": "花火フェア",
+      "default_subtitle": "夏の花火をあなたへ。",
+      "default_note": "花火。夏のご自宅用にも贈りものにもどうぞ。",
+      "poster_type": "bold",
+      "poster_design": "photo-full",
+      "poster_position": "bottom-left",
+      "flower_match": "花火"
     }
   ]
 }
