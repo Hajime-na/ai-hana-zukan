@@ -42,6 +42,32 @@ STATUS_LABELS_JP = {
 
 app = FastAPI(title="AI花図鑑")
 
+
+class _NoCacheStaticMiddleware:
+    """JS / CSS に Cache-Control: no-store を付与する ASGI ミドルウェア"""
+    def __init__(self, app_inner):
+        self._app = app_inner
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http" or not scope.get("path", "").endswith((".js", ".css")):
+            await self._app(scope, receive, send)
+            return
+
+        async def patched_send(message):
+            if message["type"] == "http.response.start":
+                headers = [
+                    (k, v) for k, v in message.get("headers", [])
+                    if k.lower() not in (b"cache-control", b"etag", b"last-modified")
+                ]
+                headers.append((b"cache-control", b"no-store"))
+                message = {**message, "headers": headers}
+            await send(message)
+
+        await self._app(scope, receive, patched_send)
+
+
+app.add_middleware(_NoCacheStaticMiddleware)
+
 BASE_DIR    = Path(__file__).resolve().parent
 STATIC_DIR  = BASE_DIR / "static"
 POSTERS_DIR = STATIC_DIR / "posters"
