@@ -759,8 +759,8 @@
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "薔薇",
-      "has_embedded_title": false,
-      "embedded_title": ""
+      "has_embedded_title": true,
+      "embedded_title": "とげはてれかくし"
     },
     {
       "id": "img-0079",
