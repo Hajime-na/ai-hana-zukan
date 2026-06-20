@@ -469,9 +469,9 @@ function updatePoster() {
   posterPreview.style.setProperty("--poster-fallback", state.selectedFlower.fallback);
   posterPreviewFrame.style.setProperty("--poster-fallback", state.selectedFlower.fallback);
   const isDemoTemplate = photo?.usage === "template" && photo?.poster_allowed !== true;
-  renderPosterTitle(posterTitleText, isDemoTemplate ? "" : (posterMainTitle.value || `${state.selectedFlower.name} フェア`));
-  posterSub.textContent = isDemoTemplate ? "" : (posterSubtitle.value || "季節のおすすめ");
-  posterMeta.textContent = isDemoTemplate ? "" : `${posterShop.value || "店舗名"} / ${posterDate.value || "期間"}`;
+  renderPosterTitle(posterTitleText, isDemoTemplate ? "" : posterMainTitle.value);
+  posterSub.textContent = isDemoTemplate ? "" : posterSubtitle.value;
+  posterMeta.textContent = isDemoTemplate ? "" : [posterShop.value, posterDate.value].filter(Boolean).join(" / ");
   posterDesignHelp.textContent = posterDesignDescriptions[posterDesign.value];
   uploadedMaterialModeHelp.textContent = getUploadedMaterialModeSetting().help;
   posterForm.classList.toggle("is-finished-mode", isFinishedModeSelected());
@@ -693,10 +693,10 @@ function getSelectedText(selectElement) {
 
 function getPosterSnapshot() {
   return {
-    title: posterMainTitle.value || `${state.selectedFlower.name} フェア`,
-    subtitle: posterSubtitle.value || "季節のおすすめ",
-    shop: posterShop.value || "店舗名",
-    date: posterDate.value || "期間",
+    title: posterMainTitle.value,
+    subtitle: posterSubtitle.value,
+    shop: posterShop.value,
+    date: posterDate.value,
     note: posterNote.value || "",
     type: getSelectedText(posterType),
     position: getSelectedText(posterPosition),
@@ -1172,7 +1172,7 @@ async function renderBasePosterCanvas() {
       const annMetaSize = Math.round((isLandscapeCanvas ? 14 : 18) * scales.meta);
       context.fillStyle = "rgba(255,255,255,0.78)";
       context.font = `400 ${annMetaSize}px 'Yu Gothic','Meiryo',sans-serif`;
-      context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, annTitleY + annLayout.lines.length * annLineH + 10, maxTextWidth);
+      context.fillText([snapshot.shop, snapshot.date].filter(Boolean).join(" / "), textX, annTitleY + annLayout.lines.length * annLineH + 10, maxTextWidth);
     } else {
       // minimal / direct：白いカードなし・テキスト影のみ
       const isMinimal = _design === "minimal";
@@ -1197,7 +1197,7 @@ async function renderBasePosterCanvas() {
       const metaSize = Math.round((isMinimal ? (isLandscapeCanvas ? 10 : 12) : (isLandscapeCanvas ? 13 : 15)) * scales.meta);
       context.fillStyle = "rgba(255,255,255,0.80)";
       context.font = `300 ${metaSize}px 'Yu Gothic','Meiryo',sans-serif`;
-      context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, Math.round(titleY + titleSize + 5), maxTextWidth);
+      context.fillText([snapshot.shop, snapshot.date].filter(Boolean).join(" / "), textX, Math.round(titleY + titleSize + 5), maxTextWidth);
     }
 
   } else {
@@ -1255,7 +1255,7 @@ async function renderBasePosterCanvas() {
     const metaFont = Math.round((isLandscapeCanvas ? 13 : 15) * scales.meta);
     context.fillStyle = "#7a9288";
     context.font = `300 ${metaFont}px 'Yu Gothic','Meiryo',sans-serif`;
-    context.fillText(`${snapshot.shop} / ${snapshot.date}`, textX, Math.round(isLandscapeCanvas ? box.y + box.height - 22 : box.y + box.height - 26), maxTextWidth);
+    context.fillText([snapshot.shop, snapshot.date].filter(Boolean).join(" / "), textX, Math.round(isLandscapeCanvas ? box.y + box.height - 22 : box.y + box.height - 26), maxTextWidth);
   }
 
   context.restore();
@@ -1667,9 +1667,10 @@ function renderFinishReview() {
   confirmPosterImageLayer.style.setProperty("--poster-image", image);
   confirmPosterPreview.style.setProperty("--poster-fallback", state.selectedFlower.fallback);
   confirmPosterPreviewFrame.style.setProperty("--poster-fallback", state.selectedFlower.fallback);
-  renderPosterTitle(confirmPosterTitle, snapshot.title);
-  confirmPosterSub.textContent = snapshot.subtitle;
-  confirmPosterMeta.textContent = `${snapshot.shop} / ${snapshot.date}`;
+  const isDemoTemplate = photo?.usage === "template" && photo?.poster_allowed !== true;
+  renderPosterTitle(confirmPosterTitle, isDemoTemplate ? "" : snapshot.title);
+  confirmPosterSub.textContent = isDemoTemplate ? "" : snapshot.subtitle;
+  confirmPosterMeta.textContent = isDemoTemplate ? "" : [snapshot.shop, snapshot.date].filter(Boolean).join(" / ");
   applyTextOffsetToPreview(confirmPosterCopy, confirmPosterPreviewFrame);
   applyBandOpacity(confirmPosterCopy);
   applyFontScalesToFrame(confirmPosterPreviewFrame);
