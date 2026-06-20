@@ -468,9 +468,10 @@ function updatePoster() {
   posterImageLayer.style.setProperty("--poster-image", image);
   posterPreview.style.setProperty("--poster-fallback", state.selectedFlower.fallback);
   posterPreviewFrame.style.setProperty("--poster-fallback", state.selectedFlower.fallback);
-  renderPosterTitle(posterTitleText, posterMainTitle.value || `${state.selectedFlower.name} フェア`);
-  posterSub.textContent = posterSubtitle.value || "季節のおすすめ";
-  posterMeta.textContent = `${posterShop.value || "店舗名"} / ${posterDate.value || "期間"}`;
+  const isDemoTemplate = photo?.usage === "template" && photo?.poster_allowed !== true;
+  renderPosterTitle(posterTitleText, isDemoTemplate ? "" : (posterMainTitle.value || `${state.selectedFlower.name} フェア`));
+  posterSub.textContent = isDemoTemplate ? "" : (posterSubtitle.value || "季節のおすすめ");
+  posterMeta.textContent = isDemoTemplate ? "" : `${posterShop.value || "店舗名"} / ${posterDate.value || "期間"}`;
   posterDesignHelp.textContent = posterDesignDescriptions[posterDesign.value];
   uploadedMaterialModeHelp.textContent = getUploadedMaterialModeSetting().help;
   posterForm.classList.toggle("is-finished-mode", isFinishedModeSelected());
@@ -651,7 +652,7 @@ function getMaterialWarningText() {
   const allowed = photo?.poster_allowed === true;
   if (usage === "uploaded") return "アップロードされた正式素材を使用中です。";
   if (usage === "template" && allowed) return "正式テンプレート素材として使用可能です。";
-  if (usage === "template" && !allowed) return "確認用テンプレートです。正式保存・注文には正式素材が必要です。";
+  if (usage === "template" && !allowed) return "図鑑参考用素材です。正式出力には使用できません。";
   const note = photo?.license_note || "正式素材をアップロードしてください。";
   return `正式素材が必要です。${note}`;
 }
@@ -3083,9 +3084,17 @@ function applyPosterTemplate(template) {
       renderFlowerDetail();
     }
   }
-  posterMainTitle.value = template.default_main_title || template.title;
-  posterSubtitle.value = template.default_subtitle || "季節のおすすめ";
-  posterNote.value = template.default_note || "";
+  if (isAllowed) {
+    posterMainTitle.value = template.default_main_title || template.title;
+    posterSubtitle.value = template.default_subtitle || "季節のおすすめ";
+    posterNote.value = template.default_note || "";
+  } else {
+    posterMainTitle.value = "";
+    posterSubtitle.value = "";
+    posterNote.value = "";
+    if (posterShop) posterShop.value = "";
+    if (posterDate) posterDate.value = "";
+  }
   if (template.poster_type) posterType.value = template.poster_type;
   if (template.poster_design) {
     // 旧デザイン名を新モードにマップ
