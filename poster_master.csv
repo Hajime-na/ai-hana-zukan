@@ -1,4 +1,4 @@
-poster_id,source_path,title,short_label,season,categories,tags,poster_allowed,featured,default_main_title,default_subtitle,default_note,poster_type,poster_design,poster_position,flower_match
+poster_id,source_path,title,short_label,season,categories,tags,poster_allowed,featured,default_main_title,default_subtitle,default_note,poster_type,poster_design,poster_position,flower_match,has_embedded_title,embedded_title
 HP-0043,static/posters/春_ラベンダー001.png,ラベンダー 001,ラベンダー1,春,春,ラベンダー;春,false,false,ラベンダーフェア,旬のラベンダーをあなたへ。,ラベンダー入荷中。ご自宅用にも贈りものにもどうぞ。,elegant,photo-full,bottom-left,ラベンダー
 HP-0044,static/posters/春_ラベンダー002.png,ラベンダー 002,ラベンダー2,春,春,ラベンダー;春,false,false,ラベンダーフェア,旬のラベンダーをあなたへ。,ラベンダー入荷中。ご自宅用にも贈りものにもどうぞ。,elegant,photo-full,bottom-left,ラベンダー
 HP-0045,static/posters/春_ラベンダー003.png,ラベンダー 003,ラベンダー3,春,春,ラベンダー;春,false,false,ラベンダーフェア,旬のラベンダーをあなたへ。,ラベンダー入荷中。ご自宅用にも贈りものにもどうぞ。,elegant,photo-full,bottom-left,ラベンダー

@@ -235,6 +235,8 @@ def main() -> None:
                 "poster_design":       row["poster_design"].strip(),
                 "poster_position":     row["poster_position"].strip(),
                 "flower_match":        row["flower_match"].strip(),
+                "has_embedded_title":  (row.get("has_embedded_title") or "").strip().lower() == "true",
+                "embedded_title":      (row.get("embedded_title") or "").strip(),
             })
 
     # static/posters/ に存在するが poster_master.csv 未登録の画像を検出

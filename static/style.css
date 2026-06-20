@@ -2322,6 +2322,19 @@ body.modal-open {
   width: 100%;
 }
 
+/* ===== Embedded title notice ===== */
+.embedded-title-notice {
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
+  border-left: 4px solid #3b82f6;
+  border-radius: 4px;
+  color: #1e40af;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  margin: -8px 0 12px;
+  padding: 8px 12px;
+}
+
 /* ===== Unregistered posters alert ===== */
 .unregistered-alert {
   background: #fef3c7;

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v44rc6" />
+    <link rel="stylesheet" href="/static/style.css?v=v44rc7" />
   </head>
   <body>
     <header class="topbar">
@@ -229,8 +229,9 @@
 
               <label class="lettering-only">
                 メインタイトル
-                <input id="posterMainTitle" value="バラ フェア" />
+                <input id="posterMainTitle" value="バラ フェア" placeholder="メインタイトル" />
               </label>
+              <div id="embeddedTitleNotice" class="embedded-title-notice" hidden></div>
               <label class="lettering-only">
                 サブタイトル
                 <input id="posterSubtitle" value="大切な方へ、上質な彩りを。" />
@@ -738,6 +739,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v44rc6"></script>
+    <script src="/static/app.js?v=v44rc7"></script>
   </body>
 </html>

@@ -35,7 +35,9 @@
       "poster_type": "elegant",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "ラベンダー"
+      "flower_match": "ラベンダー",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0044",
@@ -62,7 +64,9 @@
       "poster_type": "elegant",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "ラベンダー"
+      "flower_match": "ラベンダー",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0045",
@@ -89,7 +93,9 @@
       "poster_type": "elegant",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "ラベンダー"
+      "flower_match": "ラベンダー",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0056",
@@ -116,7 +122,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
+      "flower_match": "ひまわり",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0057",
@@ -143,7 +151,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
+      "flower_match": "ひまわり",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0058",
@@ -170,7 +180,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
+      "flower_match": "ひまわり",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0059",
@@ -197,7 +209,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
+      "flower_match": "ひまわり",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0060",
@@ -224,7 +238,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
+      "flower_match": "ひまわり",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0061",
@@ -251,7 +267,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
+      "flower_match": "ひまわり",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0062",
@@ -278,7 +296,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "ひまわり"
+      "flower_match": "ひまわり",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0063",
@@ -305,7 +325,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "紫陽花"
+      "flower_match": "紫陽花",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0064",
@@ -332,7 +354,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "紫陽花"
+      "flower_match": "紫陽花",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0065",
@@ -359,7 +383,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "紫陽花"
+      "flower_match": "紫陽花",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0066",
@@ -386,7 +412,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "紫陽花"
+      "flower_match": "紫陽花",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0067",
@@ -413,7 +441,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "紫陽花"
+      "flower_match": "紫陽花",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0068",
@@ -440,7 +470,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "紫陽花"
+      "flower_match": "紫陽花",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0069",
@@ -467,7 +499,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "紫陽花"
+      "flower_match": "紫陽花",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0070",
@@ -494,7 +528,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "朝顔"
+      "flower_match": "朝顔",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0071",
@@ -521,7 +557,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "朝顔"
+      "flower_match": "朝顔",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0072",
@@ -548,7 +586,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "朝顔"
+      "flower_match": "朝顔",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0073",
@@ -575,7 +615,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "ツツジ"
+      "flower_match": "ツツジ",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0074",
@@ -602,7 +644,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "花火"
+      "flower_match": "花火",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0075",
@@ -628,7 +672,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "胡蝶蘭"
+      "flower_match": "胡蝶蘭",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0076",
@@ -654,7 +700,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "胡蝶蘭"
+      "flower_match": "胡蝶蘭",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0077",
@@ -681,7 +729,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "花火"
+      "flower_match": "花火",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0078",
@@ -708,7 +758,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "薔薇"
+      "flower_match": "薔薇",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0079",
@@ -735,7 +787,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "薔薇"
+      "flower_match": "薔薇",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0080",
@@ -762,7 +816,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "薔薇"
+      "flower_match": "薔薇",
+      "has_embedded_title": false,
+      "embedded_title": ""
     },
     {
       "id": "img-0081",
@@ -789,7 +845,9 @@
       "poster_type": "bold",
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
-      "flower_match": "薔薇"
+      "flower_match": "薔薇",
+      "has_embedded_title": false,
+      "embedded_title": ""
     }
   ]
 }

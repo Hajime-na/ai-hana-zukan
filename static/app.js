@@ -646,13 +646,27 @@ function isPosterMaterialAllowed() {
   return getCurrentPosterPhoto()?.poster_allowed === true;
 }
 
+function updateEmbeddedTitleNotice(embeddedTitle) {
+  const notice = document.querySelector("#embeddedTitleNotice");
+  if (!notice) return;
+  if (embeddedTitle) {
+    notice.textContent = `この画像にはタイトル「${embeddedTitle}」が入っています。メインタイトル欄は空のままがおすすめです。`;
+    notice.hidden = false;
+  } else {
+    notice.hidden = true;
+  }
+}
+
 function getMaterialWarningText() {
   const photo = getCurrentPosterPhoto();
   const usage = photo?.usage;
   const allowed = photo?.poster_allowed === true;
   if (usage === "uploaded") return "アップロードされた正式素材を使用中です。";
   if (usage === "template" && allowed) return "正式テンプレート素材として使用可能です。";
-  if (usage === "template" && !allowed) return "図鑑参考用素材です。正式出力には使用できません。";
+  if (usage === "template" && !allowed) {
+    if (photo?.has_embedded_title) return "タイトル入りサンプル画像です。保存・注文には使用できません。";
+    return "図鑑参考用素材です。正式出力には使用できません。";
+  }
   const note = photo?.license_note || "正式素材をアップロードしてください。";
   return `正式素材が必要です。${note}`;
 }
@@ -755,6 +769,8 @@ function handleOfficialMaterialUpload(event) {
     }
     officialMaterialStatus.textContent = `${file.name} を正式素材として使用中です。`;
     officialMaterialStatus.classList.remove("is-error");
+    updateEmbeddedTitleNotice("");
+    if (posterMainTitle) posterMainTitle.placeholder = "メインタイトル";
     setExportStatus(pngStatus, "");
     setExportStatus(confirmPngStatus, "");
     updatePoster();
@@ -3062,11 +3078,14 @@ function renderGalleryShelf() {
 
 function applyPosterTemplate(template) {
   const isAllowed = template.poster_allowed === true;
+  const hasEmbeddedTitle = template.has_embedded_title === true;
   state.templateMaterial = {
     url: template.preview_image || template.image || null,        // 表示用（将来は低解像度）
     source_url: template.source_image || template.image || null,  // 保存用高解像度
     gradient: template.gradient,
     poster_allowed: isAllowed,
+    has_embedded_title: hasEmbeddedTitle,
+    embedded_title: template.embedded_title || "",
     source: "テンプレート素材",
     license: "テンプレート管理画像",
     usage: "template",
@@ -3084,7 +3103,7 @@ function applyPosterTemplate(template) {
       renderFlowerDetail();
     }
   }
-  if (isAllowed) {
+  if (isAllowed && !hasEmbeddedTitle) {
     posterMainTitle.value = template.default_main_title || template.title;
     posterSubtitle.value = template.default_subtitle || "季節のおすすめ";
     posterNote.value = template.default_note || "";
@@ -3095,6 +3114,8 @@ function applyPosterTemplate(template) {
     if (posterShop) posterShop.value = "";
     if (posterDate) posterDate.value = "";
   }
+  posterMainTitle.placeholder = hasEmbeddedTitle ? "画像内タイトルあり：空欄推奨" : "メインタイトル";
+  updateEmbeddedTitleNotice(hasEmbeddedTitle ? (template.embedded_title || "") : "");
   if (template.poster_type) posterType.value = template.poster_type;
   if (template.poster_design) {
     // 旧デザイン名を新モードにマップ
