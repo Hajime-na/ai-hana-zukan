@@ -79,7 +79,7 @@ def _burn_sample(img: Image.Image) -> Image.Image:
     rgba = img.convert("RGBA")
     w, h = rgba.size
 
-    font_size = max(32, round(min(w, h) * 0.058))
+    font_size = max(28, round(min(w, h) * 0.046))
     font      = _load_font(font_size)
     text      = "SAMPLE"
 
@@ -87,8 +87,8 @@ def _burn_sample(img: Image.Image) -> Image.Image:
     bb  = tmp.textbbox((0, 0), text, font=font)
     tw, th = bb[2] - bb[0], bb[3] - bb[1]
 
-    tile_w = round(tw * 2.0)
-    tile_h = round(th * 2.8)
+    tile_w = round(tw * 2.8)
+    tile_h = round(th * 3.8)
 
     diag   = round(math.sqrt(w * w + h * h)) + max(tile_w, tile_h) * 2
     canvas = Image.new("RGBA", (diag, diag), (0, 0, 0, 0))
@@ -99,7 +99,7 @@ def _burn_sample(img: Image.Image) -> Image.Image:
         for col in range(-diag // tile_w - 2, diag // tile_w + 3):
             x = cx + col * tile_w - tw // 2
             y = cy + row * tile_h - th // 2
-            draw.text((x, y), text, font=font, fill=(255, 255, 255, 60))
+            draw.text((x, y), text, font=font, fill=(255, 255, 255, 42))
 
     rotated    = canvas.rotate(-30, expand=False, center=(cx, cy))
     tile_layer = rotated.crop((cx - w // 2, cy - h // 2,
