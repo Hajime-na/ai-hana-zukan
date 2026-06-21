@@ -37,7 +37,8 @@
       "poster_position": "bottom-left",
       "flower_match": "ラベンダー",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0044",
@@ -66,7 +67,8 @@
       "poster_position": "bottom-left",
       "flower_match": "ラベンダー",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0045",
@@ -95,7 +97,8 @@
       "poster_position": "bottom-left",
       "flower_match": "ラベンダー",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0056",
@@ -124,7 +127,8 @@
       "poster_position": "bottom-left",
       "flower_match": "ひまわり",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0057",
@@ -153,7 +157,8 @@
       "poster_position": "bottom-left",
       "flower_match": "ひまわり",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0058",
@@ -182,7 +187,8 @@
       "poster_position": "bottom-left",
       "flower_match": "ひまわり",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0059",
@@ -211,7 +217,8 @@
       "poster_position": "bottom-left",
       "flower_match": "ひまわり",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0060",
@@ -240,7 +247,8 @@
       "poster_position": "bottom-left",
       "flower_match": "ひまわり",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0061",
@@ -269,7 +277,8 @@
       "poster_position": "bottom-left",
       "flower_match": "ひまわり",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0062",
@@ -298,7 +307,8 @@
       "poster_position": "bottom-left",
       "flower_match": "ひまわり",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0063",
@@ -327,7 +337,8 @@
       "poster_position": "bottom-left",
       "flower_match": "紫陽花",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0064",
@@ -356,7 +367,8 @@
       "poster_position": "bottom-left",
       "flower_match": "紫陽花",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0065",
@@ -385,7 +397,8 @@
       "poster_position": "bottom-left",
       "flower_match": "紫陽花",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0066",
@@ -414,7 +427,8 @@
       "poster_position": "bottom-left",
       "flower_match": "紫陽花",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0067",
@@ -443,7 +457,8 @@
       "poster_position": "bottom-left",
       "flower_match": "紫陽花",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0068",
@@ -472,7 +487,8 @@
       "poster_position": "bottom-left",
       "flower_match": "紫陽花",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0069",
@@ -501,7 +517,8 @@
       "poster_position": "bottom-left",
       "flower_match": "紫陽花",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0070",
@@ -530,7 +547,8 @@
       "poster_position": "bottom-left",
       "flower_match": "朝顔",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0071",
@@ -559,7 +577,8 @@
       "poster_position": "bottom-left",
       "flower_match": "朝顔",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0072",
@@ -588,7 +607,8 @@
       "poster_position": "bottom-left",
       "flower_match": "朝顔",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0073",
@@ -617,7 +637,8 @@
       "poster_position": "bottom-left",
       "flower_match": "ツツジ",
       "has_embedded_title": true,
-      "embedded_title": "ツツジは、知らないふりをする"
+      "embedded_title": "ツツジは、知らないふりをする",
+      "safe_fit_mode": "title_safe"
     },
     {
       "id": "img-0074",
@@ -646,7 +667,8 @@
       "poster_position": "bottom-left",
       "flower_match": "花火",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0075",
@@ -674,7 +696,8 @@
       "poster_position": "bottom-left",
       "flower_match": "胡蝶蘭",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0076",
@@ -702,7 +725,8 @@
       "poster_position": "bottom-left",
       "flower_match": "胡蝶蘭",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0077",
@@ -731,7 +755,8 @@
       "poster_position": "bottom-left",
       "flower_match": "花火",
       "has_embedded_title": false,
-      "embedded_title": ""
+      "embedded_title": "",
+      "safe_fit_mode": ""
     },
     {
       "id": "img-0078",
@@ -760,7 +785,8 @@
       "poster_position": "bottom-left",
       "flower_match": "薔薇",
       "has_embedded_title": true,
-      "embedded_title": "とげはてれかくし"
+      "embedded_title": "とげはてれかくし",
+      "safe_fit_mode": "title_safe"
     },
     {
       "id": "img-0079",
@@ -789,7 +815,8 @@
       "poster_position": "bottom-left",
       "flower_match": "薔薇",
       "has_embedded_title": true,
-      "embedded_title": "とげはてれかくし"
+      "embedded_title": "とげはてれかくし",
+      "safe_fit_mode": "title_safe"
     },
     {
       "id": "img-0080",
@@ -818,7 +845,8 @@
       "poster_position": "bottom-left",
       "flower_match": "薔薇",
       "has_embedded_title": true,
-      "embedded_title": "とげはてれかくし"
+      "embedded_title": "とげはてれかくし",
+      "safe_fit_mode": "title_safe"
     },
     {
       "id": "img-0081",
@@ -847,7 +875,8 @@
       "poster_position": "bottom-left",
       "flower_match": "薔薇",
       "has_embedded_title": true,
-      "embedded_title": "とげはてれかくし"
+      "embedded_title": "とげはてれかくし",
+      "safe_fit_mode": "title_safe"
     }
   ]
 }

@@ -2335,6 +2335,17 @@ body.modal-open {
   padding: 8px 12px;
 }
 
+.embedded-title-fit-hint {
+  color: #1d4ed8;
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.embedded-title-fit-warn {
+  color: #b45309;
+  font-weight: 600;
+}
+
 /* ===== Unregistered posters alert ===== */
 .unregistered-alert {
   background: #fef3c7;

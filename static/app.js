@@ -649,12 +649,28 @@ function isPosterMaterialAllowed() {
 function updateEmbeddedTitleNotice(embeddedTitle) {
   const notice = document.querySelector("#embeddedTitleNotice");
   if (!notice) return;
-  if (embeddedTitle) {
-    notice.textContent = `この画像にはタイトル「${embeddedTitle}」が入っています。メインタイトル欄は空のままがおすすめです。`;
-    notice.hidden = false;
-  } else {
+  if (!embeddedTitle) {
     notice.hidden = true;
+    return;
   }
+  const safeFitMode = state.templateMaterial?.safe_fit_mode || "";
+  const isTitleSafe = safeFitMode === "title_safe" || safeFitMode === "contain";
+  const isCoverNow = imageFit?.value === "cover";
+
+  notice.textContent = `この画像にはタイトル「${embeddedTitle}」が入っています。メインタイトル欄は空のままがおすすめです。`;
+  const old = notice.querySelector(".embedded-title-fit-msg");
+  if (old) old.remove();
+  if (isTitleSafe) {
+    const msg = document.createElement("span");
+    msg.className = isCoverNow
+      ? "embedded-title-fit-msg embedded-title-fit-warn"
+      : "embedded-title-fit-msg embedded-title-fit-hint";
+    msg.textContent = isCoverNow
+      ? " ⚠ 全面表示では画像内タイトルが切れる可能性があります。"
+      : " 文字が切れないよう「全体を収める」を推奨します。";
+    notice.appendChild(msg);
+  }
+  notice.hidden = false;
 }
 
 function getMaterialWarningText() {
@@ -2971,6 +2987,13 @@ document.querySelector("#recheckUnregisteredButton")?.addEventListener("click", 
 document.querySelector("#runSyncButton")?.addEventListener("click", runSyncPosters);
 document.querySelector("#recheckUnconfirmedButton")?.addEventListener("click", checkUnconfirmedEmbedded);
 
+imageFit?.addEventListener("change", () => {
+  const photo = getCurrentPosterPhoto();
+  if (photo?.has_embedded_title && photo?.embedded_title) {
+    updateEmbeddedTitleNotice(photo.embedded_title);
+  }
+});
+
 async function checkUnconfirmedEmbedded() {
   const alertEl = document.querySelector("#unconfirmedEmbeddedAlert");
   const btn = document.querySelector("#recheckUnconfirmedButton");
@@ -3108,6 +3131,7 @@ function renderGalleryShelf() {
 function applyPosterTemplate(template) {
   const isAllowed = template.poster_allowed === true;
   const hasEmbeddedTitle = template.has_embedded_title === true;
+  const safeFitMode = (template.safe_fit_mode || "").trim();
   state.templateMaterial = {
     url: template.preview_image || template.image || null,        // 表示用（将来は低解像度）
     source_url: template.source_image || template.image || null,  // 保存用高解像度
@@ -3115,6 +3139,7 @@ function applyPosterTemplate(template) {
     poster_allowed: isAllowed,
     has_embedded_title: hasEmbeddedTitle,
     embedded_title: template.embedded_title || "",
+    safe_fit_mode: safeFitMode,
     source: "テンプレート素材",
     license: "テンプレート管理画像",
     usage: "template",
@@ -3144,6 +3169,12 @@ function applyPosterTemplate(template) {
     if (posterDate) posterDate.value = "";
   }
   posterMainTitle.placeholder = hasEmbeddedTitle ? "画像内タイトルあり：空欄推奨" : "メインタイトル";
+  if (safeFitMode === "title_safe" || safeFitMode === "contain") {
+    if (imageFit) imageFit.value = "contain";
+    if (imageZoom) { imageZoom.value = "100"; if (imageZoomValue) imageZoomValue.textContent = "100%"; }
+    if (imageOffsetX) { imageOffsetX.value = "0"; if (imageOffsetXValue) imageOffsetXValue.textContent = "0"; }
+    if (imageOffsetY) { imageOffsetY.value = "0"; if (imageOffsetYValue) imageOffsetYValue.textContent = "0"; }
+  }
   updateEmbeddedTitleNotice(hasEmbeddedTitle ? (template.embedded_title || "") : "");
   if (template.poster_type) posterType.value = template.poster_type;
   if (template.poster_design) {
