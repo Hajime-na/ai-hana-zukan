@@ -1460,6 +1460,60 @@ body.confirm-mode .topbar,
   min-height: 1em;
 }
 
+/* 仮注文完了メッセージ */
+.order-placed-message {
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 0 0 10px;
+}
+.order-placed-message strong {
+  color: var(--green-dark, #1a5c3a);
+  font-size: 18px;
+}
+.order-id-display {
+  background: #f4f9f6;
+  border: 1px solid #c0dbd0;
+  border-radius: 6px;
+  color: #1a5c3a;
+  font-size: 14px;
+  margin: 0 0 10px;
+  padding: 8px 14px;
+}
+.order-id-value {
+  font-family: monospace;
+  font-size: 15px;
+  font-weight: 700;
+  user-select: all;
+}
+.order-placed-note {
+  color: #6b8278;
+  font-size: 13px;
+  margin: 0 0 8px;
+}
+.order-server-status {
+  font-size: 12px;
+  margin: 0 0 4px;
+  min-height: 1em;
+}
+.order-dev-actions {
+  border-top: 1px solid #e0ebe5;
+  margin-top: 10px;
+  padding-top: 8px;
+}
+.order-dev-actions > summary {
+  color: #8aaa96;
+  cursor: pointer;
+  font-size: 12px;
+  list-style: none;
+  user-select: none;
+}
+.order-dev-actions > summary::-webkit-details-marker { display: none; }
+.order-dev-actions > summary::before { content: "▶ "; }
+.order-dev-actions[open] > summary::before { content: "▼ "; }
+.order-dev-buttons {
+  margin-top: 8px;
+}
+
 .order-status[hidden] {
   display: none;
 }

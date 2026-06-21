@@ -2200,18 +2200,20 @@ placeOrderButton.addEventListener("click", () => {
   const orderId = state.editingOrderId || generateOrderId();
   const orderData = buildOrderJson(orderId);
   const jsonFileName = `order_${orderId}.json`;
-  const pngFileName = `poster_${orderId}.png`;
   orderStatus.innerHTML = `
-    <strong>仮注文を受け付けました</strong><br>
-    正式な決済・印刷・発送処理はまだ行われません<br>
-    <span class="order-status-note">注文ID：${orderId}</span><br>
-    <button type="button" class="secondary-button order-json-button" id="saveOrderJsonButton">注文JSONを保存</button>
-    <button type="button" class="secondary-button order-json-button" id="saveOrderPngButton">PNGを保存</button>
-    <button type="button" class="secondary-button order-json-button" id="saveOrderPdfButton">PDFを保存</button>
-    <button type="button" class="secondary-button order-json-button" id="saveToServerButton">サーバーに保存</button>
-    <p id="orderPngStatus" class="export-status order-png-status"></p>
-    <p id="orderPdfStatus" class="export-status order-png-status"></p>
-    <p id="serverSaveStatus" class="export-status order-png-status"></p>
+    <p class="order-placed-message">
+      <strong>仮注文を受け付けました。</strong><br>
+      内容を確認後、見積もり・お支払い案内をお送りします。
+    </p>
+    <p class="order-id-display">注文ID：<span class="order-id-value">${orderId}</span></p>
+    <p class="order-placed-note">この時点では正式な決済・印刷・発送処理はまだ行われません。内容確認後、担当者からご連絡します。</p>
+    <p id="serverSaveStatus" class="export-status order-server-status"></p>
+    <details class="order-dev-actions">
+      <summary>開発用操作</summary>
+      <div class="order-dev-buttons">
+        <button type="button" class="secondary-button compact-button" id="saveOrderJsonButton">注文JSONを保存</button>
+      </div>
+    </details>
   `;
   orderStatus.hidden = false;
   orderStatus.classList.remove("is-warning");
@@ -2219,16 +2221,8 @@ placeOrderButton.addEventListener("click", () => {
   document.querySelector("#saveOrderJsonButton").addEventListener("click", () => {
     saveOrderJson(orderData, jsonFileName);
   });
-  document.querySelector("#saveOrderPngButton").addEventListener("click", () => {
-    savePosterPng(document.querySelector("#orderPngStatus"), pngFileName);
-  });
-  document.querySelector("#saveOrderPdfButton").addEventListener("click", () => {
-    savePosterPdf(document.querySelector("#orderPdfStatus"), getPdfFileName(orderId));
-  });
-  document.querySelector("#saveToServerButton").addEventListener("click", () => {
-    saveToServer(orderData, document.querySelector("#serverSaveStatus"));
-  });
   saveOrderToHistory(orderData, jsonFileName);
+  saveToServer(orderData, document.querySelector("#serverSaveStatus"));
 });
 
 function loadOrderHistory() {
@@ -2565,6 +2559,12 @@ async function showOrderDetail(orderId) {
             <button type="button" class="secondary-button" id="copyPrioMemoButton">Prio発注用メモをコピー</button>
             <button type="button" class="secondary-button load-to-editor-button" id="loadOrderToEditorButton">この注文を編集画面に読み込む</button>
           </div>
+          <div class="order-detail-print-actions" style="margin-top:8px">
+            <button type="button" class="secondary-button" id="adminSavePdfButton">PDFを保存</button>
+            <button type="button" class="secondary-button" id="adminSavePngButton">PNGを保存</button>
+            <p id="adminPdfStatus" class="export-status" style="margin:4px 0 0"></p>
+            <p id="adminPngStatus" class="export-status" style="margin:4px 0 0"></p>
+          </div>
         </div>
         <div class="order-detail-estimate">
           <h4>見積もり・請求メモ</h4>
@@ -2646,6 +2646,29 @@ async function showOrderDetail(orderId) {
     });
     content.querySelector("#loadOrderToEditorButton").addEventListener("click", () => {
       loadOrderIntoEditor(data);
+    });
+    content.querySelector("#adminSavePdfButton").addEventListener("click", () => {
+      saveServerOrderPdf(orderId, content.querySelector("#adminPdfStatus"));
+    });
+    content.querySelector("#adminSavePngButton").addEventListener("click", async () => {
+      const statusEl = content.querySelector("#adminPngStatus");
+      if (statusEl) { statusEl.textContent = "PNGを取得中..."; statusEl.classList.remove("is-error"); }
+      try {
+        const resp = await fetch(`/api/orders/${orderId}/poster`);
+        if (!resp.ok) throw new Error("poster not found");
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = `poster_${orderId}.png`;
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+        URL.revokeObjectURL(url);
+        if (statusEl) statusEl.textContent = "PNGを保存しました";
+      } catch {
+        if (statusEl) { statusEl.textContent = "PNG取得に失敗しました"; statusEl.classList.add("is-error"); }
+      }
     });
 
     content.querySelector("#estimateNoteTextarea").value = est.estimate_note || "";
