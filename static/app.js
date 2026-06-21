@@ -574,6 +574,20 @@ function getPosterBaseSize() {
   return getPosterSizeSetting();
 }
 
+function getExportCanvasSize() {
+  const printKey = (printSize?.value || "A2").toUpperCase();
+  const prev = getPosterBaseSize();
+  const aspect = prev.width / prev.height;
+  // longMm = 長辺(mm), dpi = 目標解像度（A1のみ150dpi上限で軽量化）
+  const cfg = { A4: [297, 300], A3: [420, 300], A2: [594, 300], A1: [841, 150] };
+  const [longMm, dpi] = cfg[printKey] || cfg.A2;
+  const longPx = Math.ceil(longMm / 25.4 * dpi);
+  let w, h;
+  if (aspect >= 1) { w = longPx; h = Math.ceil(w / aspect); }
+  else              { h = longPx; w = Math.ceil(h * aspect); }
+  return { width: w, height: h, dpi };
+}
+
 function getImageRotationSetting() {
   return imageRotationSettings[imageRotation.value] || imageRotationSettings.normal;
 }
@@ -1129,33 +1143,44 @@ function drawPosterOverlay(context, design, canvasWidth, canvasHeight) {
   context.fillRect(0, 0, canvasWidth, canvasHeight);
 }
 
-async function renderBasePosterCanvas() {
+async function renderBasePosterCanvas(exportSize = null) {
   const canvas = document.createElement("canvas");
-  const size = getPosterBaseSize();
-  canvas.width = size.width;
-  canvas.height = size.height;
+  const previewSize = getPosterBaseSize();
+  // vw/vh = 仮想描画サイズ（プレビュー解像度）。context.scale で高解像度にスケールアップ。
+  const vw = previewSize.width;
+  const vh = previewSize.height;
+  if (exportSize) {
+    canvas.width = exportSize.width;
+    canvas.height = exportSize.height;
+  } else {
+    canvas.width = vw;
+    canvas.height = vh;
+  }
   const context = canvas.getContext("2d");
+  const shadowScale = exportSize ? exportSize.width / vw : 1;
+  if (exportSize) context.scale(exportSize.width / vw, exportSize.height / vh);
+
   const snapshot = getPosterSnapshot();
   const image = await loadPosterImage(getCurrentPosterExportUrl()).catch(() => null);
 
-  drawFallbackBackground(context, canvas.width, canvas.height);
+  drawFallbackBackground(context, vw, vh);
   if (image) {
-    drawPosterImage(context, image, canvas.width, canvas.height);
+    drawPosterImage(context, image, vw, vh);
   }
 
   if (isFinishedImageMode()) return canvas;
 
   const _design = posterDesign.value;
-  drawPosterOverlay(context, _design, canvas.width, canvas.height);
+  drawPosterOverlay(context, _design, vw, vh);
 
   // 文字なしモード
   if (isTextlessDesign(_design)) return canvas;
 
-  const box = getCopyBox(posterPosition.value, _design, canvas.width, canvas.height);
+  const box = getCopyBox(posterPosition.value, _design, vw, vh);
   box.x += parseInt(textOffsetX?.value) || 0;
   box.y += parseInt(textOffsetY?.value) || 0;
 
-  const isLandscapeCanvas = canvas.width > canvas.height;
+  const isLandscapeCanvas = vw > vh;
   const paddingX = isLandscapeCanvas ? 20 : 30;
   const textX = Math.round(box.align === "center" ? box.x + box.width / 2 : box.x + paddingX);
   const maxTextWidth = isLandscapeCanvas ? box.width - paddingX * 2 : Math.min(420, box.width - paddingX * 2);
@@ -1170,7 +1195,7 @@ async function renderBasePosterCanvas() {
     if (_design === "announce") {
       // 全面告知：大きな太文字で訴求
       context.shadowColor = "rgba(0,0,0,0.80)";
-      context.shadowBlur = 16;
+      context.shadowBlur = Math.round(16 * shadowScale);
       const subSize = Math.round((isLandscapeCanvas ? 20 : 26) * scales.subtitle);
       context.fillStyle = "rgba(255,255,255,0.88)";
       context.font = `600 ${subSize}px 'Yu Gothic','Meiryo',sans-serif`;
@@ -1193,7 +1218,7 @@ async function renderBasePosterCanvas() {
       // minimal / direct：白いカードなし・テキスト影のみ
       const isMinimal = _design === "minimal";
       context.shadowColor = "rgba(0,0,0,0.65)";
-      context.shadowBlur = isMinimal ? 4 : 7;
+      context.shadowBlur = Math.round((isMinimal ? 4 : 7) * shadowScale);
 
       if (!isMinimal) {
         const dSubFont = Math.round((isLandscapeCanvas ? 17 : 20) * scales.subtitle);
@@ -1278,8 +1303,8 @@ async function renderBasePosterCanvas() {
   return canvas;
 }
 
-async function renderPosterCanvas() {
-  const baseCanvas = await renderBasePosterCanvas();
+async function renderPosterCanvas(exportSize = null) {
+  const baseCanvas = await renderBasePosterCanvas(exportSize);
   let finalCanvas;
   if (!getPosterRotationSetting().rotated) {
     finalCanvas = baseCanvas;
@@ -1296,6 +1321,10 @@ async function renderPosterCanvas() {
   // 印刷確認ID を右下に描画（PNG/PDF出力に必ず含まれる）
   drawPrintCheckId(finalCanvas.getContext("2d"), finalCanvas.width, finalCanvas.height, state.currentPrintCheckId);
   return finalCanvas;
+}
+
+async function renderHighResPosterCanvas() {
+  return renderPosterCanvas(getExportCanvasSize());
 }
 
 function getExportFileName() {
@@ -1483,9 +1512,10 @@ async function savePosterPng(statusElement, fileName) {
     setExportStatus(statusElement, "PNG保存には正式素材が必要です", true);
     return;
   }
-  setExportStatus(statusElement, "PNGを作成しています...");
+  const exportSize = getExportCanvasSize();
+  setExportStatus(statusElement, `高解像度PNG作成中（${exportSize.width}×${exportSize.height}px / ${exportSize.dpi}dpi）...`);
   try {
-    const canvas = await renderPosterCanvas();
+    const canvas = await renderHighResPosterCanvas();
     const blob = await new Promise((resolve, reject) => {
       canvas.toBlob((result) => {
         if (result) resolve(result);
@@ -1500,7 +1530,7 @@ async function savePosterPng(statusElement, fileName) {
     anchor.click();
     anchor.remove();
     URL.revokeObjectURL(url);
-    setExportStatus(statusElement, "PNGを保存しました");
+    setExportStatus(statusElement, `PNG保存完了（${exportSize.width}×${exportSize.height}px / ${exportSize.dpi}dpi）`);
   } catch (error) {
     setExportStatus(statusElement, "PNG保存に失敗しました", true);
   }
@@ -1515,28 +1545,13 @@ function getPdfFileName(orderId) {
   return orderId ? `poster_${orderId}.pdf` : `poster_preview_${dateStr}.pdf`;
 }
 
-function getPdfPageDimensions(canvasWidth, canvasHeight) {
-  const sizeKey = posterSize.value;
+function getPdfPageDimensions() {
+  // PDFページサイズは印刷サイズ（printSize）に合わせる。posterSizeのアスペクトとは独立。
+  const printKey = (printSize?.value || "A2").toUpperCase();
   const isRotated = getPosterRotationSetting().rotated;
-  if (sizeKey === "a4-portrait") {
-    return isRotated ? { width: 297, height: 210 } : { width: 210, height: 297 };
-  }
-  if (sizeKey === "a4-landscape") {
-    return isRotated ? { width: 210, height: 297 } : { width: 297, height: 210 };
-  }
-  const ratio = canvasWidth / canvasHeight;
-  if (ratio >= 1) {
-    const maxW = 297, maxH = 210;
-    if (ratio > maxW / maxH) {
-      return { width: maxW, height: Math.round((maxW / ratio) * 10) / 10 };
-    }
-    return { width: Math.round(maxH * ratio * 10) / 10, height: maxH };
-  }
-  const maxW = 210, maxH = 297;
-  if (ratio < maxW / maxH) {
-    return { width: Math.round(maxH * ratio * 10) / 10, height: maxH };
-  }
-  return { width: maxW, height: Math.round((maxW / ratio) * 10) / 10 };
+  const dims = { A4: [210, 297], A3: [297, 420], A2: [420, 594], A1: [594, 841] };
+  const [shortMm, longMm] = dims[printKey] || dims.A2;
+  return isRotated ? { width: longMm, height: shortMm } : { width: shortMm, height: longMm };
 }
 
 async function savePosterPdf(statusElement, fileName) {
@@ -1548,10 +1563,12 @@ async function savePosterPdf(statusElement, fileName) {
     setExportStatus(statusElement, "jsPDFの読み込み中です。しばらくお待ちください", true);
     return;
   }
-  setExportStatus(statusElement, "PDFを作成しています...");
+  const exportSize = getExportCanvasSize();
+  const printKey = (printSize?.value || "A2").toUpperCase();
+  setExportStatus(statusElement, `高解像度PDF作成中（${printKey} / ${exportSize.width}×${exportSize.height}px / ${exportSize.dpi}dpi）...`);
   try {
-    const canvas = await renderPosterCanvas();
-    const { width: pdfW, height: pdfH } = getPdfPageDimensions(canvas.width, canvas.height);
+    const canvas = await renderHighResPosterCanvas();
+    const { width: pdfW, height: pdfH } = getPdfPageDimensions();
     const orientation = pdfW >= pdfH ? "landscape" : "portrait";
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation, unit: "mm", format: [pdfW, pdfH] });
@@ -1561,7 +1578,7 @@ async function savePosterPdf(statusElement, fileName) {
     doc.setTextColor(140, 140, 140);
     doc.text(PDF_DISCLAIMER, 2, pdfH - 1.5);
     doc.save(fileName || getPdfFileName());
-    setExportStatus(statusElement, "PDFを保存しました");
+    setExportStatus(statusElement, `PDF保存完了（${printKey} ${pdfW}×${pdfH}mm / ${exportSize.dpi}dpi）`);
   } catch {
     setExportStatus(statusElement, "PDF保存に失敗しました", true);
   }
@@ -1731,6 +1748,20 @@ function isConfirmModeFromUrl() {
   return params.get("v") === "confirmmode1" || params.get("mode") === "confirm";
 }
 
+function updateExportResolutionHint() {
+  const hint = document.querySelector("#exportResolutionHint");
+  if (!hint) return;
+  const printKey = (printSize?.value || "A2").toUpperCase();
+  const exportSize = getExportCanvasSize();
+  const isA1 = printKey === "A1";
+  const lines = [
+    `出力解像度：${exportSize.width}×${exportSize.height}px（${printKey}印刷 ${exportSize.dpi}dpi）`,
+    `PDFページサイズ：${printKey === "A4" ? "210×297" : printKey === "A3" ? "297×420" : printKey === "A2" ? "420×594" : "594×841"}mm`,
+  ];
+  if (isA1) lines.push("A1は実験的な機能です。レンダリングに時間がかかる場合があります。");
+  hint.innerHTML = lines.map((l, i) => `<span${i === lines.length - 1 && isA1 ? ' class="export-hint-a1warn"' : ""}>${l}</span>`).join("<br>");
+}
+
 function showFinishReview({ updateUrl = true } = {}) {
   // 確認画面に入った時点で印刷確認IDを確定（PNG/PDF保存・注文JSONと同一になる）
   if (!state.currentPrintCheckId) {
@@ -1750,6 +1781,7 @@ function showFinishReview({ updateUrl = true } = {}) {
     checkbox.checked = false;
   });
   if (updateUrl) setConfirmModeUrl(true);
+  updateExportResolutionHint();
   confirmationSection.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -2119,6 +2151,7 @@ advancedSettingsDetails?.addEventListener("toggle", () => {
   if (officialMaterialInput) officialMaterialInput.disabled = !advancedSettingsDetails.open;
 });
 document.querySelector("#finishButton").addEventListener("click", showFinishReview);
+printSize?.addEventListener("change", updateExportResolutionHint);
 backToEditButton.addEventListener("click", backToEdit);
 savePngButton.addEventListener("click", () => {
   const fn = state.editingOrderId ? `poster_${state.editingOrderId}.png` : undefined;

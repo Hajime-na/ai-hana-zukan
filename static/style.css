@@ -1138,6 +1138,28 @@ details[open] > .advanced-summary::before {
   color: #9a4b2f;
 }
 
+.export-resolution-hint {
+  background: #f0f7f4;
+  border: 1px solid #b2d4c6;
+  border-radius: 6px;
+  color: #2d6650;
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+}
+.export-resolution-hint:empty { display: none; }
+.export-hint-a1warn {
+  color: #b45309;
+  font-weight: 600;
+}
+
+.export-prio-hint {
+  color: #5a7a6a;
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+
 .material-warning {
   background: #fffaf1;
   border: 1px solid #ead7a8;
