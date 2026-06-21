@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v44rc8" />
+    <link rel="stylesheet" href="/static/style.css?v=v44rc9" />
   </head>
   <body>
     <header class="topbar">
@@ -706,6 +706,16 @@
 
       <!-- ⑨ サーバー保存済み注文 -->
       <section id="serverOrdersSection" class="panel history-panel" aria-labelledby="server-orders-title">
+        <!-- タイトル確認未完了警告バナー -->
+        <div id="unconfirmedEmbeddedAlert" class="unregistered-alert unconfirmed-embedded-alert" hidden>
+          <p class="unregistered-alert-title">⚠ タイトル確認が未完了の素材があります</p>
+          <p class="unregistered-alert-desc">以下の素材は、画像内タイトルの有無が未確認です。poster_master.csv の has_embedded_title を true / false に設定してください。</p>
+          <ul id="unconfirmedEmbeddedList" class="unregistered-files-list"></ul>
+          <p class="unregistered-alert-hint">画像を目視確認 → CSVに true または false を記入 → CSV→プレビュー同期</p>
+          <div class="unregistered-alert-actions">
+            <button type="button" id="recheckUnconfirmedButton" class="secondary-button compact-button">再確認</button>
+          </div>
+        </div>
         <!-- 未登録ポスター警告バナー -->
         <div id="unregisteredPostersAlert" class="unregistered-alert" hidden>
           <p class="unregistered-alert-title">⚠ 未登録のポスター画像があります</p>
@@ -739,6 +749,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v44rc8"></script>
+    <script src="/static/app.js?v=v44rc9"></script>
   </body>
 </html>

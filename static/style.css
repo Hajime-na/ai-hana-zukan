@@ -2385,6 +2385,25 @@ body.modal-open {
   white-space: pre-wrap;
 }
 
+/* ===== Unconfirmed embedded title alert ===== */
+.unconfirmed-embedded-alert {
+  background: #fdf4ff;
+  border-color: #a855f7;
+}
+
+.unconfirmed-embedded-alert .unregistered-alert-title {
+  color: #6b21a8;
+}
+
+.unconfirmed-embedded-alert .unregistered-alert-desc,
+.unconfirmed-embedded-alert .unregistered-files-list {
+  color: #581c87;
+}
+
+.unconfirmed-embedded-alert .unregistered-alert-hint {
+  color: #7e22ce;
+}
+
 .wish-details > summary {
   cursor: pointer;
   display: flex;

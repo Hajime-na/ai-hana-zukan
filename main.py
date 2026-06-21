@@ -248,6 +248,23 @@ def get_unregistered_posters():
     return {"ok": True, "count": len(unlisted), "files": unlisted}
 
 
+@app.get("/api/posters/unconfirmed-embedded")
+def get_unconfirmed_embedded():
+    items: list[dict] = []
+    if MASTER_CSV.exists():
+        with open(MASTER_CSV, encoding="utf-8-sig", newline="") as f:
+            for row in csv_mod.DictReader(f):
+                allowed = row.get("poster_allowed", "").strip().lower()
+                has_embedded = (row.get("has_embedded_title") or "").strip().lower()
+                if allowed == "false" and has_embedded == "":
+                    items.append({
+                        "poster_id": row["poster_id"].strip(),
+                        "source_path": row.get("source_path", "").strip(),
+                        "title": row.get("title", "").strip(),
+                    })
+    return {"ok": True, "count": len(items), "items": items}
+
+
 @app.post("/api/sync-posters")
 def sync_posters():
     script = BASE_DIR / "scripts" / "sync_poster_templates.py"

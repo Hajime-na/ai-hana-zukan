@@ -616,8 +616,8 @@
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "ツツジ",
-      "has_embedded_title": false,
-      "embedded_title": ""
+      "has_embedded_title": true,
+      "embedded_title": "ツツジは、知らないふりをする"
     },
     {
       "id": "img-0074",
@@ -788,8 +788,8 @@
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "薔薇",
-      "has_embedded_title": false,
-      "embedded_title": ""
+      "has_embedded_title": true,
+      "embedded_title": "とげはてれかくし"
     },
     {
       "id": "img-0080",
@@ -817,8 +817,8 @@
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "薔薇",
-      "has_embedded_title": false,
-      "embedded_title": ""
+      "has_embedded_title": true,
+      "embedded_title": "とげはてれかくし"
     },
     {
       "id": "img-0081",
@@ -846,8 +846,8 @@
       "poster_design": "photo-full",
       "poster_position": "bottom-left",
       "flower_match": "薔薇",
-      "has_embedded_title": false,
-      "embedded_title": ""
+      "has_embedded_title": true,
+      "embedded_title": "とげはてれかくし"
     }
   ]
 }

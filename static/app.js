@@ -2969,6 +2969,34 @@ document.querySelector("#clearEditingOrderButton").addEventListener("click", cle
 document.querySelector("#refreshServerOrdersButton").addEventListener("click", renderServerOrders);
 document.querySelector("#recheckUnregisteredButton")?.addEventListener("click", checkUnregisteredPosters);
 document.querySelector("#runSyncButton")?.addEventListener("click", runSyncPosters);
+document.querySelector("#recheckUnconfirmedButton")?.addEventListener("click", checkUnconfirmedEmbedded);
+
+async function checkUnconfirmedEmbedded() {
+  const alertEl = document.querySelector("#unconfirmedEmbeddedAlert");
+  const btn = document.querySelector("#recheckUnconfirmedButton");
+  if (!alertEl) return;
+
+  if (btn) { btn.disabled = true; btn.textContent = "確認中…"; }
+  try {
+    const resp = await fetch("/api/posters/unconfirmed-embedded");
+    const data = await resp.json();
+    const ts = new Date().toLocaleTimeString("ja-JP");
+    if (data.count > 0) {
+      const list = document.querySelector("#unconfirmedEmbeddedList");
+      list.innerHTML = data.items.map((item) =>
+        `<li>${item.poster_id} — ${item.title || item.source_path}</li>`
+      ).join("");
+      alertEl.hidden = false;
+    } else {
+      alertEl.hidden = true;
+    }
+    if (btn) { btn.textContent = `再確認 (${ts})`; }
+  } catch {
+    if (btn) { btn.textContent = "再確認"; }
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
 
 async function checkUnregisteredPosters() {
   const alertEl = document.querySelector("#unregisteredPostersAlert");
@@ -3025,6 +3053,7 @@ async function runSyncPosters() {
         renderGalleryShelf();
       } catch { /* ignore */ }
     }
+    await checkUnconfirmedEmbedded();
     await checkUnregisteredPosters();
   } catch (e) {
     if (msg) { msg.textContent = `❌ エラー: ${e.message}`; msg.hidden = false; }
@@ -3224,6 +3253,7 @@ async function init() {
   renderGalleryShelf();
   renderOrderHistory();
   renderServerOrders();
+  checkUnconfirmedEmbedded();
   checkUnregisteredPosters();
   if (isConfirmModeFromUrl()) {
     showFinishReview({ updateUrl: false });
