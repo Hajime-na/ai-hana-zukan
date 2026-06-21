@@ -545,7 +545,11 @@ def get_order_poster(order_id: str):
     png_path = ORDERS_DIR / f"poster_{order_id}.png"
     if not png_path.exists():
         raise HTTPException(status_code=404, detail="Poster not found")
-    return FileResponse(str(png_path), media_type="image/png")
+    # detect actual format from magic bytes (file may contain JPEG despite .png extension)
+    with open(png_path, "rb") as f:
+        header = f.read(4)
+    media_type = "image/jpeg" if header[:3] == b'\xff\xd8\xff' else "image/png"
+    return FileResponse(str(png_path), media_type=media_type)
 
 
 @app.get("/api/orders/{order_id}/json")

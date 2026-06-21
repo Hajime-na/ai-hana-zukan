@@ -1584,7 +1584,7 @@ async function savePosterPdf(statusElement, fileName) {
   }
 }
 
-async function saveServerOrderPdf(orderId, statusElement) {
+async function saveServerOrderPdf(orderId, statusElement, printSizeKey = "A2") {
   if (!window.jspdf) {
     if (statusElement) statusElement.textContent = "jsPDFの読み込み中です";
     return;
@@ -1596,29 +1596,10 @@ async function saveServerOrderPdf(orderId, statusElement) {
     if (!resp.ok) throw new Error("poster not found");
     const blob = await resp.blob();
     imgUrl = URL.createObjectURL(blob);
-    const img = await new Promise((resolve, reject) => {
-      const image = new Image();
-      image.onload = () => resolve(image);
-      image.onerror = reject;
-      image.src = imgUrl;
-    });
-    const ratio = img.naturalWidth / img.naturalHeight;
-    let pdfW, pdfH;
-    if (ratio >= 1) {
-      const maxW = 297, maxH = 210;
-      if (ratio > maxW / maxH) {
-        pdfW = maxW; pdfH = Math.round((maxW / ratio) * 10) / 10;
-      } else {
-        pdfH = maxH; pdfW = Math.round(maxH * ratio * 10) / 10;
-      }
-    } else {
-      const maxW = 210, maxH = 297;
-      if (ratio < maxW / maxH) {
-        pdfH = maxH; pdfW = Math.round(maxH * ratio * 10) / 10;
-      } else {
-        pdfW = maxW; pdfH = Math.round((maxW / ratio) * 10) / 10;
-      }
-    }
+    // PDFページサイズは注文の印刷サイズに合わせる
+    const key = (printSizeKey || "A2").toUpperCase();
+    const pageDims = { A4: [210, 297], A3: [297, 420], A2: [420, 594], A1: [594, 841] };
+    const [pdfW, pdfH] = pageDims[key] || pageDims.A2;
     const orientation = pdfW >= pdfH ? "landscape" : "portrait";
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation, unit: "mm", format: [pdfW, pdfH] });
@@ -1627,13 +1608,15 @@ async function saveServerOrderPdf(orderId, statusElement) {
       reader.onload = () => resolve(reader.result);
       reader.readAsDataURL(blob);
     });
-    doc.addImage(base64, "PNG", 0, 0, pdfW, pdfH);
+    // MIME type に応じてフォーマットを指定（JPEG or PNG）
+    const imgFormat = blob.type === "image/jpeg" || base64.startsWith("data:image/jpeg") ? "JPEG" : "PNG";
+    doc.addImage(base64, imgFormat, 0, 0, pdfW, pdfH);
     doc.setFontSize(6);
     doc.setTextColor(140, 140, 140);
     doc.text(PDF_DISCLAIMER, 2, pdfH - 1.5);
     doc.save(`poster_${orderId}.pdf`);
     URL.revokeObjectURL(imgUrl);
-    if (statusElement) statusElement.textContent = "PDFを保存しました";
+    if (statusElement) statusElement.textContent = `PDFを保存しました（${key} ${pdfW}×${pdfH}mm）`;
   } catch {
     if (imgUrl) URL.revokeObjectURL(imgUrl);
     if (statusElement) statusElement.textContent = "PDF保存に失敗しました（ポスター画像がサーバーに保存されていない可能性があります）";
@@ -2346,8 +2329,9 @@ async function saveToServer(orderData, statusElement) {
     statusElement.classList.remove("is-error");
   }
   try {
-    const canvas = await renderPosterCanvas();
-    const pngDataUrl = canvas.toDataURL("image/png");
+    const exportSize = getExportCanvasSize();
+    const canvas = await renderPosterCanvas(exportSize);
+    const pngDataUrl = canvas.toDataURL("image/jpeg", 0.92);
     const response = await fetch("/api/save-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -2443,7 +2427,7 @@ async function renderServerOrders() {
             </dl>
             <div class="order-history-actions server-order-actions">
               <button type="button" class="secondary-button server-detail-btn" data-order-id="${order.order_id}">詳細を見る</button>
-              ${order.png_file ? `<button type="button" class="secondary-button server-pdf-btn" data-order-id="${order.order_id}">PDFで保存</button>` : ""}
+              ${order.png_file ? `<button type="button" class="secondary-button server-pdf-btn" data-order-id="${order.order_id}" data-print-size="${order.print_size || "A2"}">PDFで保存</button>` : ""}
               <label class="server-status-label">
                 ステータス
                 <select class="server-status-select" data-order-id="${order.order_id}">${statusOptions}</select>
@@ -2648,7 +2632,7 @@ async function showOrderDetail(orderId) {
       loadOrderIntoEditor(data);
     });
     content.querySelector("#adminSavePdfButton").addEventListener("click", () => {
-      saveServerOrderPdf(orderId, content.querySelector("#adminPdfStatus"));
+      saveServerOrderPdf(orderId, content.querySelector("#adminPdfStatus"), data.print_size);
     });
     content.querySelector("#adminSavePngButton").addEventListener("click", async () => {
       const statusEl = content.querySelector("#adminPngStatus");
@@ -3019,8 +3003,9 @@ document.querySelector("#serverOrdersList").addEventListener("click", async (eve
   const pdfBtn = event.target.closest(".server-pdf-btn");
   if (pdfBtn) {
     const orderId = pdfBtn.dataset.orderId;
+    const printSizeKey = pdfBtn.dataset.printSize || "A2";
     const statusEl = document.querySelector(`.server-pdf-status[data-order-id="${orderId}"]`);
-    saveServerOrderPdf(orderId, statusEl);
+    saveServerOrderPdf(orderId, statusEl, printSizeKey);
     return;
   }
   const deleteBtn = event.target.closest(".server-delete-btn");
