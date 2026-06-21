@@ -27,7 +27,7 @@
         "ラベンダー",
         "春"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "ラベンダーフェア",
       "default_subtitle": "旬のラベンダーをあなたへ。",
@@ -57,7 +57,7 @@
         "ラベンダー",
         "春"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "ラベンダーフェア",
       "default_subtitle": "旬のラベンダーをあなたへ。",
@@ -87,7 +87,7 @@
         "ラベンダー",
         "春"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "ラベンダーフェア",
       "default_subtitle": "旬のラベンダーをあなたへ。",
@@ -117,7 +117,7 @@
         "ひまわり",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "ひまわりフェア",
       "default_subtitle": "旬のひまわりをあなたへ。",
@@ -147,7 +147,7 @@
         "ひまわり",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "ひまわりフェア",
       "default_subtitle": "旬のひまわりをあなたへ。",
@@ -177,7 +177,7 @@
         "ひまわり",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "ひまわりフェア",
       "default_subtitle": "旬のひまわりをあなたへ。",
@@ -207,7 +207,7 @@
         "ひまわり",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "ひまわりフェア",
       "default_subtitle": "旬のひまわりをあなたへ。",
@@ -237,7 +237,7 @@
         "ひまわり",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "ひまわりフェア",
       "default_subtitle": "旬のひまわりをあなたへ。",
@@ -267,7 +267,7 @@
         "ひまわり",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "ひまわりフェア",
       "default_subtitle": "旬のひまわりをあなたへ。",
@@ -297,7 +297,7 @@
         "ひまわり",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "ひまわりフェア",
       "default_subtitle": "旬のひまわりをあなたへ。",
@@ -327,7 +327,7 @@
         "紫陽花",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
@@ -357,7 +357,7 @@
         "紫陽花",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
@@ -387,7 +387,7 @@
         "紫陽花",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
@@ -417,7 +417,7 @@
         "紫陽花",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
@@ -447,7 +447,7 @@
         "紫陽花",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
@@ -477,7 +477,7 @@
         "紫陽花",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
@@ -507,7 +507,7 @@
         "紫陽花",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "紫陽花フェア",
       "default_subtitle": "旬の紫陽花をあなたへ。",
@@ -537,7 +537,7 @@
         "朝顔",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "朝顔フェア",
       "default_subtitle": "旬の朝顔をあなたへ。",
@@ -567,7 +567,7 @@
         "朝顔",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "朝顔フェア",
       "default_subtitle": "旬の朝顔をあなたへ。",
@@ -597,7 +597,7 @@
         "朝顔",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "朝顔フェア",
       "default_subtitle": "旬の朝顔をあなたへ。",
@@ -627,7 +627,7 @@
         "ツツジ",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "ツツジフェア",
       "default_subtitle": "旬のツツジをあなたへ。",
@@ -657,7 +657,7 @@
         "花火",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "花火フェア",
       "default_subtitle": "夏の花火をあなたへ。",
@@ -686,7 +686,7 @@
       "tags": [
         "胡蝶蘭"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "胡蝶蘭フェア",
       "default_subtitle": "上品な胡蝶蘭をあなたへ。",
@@ -715,7 +715,7 @@
       "tags": [
         "胡蝶蘭"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "胡蝶蘭フェア",
       "default_subtitle": "上品な胡蝶蘭をあなたへ。",
@@ -745,7 +745,7 @@
         "花火",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "花火フェア",
       "default_subtitle": "夏の花火をあなたへ。",
@@ -775,7 +775,7 @@
         "薔薇",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "薔薇フェア",
       "default_subtitle": "旬の薔薇をあなたへ。",
@@ -805,7 +805,7 @@
         "薔薇",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "薔薇フェア",
       "default_subtitle": "旬の薔薇をあなたへ。",
@@ -835,7 +835,7 @@
         "薔薇",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "薔薇フェア",
       "default_subtitle": "旬の薔薇をあなたへ。",
@@ -865,7 +865,7 @@
         "薔薇",
         "夏"
       ],
-      "poster_allowed": false,
+      "poster_allowed": true,
       "featured": false,
       "default_main_title": "薔薇フェア",
       "default_subtitle": "旬の薔薇をあなたへ。",
