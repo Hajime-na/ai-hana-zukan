@@ -1667,10 +1667,9 @@ function renderFinishReview() {
   confirmPosterImageLayer.style.setProperty("--poster-image", image);
   confirmPosterPreview.style.setProperty("--poster-fallback", state.selectedFlower.fallback);
   confirmPosterPreviewFrame.style.setProperty("--poster-fallback", state.selectedFlower.fallback);
-  const isDemoTemplate = photo?.usage === "template" && photo?.poster_allowed !== true;
-  renderPosterTitle(confirmPosterTitle, isDemoTemplate ? "" : snapshot.title);
-  confirmPosterSub.textContent = isDemoTemplate ? "" : snapshot.subtitle;
-  confirmPosterMeta.textContent = isDemoTemplate ? "" : [snapshot.shop, snapshot.date].filter(Boolean).join(" / ");
+  renderPosterTitle(confirmPosterTitle, snapshot.title);
+  confirmPosterSub.textContent = snapshot.subtitle;
+  confirmPosterMeta.textContent = [snapshot.shop, snapshot.date].filter(Boolean).join(" / ");
   applyTextOffsetToPreview(confirmPosterCopy, confirmPosterPreviewFrame);
   applyBandOpacity(confirmPosterCopy);
   applyFontScalesToFrame(confirmPosterPreviewFrame);
