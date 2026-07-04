@@ -1357,63 +1357,94 @@ function generatePrintCheckId() {
   return `${getTemplatePosterIdLabel()} / ${ts}`;
 }
 
-function drawPrintCheckId(context, canvasWidth, canvasHeight, checkId) {
-  if (!checkId) return;
-  const fontSize = Math.max(11, Math.round(Math.min(canvasWidth, canvasHeight) * 0.009));
-  const marginX = Math.round(fontSize * 2.2);
-  const marginY = Math.round(fontSize * 1.8);
-  const x = canvasWidth - marginX;
-  const y = canvasHeight - marginY;
-
-  // サンプリング: 右下コーナーの輝度で文字色を自動切替
-  const sampleSize = Math.round(fontSize * 10);
-  const sx = Math.max(0, canvasWidth - sampleSize);
-  const sy = Math.max(0, canvasHeight - sampleSize);
-  let isDark = true;
-  try {
-    const px = context.getImageData(sx, sy, Math.min(sampleSize, canvasWidth), Math.min(sampleSize, canvasHeight)).data;
-    let total = 0;
-    for (let i = 0; i < px.length; i += 4) {
-      total += px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114;
-    }
-    isDark = total / (px.length / 4) < 140;
-  } catch (_) {}
-
-  const textColor = isDark ? "rgba(255,255,255,0.68)" : "rgba(40,40,40,0.58)";
-  const bgColor   = isDark ? "rgba(0,0,0,0.30)"       : "rgba(255,255,255,0.42)";
-
-  context.save();
-  context.font = `400 ${fontSize}px 'Yu Gothic','Meiryo',monospace`;
-  context.textAlign = "right";
-  context.textBaseline = "bottom";
-
-  const textW = context.measureText(checkId).width;
-  const padX = Math.round(fontSize * 0.5);
-  const padY = Math.round(fontSize * 0.35);
-  const rx = x - textW - padX;
-  const ry = y - fontSize - padY;
-  const rw = textW + padX * 2;
-  const rh = fontSize + padY * 2;
-  const r  = Math.round(rh / 3);
+// 印刷確認IDバッジを専用の小さいoffscreen canvasに描画して返す。
+// 大きい出力canvas（A2/A3高解像度）の遠い座標へ直接 fillRect/fillText すると
+// Chromiumで描画が反映されないことがあるため、小さいcanvasで描いてから
+// drawImage で合成する（drawImageは巨大canvasでも問題なく動作するため）。
+function createPrintCheckIdBadgeCanvas({ text, fontSize, textColor, bgColor, rw, rh, padX, padY }) {
+  const badge = document.createElement("canvas");
+  badge.width = Math.max(1, Math.ceil(rw));
+  badge.height = Math.max(1, Math.ceil(rh));
+  const ctx = badge.getContext("2d");
+  const w = badge.width;
+  const h = badge.height;
+  const r = Math.round(h / 3);
 
   // 角丸背景
-  context.fillStyle = bgColor;
-  context.beginPath();
-  context.moveTo(rx + r, ry);
-  context.lineTo(rx + rw - r, ry);
-  context.quadraticCurveTo(rx + rw, ry,      rx + rw, ry + r);
-  context.lineTo(rx + rw, ry + rh - r);
-  context.quadraticCurveTo(rx + rw, ry + rh, rx + rw - r, ry + rh);
-  context.lineTo(rx + r, ry + rh);
-  context.quadraticCurveTo(rx, ry + rh,      rx, ry + rh - r);
-  context.lineTo(rx, ry + r);
-  context.quadraticCurveTo(rx, ry,            rx + r, ry);
-  context.closePath();
-  context.fill();
+  ctx.fillStyle = bgColor;
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.lineTo(w - r, 0);
+  ctx.quadraticCurveTo(w, 0,     w, r);
+  ctx.lineTo(w, h - r);
+  ctx.quadraticCurveTo(w, h,     w - r, h);
+  ctx.lineTo(r, h);
+  ctx.quadraticCurveTo(0, h,     0, h - r);
+  ctx.lineTo(0, r);
+  ctx.quadraticCurveTo(0, 0,     r, 0);
+  ctx.closePath();
+  ctx.fill();
 
-  context.fillStyle = textColor;
-  context.fillText(checkId, x, y);
-  context.restore();
+  ctx.font = `400 ${fontSize}px 'Yu Gothic','Meiryo',monospace`;
+  ctx.textAlign = "right";
+  ctx.textBaseline = "bottom";
+  ctx.fillStyle = textColor;
+  ctx.fillText(text, w - padX, h - padY);
+
+  return badge;
+}
+
+function drawPrintCheckId(context, canvasWidth, canvasHeight, checkId) {
+  if (!checkId) return;
+
+  // renderBasePosterCanvas は高解像度出力時に context.scale() で座標変換(CTM)を
+  // かけたまま復元しない（プレビュー座標系→出力解像度への一括スケール用）。
+  // このCTMが残った状態で canvasWidth/canvasHeight（実デバイスピクセル値）を
+  // 使って直接 fillRect/fillText/drawImage すると、座標もフォントサイズも
+  // 二重にスケールされてキャンバス外に描画され、右下バッジが消えてしまう。
+  // そのため、このバッジ描画だけは一時的にCTMを単位行列にリセットして
+  // デバイスピクセル座標で完結させる。
+  context.save();
+  context.setTransform(1, 0, 0, 1, 0, 0);
+  try {
+    const fontSize = Math.max(11, Math.round(Math.min(canvasWidth, canvasHeight) * 0.009));
+    const marginX = Math.round(fontSize * 2.2);
+    const marginY = Math.round(fontSize * 1.8);
+    const x = canvasWidth - marginX;
+    const y = canvasHeight - marginY;
+
+    // サンプリング: 右下コーナーの輝度で文字色を自動切替
+    const sampleSize = Math.round(fontSize * 10);
+    const sx = Math.max(0, canvasWidth - sampleSize);
+    const sy = Math.max(0, canvasHeight - sampleSize);
+    let isDark = true;
+    try {
+      const px = context.getImageData(sx, sy, Math.min(sampleSize, canvasWidth), Math.min(sampleSize, canvasHeight)).data;
+      let total = 0;
+      for (let i = 0; i < px.length; i += 4) {
+        total += px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114;
+      }
+      isDark = total / (px.length / 4) < 140;
+    } catch (_) {}
+
+    const textColor = isDark ? "rgba(255,255,255,0.68)" : "rgba(40,40,40,0.58)";
+    const bgColor   = isDark ? "rgba(0,0,0,0.30)"       : "rgba(255,255,255,0.42)";
+
+    context.font = `400 ${fontSize}px 'Yu Gothic','Meiryo',monospace`;
+    const textW = context.measureText(checkId).width;
+
+    const padX = Math.round(fontSize * 0.5);
+    const padY = Math.round(fontSize * 0.35);
+    const rw = textW + padX * 2;
+    const rh = fontSize + padY * 2;
+    const rx = x + padX - rw;
+    const ry = y + padY - rh;
+
+    const badge = createPrintCheckIdBadgeCanvas({ text: checkId, fontSize, textColor, bgColor, rw, rh, padX, padY });
+    context.drawImage(badge, rx, ry, rw, rh);
+  } finally {
+    context.restore();
+  }
 }
 
 function buildOrderJson(orderId) {
