@@ -2601,16 +2601,10 @@ async function showOrderDetail(orderId) {
             <button type="button" class="secondary-button" id="copyPrioMemoButton">Prio発注用メモをコピー</button>
             <button type="button" class="secondary-button load-to-editor-button" id="loadOrderToEditorButton">この注文を編集画面に読み込む</button>
           </div>
-          <div class="order-detail-print-actions" style="margin-top:8px">
-            <button type="button" class="secondary-button" id="adminSavePdfButton">PDFを保存</button>
-            <button type="button" class="secondary-button" id="adminSavePngButton">PNGを保存</button>
-            <p id="adminPdfStatus" class="export-status" style="margin:4px 0 0"></p>
-            <p id="adminPngStatus" class="export-status" style="margin:4px 0 0"></p>
-          </div>
         </div>
         <div class="order-detail-submission-check">
           <h4>入稿データ確認</h4>
-          <p class="print-order-admin-notice">画面プレビューではなく、実際にPrioへ送るPDF/PNGファイルそのものを開いて確認してください。</p>
+          <p class="print-order-admin-notice">ここで生成されるPDF/PNGが、Prioへ送る入稿データです。画面プレビューではなく、必ず実際のPDFを開いて確認してください。</p>
           <dl class="order-detail-fields">
             <div><dt>印刷確認ID</dt><dd style="font-family:monospace;font-weight:bold">${data.print_check_id || "―"}</dd></div>
             <div><dt>PDFファイル名</dt><dd id="submissionPdfFilename">${lastExport.pdf?.filename || "未生成"}</dd></div>
@@ -2622,9 +2616,15 @@ async function showOrderDetail(orderId) {
             <div><dt>PNG出力サイズ</dt><dd id="submissionPngSize">${lastExport.png ? `${lastExport.png.width}×${lastExport.png.height}px` : "―"}</dd></div>
           </dl>
           <div class="order-detail-print-actions">
-            <a id="openPdfConfirmLink" class="secondary-button submission-open-link${lastExport.pdf ? "" : " is-disabled"}" href="/api/orders/${orderId}/pdf" target="_blank" rel="noopener">PDFを開いて確認</a>
-            <a id="openPngConfirmLink" class="secondary-button submission-open-link${lastExport.png ? "" : " is-disabled"}" href="/api/orders/${orderId}/poster" target="_blank" rel="noopener">PNGを開いて確認</a>
+            <button type="button" class="secondary-button" id="adminSavePdfButton">入稿用PDFを生成</button>
+            <a id="openPdfConfirmLink" class="secondary-button submission-open-link${lastExport.pdf ? "" : " is-disabled"}" href="/api/orders/${orderId}/pdf" target="_blank" rel="noopener">入稿用PDFを開いて確認</a>
           </div>
+          <div class="order-detail-print-actions">
+            <button type="button" class="secondary-button" id="adminSavePngButton">入稿用PNGを生成</button>
+            <a id="openPngConfirmLink" class="secondary-button submission-open-link${lastExport.png ? "" : " is-disabled"}" href="/api/orders/${orderId}/poster" target="_blank" rel="noopener">入稿用PNGを開いて確認</a>
+          </div>
+          <p id="adminPdfStatus" class="export-status" style="margin:4px 0 0"></p>
+          <p id="adminPngStatus" class="export-status" style="margin:4px 0 0"></p>
           <div class="order-confirm-checks submission-check-list">
             <p class="order-confirm-checks-title">入稿前チェック（Prio発注前に必ず確認）</p>
             ${Object.entries(submissionCheckLabels)
@@ -3186,6 +3186,10 @@ document.querySelector("#serverOrdersList").addEventListener("change", (event) =
 document.querySelector("#closeOrderDetailButton").addEventListener("click", closeOrderDetail);
 document.querySelector("#orderDetailBackdrop").addEventListener("click", closeOrderDetail);
 document.querySelector("#clearEditingOrderButton").addEventListener("click", clearEditingOrder);
+
+document.querySelector("#adminNavButton")?.addEventListener("click", () => {
+  document.querySelector("#serverOrdersSection")?.scrollIntoView({ behavior: "smooth", block: "start" });
+});
 
 document.querySelector("#refreshServerOrdersButton").addEventListener("click", renderServerOrders);
 document.querySelector("#recheckUnregisteredButton")?.addEventListener("click", checkUnregisteredPosters);
