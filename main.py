@@ -549,7 +549,14 @@ def get_order_poster(order_id: str):
     with open(png_path, "rb") as f:
         header = f.read(4)
     media_type = "image/jpeg" if header[:3] == b'\xff\xd8\xff' else "image/png"
-    return FileResponse(str(png_path), media_type=media_type)
+    # 注文編集→再保存直後にPDF/PNG出力すると同一URLでも中身が変わるため、
+    # ブラウザのヒューリスティックキャッシュで古い画像を返さないよう明示的に無効化する
+    headers = {
+        "Cache-Control": "no-store",
+        "Pragma": "no-cache",
+        "Expires": "0",
+    }
+    return FileResponse(str(png_path), media_type=media_type, headers=headers)
 
 
 @app.get("/api/orders/{order_id}/json")
