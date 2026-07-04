@@ -2230,6 +2230,11 @@ placeOrderButton.addEventListener("click", () => {
     return;
   }
   const orderId = state.editingOrderId || generateOrderId();
+  // 仮注文前に発行した印刷確認IDは仮のタイムスタンプのため、確定した注文IDに
+  // 合わせて必ず上書きする（注文JSON・PDF/PNG・Prio発注メモの整合性のため）
+  state.currentPrintCheckId = `${getTemplatePosterIdLabel()} / ${orderId}`;
+  const printCheckEl = document.querySelector("#confirmPrintCheckId");
+  if (printCheckEl) printCheckEl.textContent = state.currentPrintCheckId;
   const orderData = buildOrderJson(orderId);
   const jsonFileName = `order_${orderId}.json`;
   orderStatus.innerHTML = `
