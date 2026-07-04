@@ -550,16 +550,21 @@
               <label><input type="checkbox" class="order-confirm-check" /> この内容で注文へ進みます</label>
             </div>
             <div id="exportResolutionHint" class="export-resolution-hint" aria-live="polite"></div>
-            <p class="export-prio-hint">Prio入稿用PDFは、仮注文保存後に注文ID付きで出力してください。</p>
             <div class="confirmation-actions">
               <button id="backToEditButton" class="secondary-button" type="button">編集に戻る</button>
-              <button id="saveConfirmPngButton" class="secondary-button" type="button">PNGで保存</button>
-              <button id="saveConfirmPdfButton" class="secondary-button" type="button">PDFで保存</button>
               <button id="placeOrderButton" class="primary-button finish-button" type="button">この内容で仮注文する</button>
             </div>
-            <p id="confirmPngStatus" class="export-status" aria-live="polite"></p>
-            <p id="confirmPdfStatus" class="export-status" aria-live="polite"></p>
             <p id="orderStatus" class="order-status" hidden></p>
+            <details class="order-dev-actions">
+              <summary>開発用操作</summary>
+              <p class="export-prio-hint">Prio入稿用PDFは、仮注文保存後に注文ID付きで出力してください。</p>
+              <div class="order-dev-buttons">
+                <button id="saveConfirmPngButton" class="secondary-button compact-button" type="button">PNGで保存</button>
+                <button id="saveConfirmPdfButton" class="secondary-button compact-button" type="button">PDFで保存</button>
+              </div>
+              <p id="confirmPngStatus" class="export-status" aria-live="polite"></p>
+              <p id="confirmPdfStatus" class="export-status" aria-live="polite"></p>
+            </details>
           </div>
 
           <!-- 右カラム：入力内容サマリー -->
@@ -751,6 +756,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v46rc46"></script>
+    <script src="/static/app.js?v=v47rc47"></script>
   </body>
 </html>
