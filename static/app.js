@@ -188,8 +188,8 @@ const posterDesignDescriptions = {
 
 const posterSizeSettings = {
   original: { label: "元画像比率", aspect: "1 / 1", width: 1200, height: 1200 },
-  "a4-portrait": { label: "A4縦", aspect: "210 / 297", width: 1200, height: 1697 },
-  "a4-landscape": { label: "A4横", aspect: "297 / 210", width: 1697, height: 1200 },
+  "a4-portrait": { label: "A判縦", aspect: "210 / 297", width: 1200, height: 1697 },
+  "a4-landscape": { label: "A判横", aspect: "297 / 210", width: 1697, height: 1200 },
   square: { label: "正方形", aspect: "1 / 1", width: 1200, height: 1200 },
   wide: { label: "16:9", aspect: "16 / 9", width: 1600, height: 900 },
   story: { label: "9:16", aspect: "9 / 16", width: 900, height: 1600 },
