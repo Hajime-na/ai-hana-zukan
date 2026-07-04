@@ -2239,6 +2239,10 @@ placeOrderButton.addEventListener("click", () => {
     </p>
     <p class="order-id-display">注文ID：<span class="order-id-value">${orderId}</span></p>
     <p class="order-placed-note">この時点では正式な決済・印刷・発送処理はまだ行われません。内容確認後、担当者からご連絡します。</p>
+    <p class="order-flow-notice">
+      注文状況は管理画面で確認できます。<br>
+      管理画面から入稿用PDFを生成し、実際のPDFを開いて確認してください。
+    </p>
     <p id="serverSaveStatus" class="export-status order-server-status"></p>
     <details class="order-dev-actions">
       <summary>開発用操作</summary>

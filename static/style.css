@@ -1172,6 +1172,17 @@ details[open] > .advanced-summary::before {
   margin: 0 0 8px;
 }
 
+.order-flow-notice {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 8px 0;
+  padding: 10px 12px;
+}
+
 .material-warning {
   background: #fffaf1;
   border: 1px solid #ead7a8;

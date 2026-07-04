@@ -12,7 +12,7 @@
         <p class="eyebrow">Hana Poster AI</p>
         <h1>花屋さんのポスター文字入れ</h1>
       </div>
-      <button type="button" id="adminNavButton" class="secondary-button compact-button admin-nav-button">管理画面</button>
+      <button type="button" id="adminNavButton" class="secondary-button compact-button admin-nav-button">注文状況を確認する</button>
       <button type="button" id="bgmButton" class="bgm-button" aria-label="BGM 再生/停止">♪ BGM</button>
       <div class="status">v1.1-rc3</div>
     </header>
@@ -551,6 +551,10 @@
               <label><input type="checkbox" class="order-confirm-check" /> この内容で注文へ進みます</label>
             </div>
             <div id="exportResolutionHint" class="export-resolution-hint" aria-live="polite"></div>
+            <p class="order-flow-notice">
+              注文状況を残すには「この内容で仮注文する」を押してください。<br>
+              PDF/PNG保存は確認用であり、仮注文にはなりません。
+            </p>
             <div class="confirmation-actions">
               <button id="backToEditButton" class="secondary-button" type="button">編集に戻る</button>
               <button id="placeOrderButton" class="primary-button finish-button" type="button">この内容で仮注文する</button>
@@ -559,6 +563,7 @@
             <details class="order-dev-actions">
               <summary>開発用操作</summary>
               <p class="export-prio-hint">Prio入稿用PDFは、仮注文保存後に注文ID付きで出力してください。</p>
+              <p class="order-flow-notice">このPDF/PNG保存は確認用です。注文として記録するには「この内容で仮注文する」を押してください。</p>
               <div class="order-dev-buttons">
                 <button id="saveConfirmPngButton" class="secondary-button compact-button" type="button">PNGで保存</button>
                 <button id="saveConfirmPdfButton" class="secondary-button compact-button" type="button">PDFで保存</button>
@@ -744,6 +749,10 @@
           <button type="button" id="refreshServerOrdersButton" class="secondary-button compact-button">一覧を更新</button>
         </div>
         <p class="history-notice">この保存機能はローカル開発用です。本番運用では認証・DB・バックアップが必要です。</p>
+        <p class="order-flow-notice">
+          ここでは仮注文の確認、見積もり、支払い状況、入稿用PDF生成、Prio発注準備を行います。<br>
+          仮注文前のPDF保存は注文一覧には表示されません。
+        </p>
         <div id="serverOrdersList" class="order-history-list"></div>
       </section>
     </main>
@@ -757,6 +766,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v50rc50"></script>
+    <script src="/static/app.js?v=v51rc51"></script>
   </body>
 </html>
