@@ -1615,7 +1615,7 @@ async function savePosterPdf(statusElement, fileName) {
   }
 }
 
-async function saveServerOrderPdf(orderId, statusElement, printSizeKey = "A2") {
+async function saveServerOrderPdf(orderId, statusElement, printSizeKey = "A2", onSaved = null) {
   if (!window.jspdf) {
     if (statusElement) statusElement.textContent = "jsPDFの読み込み中です";
     return;
@@ -1647,7 +1647,25 @@ async function saveServerOrderPdf(orderId, statusElement, printSizeKey = "A2") {
     doc.text(PDF_DISCLAIMER, 2, pdfH - 1.5);
     doc.save(`poster_${orderId}.pdf`);
     URL.revokeObjectURL(imgUrl);
+
+    // 実際にPrioへ送るPDFをサーバーにも保存し、いつでも「開いて確認」できるようにする
+    const bitmap = await createImageBitmap(blob).catch(() => null);
+    const pdfDataUrl = doc.output("datauristring");
+    await fetch(`/api/orders/${orderId}/pdf`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pdf_data_url: pdfDataUrl }),
+    }).catch(() => {});
+    const exportInfo = await updateExportInfo(orderId, {
+      kind: "pdf",
+      width: bitmap?.width || 0,
+      height: bitmap?.height || 0,
+      page_width_mm: pdfW,
+      page_height_mm: pdfH,
+    });
+
     if (statusElement) statusElement.textContent = `PDFを保存しました（${key} ${pdfW}×${pdfH}mm）`;
+    if (onSaved) onSaved(exportInfo?.last_export);
   } catch {
     if (imgUrl) URL.revokeObjectURL(imgUrl);
     if (statusElement) statusElement.textContent = "PDF保存に失敗しました（ポスター画像がサーバーに保存されていない可能性があります）";
@@ -2499,6 +2517,15 @@ async function showOrderDetail(orderId) {
     const hasPoster = Boolean(data.png_filename);
     const pay = data.payment || {};
     const est = data.estimate || {};
+    const lastExport = data.last_export || {};
+    const submissionCheck = data.submission_check || {};
+    const submissionCheckLabels = {
+      pdf_opened: "実際のPDFを開いて確認しました",
+      print_check_id_confirmed: "印刷確認IDが右下に入っていることを確認しました",
+      no_sample_confirmed: "SAMPLE透かしが入っていないことを確認しました",
+      title_not_cut_confirmed: "文字・画像内タイトルが切れていないことを確認しました",
+      size_orientation_confirmed: "印刷サイズ・向きが正しいことを確認しました",
+    };
 
     content.innerHTML = `
       <h3 class="order-detail-title">注文詳細</h3>
@@ -2579,6 +2606,34 @@ async function showOrderDetail(orderId) {
             <button type="button" class="secondary-button" id="adminSavePngButton">PNGを保存</button>
             <p id="adminPdfStatus" class="export-status" style="margin:4px 0 0"></p>
             <p id="adminPngStatus" class="export-status" style="margin:4px 0 0"></p>
+          </div>
+        </div>
+        <div class="order-detail-submission-check">
+          <h4>入稿データ確認</h4>
+          <p class="print-order-admin-notice">画面プレビューではなく、実際にPrioへ送るPDF/PNGファイルそのものを開いて確認してください。</p>
+          <dl class="order-detail-fields">
+            <div><dt>印刷確認ID</dt><dd style="font-family:monospace;font-weight:bold">${data.print_check_id || "―"}</dd></div>
+            <div><dt>PDFファイル名</dt><dd id="submissionPdfFilename">${lastExport.pdf?.filename || "未生成"}</dd></div>
+            <div><dt>PDF最終生成日時</dt><dd id="submissionPdfGeneratedAt">${lastExport.pdf ? formatHistoryDate(lastExport.pdf.generated_at) : "―"}</dd></div>
+            <div><dt>PDF出力サイズ</dt><dd id="submissionPdfSize">${lastExport.pdf ? `${lastExport.pdf.width}×${lastExport.pdf.height}px` : "―"}</dd></div>
+            <div><dt>PDFページサイズ</dt><dd id="submissionPdfPageSize">${lastExport.pdf ? `${lastExport.pdf.page_width_mm}×${lastExport.pdf.page_height_mm}mm` : "―"}</dd></div>
+            <div><dt>PNGファイル名</dt><dd id="submissionPngFilename">${lastExport.png?.filename || "未生成"}</dd></div>
+            <div><dt>PNG最終生成日時</dt><dd id="submissionPngGeneratedAt">${lastExport.png ? formatHistoryDate(lastExport.png.generated_at) : "―"}</dd></div>
+            <div><dt>PNG出力サイズ</dt><dd id="submissionPngSize">${lastExport.png ? `${lastExport.png.width}×${lastExport.png.height}px` : "―"}</dd></div>
+          </dl>
+          <div class="order-detail-print-actions">
+            <a id="openPdfConfirmLink" class="secondary-button submission-open-link${lastExport.pdf ? "" : " is-disabled"}" href="/api/orders/${orderId}/pdf" target="_blank" rel="noopener">PDFを開いて確認</a>
+            <a id="openPngConfirmLink" class="secondary-button submission-open-link${lastExport.png ? "" : " is-disabled"}" href="/api/orders/${orderId}/poster" target="_blank" rel="noopener">PNGを開いて確認</a>
+          </div>
+          <div class="order-confirm-checks submission-check-list">
+            <p class="order-confirm-checks-title">入稿前チェック（Prio発注前に必ず確認）</p>
+            ${Object.entries(submissionCheckLabels)
+              .map(([key, label]) => `<label><input type="checkbox" class="submission-check-item" data-check="${key}"${submissionCheck[key] ? " checked" : ""} /> ${label}</label>`)
+              .join("")}
+          </div>
+          <div class="order-detail-print-actions">
+            <button type="button" class="secondary-button" id="saveSubmissionCheckButton">入稿前チェックを保存</button>
+            <p id="submissionCheckStatus" class="export-status" style="margin:4px 0 0"></p>
           </div>
         </div>
         <div class="order-detail-estimate">
@@ -2662,8 +2717,28 @@ async function showOrderDetail(orderId) {
     content.querySelector("#loadOrderToEditorButton").addEventListener("click", () => {
       loadOrderIntoEditor(data);
     });
+    function renderSubmissionExportInfo(lastExportData) {
+      const le = lastExportData || {};
+      const setText = (id, text) => { const el = content.querySelector(id); if (el) el.textContent = text; };
+      setText("#submissionPdfFilename", le.pdf?.filename || "未生成");
+      setText("#submissionPdfGeneratedAt", le.pdf ? formatHistoryDate(le.pdf.generated_at) : "―");
+      setText("#submissionPdfSize", le.pdf ? `${le.pdf.width}×${le.pdf.height}px` : "―");
+      setText("#submissionPdfPageSize", le.pdf ? `${le.pdf.page_width_mm}×${le.pdf.page_height_mm}mm` : "―");
+      setText("#submissionPngFilename", le.png?.filename || "未生成");
+      setText("#submissionPngGeneratedAt", le.png ? formatHistoryDate(le.png.generated_at) : "―");
+      setText("#submissionPngSize", le.png ? `${le.png.width}×${le.png.height}px` : "―");
+      const pdfLink = content.querySelector("#openPdfConfirmLink");
+      if (pdfLink) pdfLink.classList.toggle("is-disabled", !le.pdf);
+      const pngLink = content.querySelector("#openPngConfirmLink");
+      if (pngLink) pngLink.classList.toggle("is-disabled", !le.png);
+    }
+
     content.querySelector("#adminSavePdfButton").addEventListener("click", () => {
-      saveServerOrderPdf(orderId, content.querySelector("#adminPdfStatus"), data.print_size);
+      saveServerOrderPdf(orderId, content.querySelector("#adminPdfStatus"), data.print_size, (lastExportData) => {
+        renderSubmissionExportInfo(lastExportData);
+        // 保存直後に確認しやすいよう、可能なら新しいタブで実ファイルを開く（ポップアップブロック時は無視）
+        try { window.open(`/api/orders/${orderId}/pdf`, "_blank", "noopener"); } catch (_) {}
+      });
     });
     content.querySelector("#adminSavePngButton").addEventListener("click", async () => {
       const statusEl = content.querySelector("#adminPngStatus");
@@ -2679,10 +2754,42 @@ async function showOrderDetail(orderId) {
         document.body.appendChild(anchor);
         anchor.click();
         anchor.remove();
+        const bitmap = await createImageBitmap(blob).catch(() => null);
         URL.revokeObjectURL(url);
+        const result = await updateExportInfo(orderId, {
+          kind: "png",
+          width: bitmap?.width || 0,
+          height: bitmap?.height || 0,
+        });
+        renderSubmissionExportInfo(result?.last_export);
+        try { window.open(`/api/orders/${orderId}/poster`, "_blank", "noopener"); } catch (_) {}
         if (statusEl) statusEl.textContent = "PNGを保存しました";
       } catch {
         if (statusEl) { statusEl.textContent = "PNG取得に失敗しました"; statusEl.classList.add("is-error"); }
+      }
+    });
+
+    content.querySelector("#saveSubmissionCheckButton").addEventListener("click", async () => {
+      const checkItems = content.querySelectorAll(".submission-check-item");
+      const checkData = {};
+      checkItems.forEach((el) => { checkData[el.dataset.check] = el.checked; });
+      await updateSubmissionCheck(orderId, checkData);
+      const btn = content.querySelector("#saveSubmissionCheckButton");
+      if (btn) { btn.textContent = "保存しました"; setTimeout(() => { btn.textContent = "入稿前チェックを保存"; }, 2000); }
+    });
+
+    content.querySelector("#printStatusSelect").addEventListener("change", (event) => {
+      const select = event.target;
+      if (select.value !== "入稿済み") return;
+      const checkItems = content.querySelectorAll(".submission-check-item");
+      const allChecked = Array.from(checkItems).every((el) => el.checked);
+      if (!allChecked) {
+        const proceed = window.confirm(
+          "入稿前チェックが完了していません。\n実際のPDFを開いて確認せずに「入稿済み」にしますか？",
+        );
+        if (!proceed) {
+          select.value = data.print_order_status || "未発注";
+        }
       }
     });
 
@@ -2895,6 +3002,32 @@ async function updateEstimate(orderId, estimateData) {
     });
   } catch {
     // silent fail
+  }
+}
+
+async function updateExportInfo(orderId, exportInfoData) {
+  try {
+    const resp = await fetch(`/api/orders/${orderId}/export-info`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(exportInfoData),
+    });
+    return await resp.json();
+  } catch {
+    return null;
+  }
+}
+
+async function updateSubmissionCheck(orderId, checkData) {
+  try {
+    const resp = await fetch(`/api/orders/${orderId}/submission-check`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(checkData),
+    });
+    return await resp.json();
+  } catch {
+    return null;
   }
 }
 

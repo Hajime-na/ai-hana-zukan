@@ -445,6 +445,18 @@ dd {
   margin: 12px 0;
 }
 
+a.submission-open-link {
+  align-items: center;
+  display: inline-flex;
+  text-decoration: none;
+}
+
+a.submission-open-link.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
 .suggestions {
   display: grid;
   gap: 10px;

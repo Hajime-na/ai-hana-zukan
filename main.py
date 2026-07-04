@@ -6,6 +6,7 @@ import subprocess
 import sys
 import urllib.error
 import urllib.request
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -146,6 +147,26 @@ class LayoutSuggestRequest(BaseModel):
     subtitle: str = ""
     flower_name: str = ""
     is_landscape: bool = False
+
+
+class SavePdfRequest(BaseModel):
+    pdf_data_url: str
+
+
+class ExportInfoRequest(BaseModel):
+    kind: str  # "pdf" | "png"
+    width: int = 0
+    height: int = 0
+    page_width_mm: float = 0
+    page_height_mm: float = 0
+
+
+class SubmissionCheckRequest(BaseModel):
+    pdf_opened: bool = False
+    print_check_id_confirmed: bool = False
+    no_sample_confirmed: bool = False
+    title_not_cut_confirmed: bool = False
+    size_orientation_confirmed: bool = False
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
@@ -557,6 +578,77 @@ def get_order_poster(order_id: str):
         "Expires": "0",
     }
     return FileResponse(str(png_path), media_type=media_type, headers=headers)
+
+
+@app.post("/api/orders/{order_id}/pdf")
+def save_order_pdf(order_id: str, request: SavePdfRequest):
+    try:
+        if not (ORDERS_DIR / f"order_{order_id}.json").exists():
+            raise HTTPException(status_code=404, detail="Order not found")
+        raw = request.pdf_data_url
+        if "," in raw:
+            raw = raw.split(",", 1)[1]
+        pdf_path = ORDERS_DIR / f"poster_{order_id}.pdf"
+        pdf_path.write_bytes(base64.b64decode(raw))
+        return {"ok": True, "order_id": order_id, "pdf_file": pdf_path.name}
+    except HTTPException:
+        return {"ok": False, "error": "Order not found"}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@app.get("/api/orders/{order_id}/pdf")
+def get_order_pdf(order_id: str):
+    pdf_path = ORDERS_DIR / f"poster_{order_id}.pdf"
+    if not pdf_path.exists():
+        raise HTTPException(status_code=404, detail="PDF not found")
+    headers = {
+        "Cache-Control": "no-store",
+        "Pragma": "no-cache",
+        "Expires": "0",
+    }
+    return FileResponse(str(pdf_path), media_type="application/pdf", headers=headers)
+
+
+@app.post("/api/orders/{order_id}/export-info")
+def update_export_info(order_id: str, request: ExportInfoRequest):
+    try:
+        data = _load_order_json(order_id)
+        kind = "pdf" if request.kind == "pdf" else "png"
+        entry = {
+            "filename": f"poster_{order_id}.{kind}",
+            "generated_at": datetime.now().isoformat(timespec="seconds"),
+            "width": request.width,
+            "height": request.height,
+        }
+        if kind == "pdf":
+            entry["page_width_mm"] = request.page_width_mm
+            entry["page_height_mm"] = request.page_height_mm
+        last_export = data.get("last_export", {})
+        last_export[kind] = entry
+        data["last_export"] = last_export
+        _save_order_json(order_id, data)
+        return {"ok": True, "order_id": order_id, "last_export": last_export}
+    except HTTPException:
+        return {"ok": False, "error": "Order not found"}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@app.post("/api/orders/{order_id}/submission-check")
+def update_submission_check(order_id: str, request: SubmissionCheckRequest):
+    try:
+        data = _load_order_json(order_id)
+        check = request.model_dump()
+        check["all_confirmed"] = all(check.values())
+        check["updated_at"] = datetime.now().isoformat(timespec="seconds")
+        data["submission_check"] = check
+        _save_order_json(order_id, data)
+        return {"ok": True, "order_id": order_id, "submission_check": check}
+    except HTTPException:
+        return {"ok": False, "error": "Order not found"}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
 
 
 @app.get("/api/orders/{order_id}/json")
