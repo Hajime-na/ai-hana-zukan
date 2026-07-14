@@ -2149,6 +2149,62 @@ body.modal-open {
   padding: 9px 20px;
 }
 
+/* ── Entry cards (3カテゴリ入口) ─────────────────────────────── */
+.entry-panel {
+  background: var(--panel);
+  border-color: var(--line);
+}
+
+.entry-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 14px;
+}
+
+@media (max-width: 720px) {
+  .entry-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.entry-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font-family: inherit;
+  gap: 6px;
+  padding: 18px 16px;
+  text-align: left;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+
+.entry-card:hover {
+  border-color: var(--green);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.entry-card-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.entry-card-title {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.entry-card-desc {
+  color: #4a6450;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
 /* ── Gallery section (shelf layout) ─────────────────────────── */
 .gallery-panel {
   background: var(--soft);

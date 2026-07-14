@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v44rc12" />
+    <link rel="stylesheet" href="/static/style.css?v=v45rc1" />
   </head>
   <body>
     <header class="topbar">
@@ -14,7 +14,7 @@
       </div>
       <button type="button" id="adminNavButton" class="secondary-button compact-button admin-nav-button">注文状況を確認する</button>
       <button type="button" id="bgmButton" class="bgm-button" aria-label="BGM 再生/停止">♪ BGM</button>
-      <div class="status">v1.1-rc3</div>
+      <div class="status">v1.2-rc1</div>
     </header>
 
     <main class="page">
@@ -22,13 +22,41 @@
       <!-- ① ヒーロー -->
       <section id="heroSection" class="panel hero-panel">
         <div class="hero-content">
-          <p class="eyebrow">Flower Poster Creator</p>
-          <h2 class="hero-title">花屋さんの販促を、<br>もっと美しく。</h2>
-          <p class="hero-lead">季節の花ポスターに、お店の名前・フェア名・期間を入れて、<br>そのまま告知・印刷に使えます。</p>
+          <p class="eyebrow">Photo & Shop Poster Creator</p>
+          <h2 class="hero-title">写真と言葉で、<br>想いをポスターに。</h2>
+          <p class="hero-lead">想い出の写真、カフェのメニュー、花やギフトの告知まで。<br>大切な一枚に言葉を添えて、印刷できるポスターに仕上げます。</p>
           <div class="hero-actions">
-            <button class="primary-button" id="heroGalleryButton" type="button">ポスターを選ぶ</button>
-            <button class="secondary-button" id="heroStartButton" type="button">文字入れを試す</button>
+            <button class="primary-button" id="heroPhotoButton" type="button">写真から作る</button>
+            <button class="secondary-button" id="heroSampleButton" type="button">サンプルから作る</button>
           </div>
+        </div>
+      </section>
+
+      <!-- ①.5 サービス入口（3カテゴリ） -->
+      <section id="entrySection" class="panel entry-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Choose a Category</p>
+            <h2>何のポスターを作りますか？</h2>
+            <p class="section-description">目的に合わせて選ぶと、そのまま制作をスタートできます。</p>
+          </div>
+        </div>
+        <div class="entry-grid">
+          <button type="button" class="entry-card" id="entryMemoryCard">
+            <span class="entry-card-icon" aria-hidden="true">🖼️</span>
+            <span class="entry-card-title">想い出ポスター</span>
+            <span class="entry-card-desc">写真をきれいに整えて、大切な記憶を飾れるポスターにします。</span>
+          </button>
+          <button type="button" class="entry-card" id="entryCafeCard">
+            <span class="entry-card-icon" aria-hidden="true">☕</span>
+            <span class="entry-card-title">カフェ・店舗ポスター</span>
+            <span class="entry-card-desc">季節メニュー、新作ドリンク、イベント告知など、お店の雰囲気に合うポスターを作ります。</span>
+          </button>
+          <button type="button" class="entry-card" id="entryFlowerCard">
+            <span class="entry-card-icon" aria-hidden="true">🌸</span>
+            <span class="entry-card-title">花・ギフトポスター</span>
+            <span class="entry-card-desc">花、開店祝い、季節の贈りものに合うポスターを作ります。</span>
+          </button>
         </div>
       </section>
 
@@ -37,8 +65,8 @@
         <div class="section-head">
           <div>
             <p class="eyebrow">Showcase</p>
-            <h2>美しいポスター作例</h2>
-            <p class="section-description">季節・シーンから雰囲気を選んで、そのまま制作をスタートできます。</p>
+            <h2>用途別サンプル</h2>
+            <p class="section-description">想い出、カフェ・店舗、花・ギフトまで。雰囲気から選んで、そのまま制作をスタートできます。</p>
           </div>
         </div>
         <div class="showroom-grid">
@@ -766,6 +794,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v52rc52"></script>
+    <script src="/static/app.js?v=v53rc2"></script>
   </body>
 </html>
