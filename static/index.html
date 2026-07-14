@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v46rc1" />
+    <link rel="stylesheet" href="/static/style.css?v=v47rc1" />
   </head>
   <body>
     <header class="topbar">
@@ -53,6 +53,51 @@
             <span class="entry-card-desc">メニュー、イベント、季節のお知らせ、花やギフトの告知まで。お店の雰囲気に合うポスターを作ります。</span>
           </button>
         </div>
+      </section>
+
+      <!-- ①.6 想い出ポスター専用入口（v1.3 仮ページ） -->
+      <section id="memorySection" class="panel memory-panel" aria-labelledby="memory-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Memory Poster</p>
+            <h2 id="memory-title">想い出写真で作る</h2>
+            <p class="section-description">写真をアップロードして、きれいに整え、言葉を添えてポスターにします。</p>
+          </div>
+        </div>
+
+        <div class="memory-upload-area">
+          <input id="memoryPhotoInput" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="display:none" />
+          <button type="button" id="memoryUploadTriggerButton" class="primary-button">写真をアップロード</button>
+          <p id="memoryUploadStatus" class="field-help" aria-live="polite">対応形式：jpg / jpeg / png / webp</p>
+          <div id="memoryUploadPreview" class="memory-upload-preview" hidden>
+            <img id="memoryUploadPreviewImg" alt="アップロードした写真のプレビュー" />
+          </div>
+        </div>
+
+        <ol class="memory-steps">
+          <li class="memory-step is-current" id="memoryStep1">
+            <span class="memory-step-num">1</span>
+            <span class="memory-step-label">写真をアップロード</span>
+          </li>
+          <li class="memory-step is-upcoming" id="memoryStep2">
+            <span class="memory-step-num">2</span>
+            <span class="memory-step-label">高画質化・補正</span>
+          </li>
+          <li class="memory-step is-upcoming" id="memoryStep3">
+            <span class="memory-step-num">3</span>
+            <span class="memory-step-label">言葉を入れる</span>
+          </li>
+          <li class="memory-step is-upcoming" id="memoryStep4">
+            <span class="memory-step-num">4</span>
+            <span class="memory-step-label">仕上がり確認</span>
+          </li>
+          <li class="memory-step is-upcoming" id="memoryStep5">
+            <span class="memory-step-num">5</span>
+            <span class="memory-step-label">仮注文</span>
+          </li>
+        </ol>
+
+        <p class="memory-note">この画面は想い出ポスターフローの仮ページです。高画質化・補正・言葉入れ以降の実処理は準備中です。</p>
       </section>
 
       <!-- ② 作例エリア -->
@@ -789,6 +834,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v53rc3"></script>
+    <script src="/static/app.js?v=v53rc4"></script>
   </body>
 </html>

@@ -2205,6 +2205,102 @@ body.modal-open {
   line-height: 1.6;
 }
 
+/* ── Memory poster entry (想い出ポスター専用・v1.3仮ページ) ────── */
+.memory-panel {
+  background: var(--panel);
+  border-color: var(--line);
+}
+
+.memory-upload-area {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.memory-upload-preview {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-top: 6px;
+  max-width: 220px;
+  overflow: hidden;
+}
+
+.memory-upload-preview img {
+  display: block;
+  width: 100%;
+}
+
+.memory-steps {
+  counter-reset: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+
+.memory-step {
+  align-items: center;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  display: flex;
+  gap: 6px;
+  padding: 5px 12px 5px 6px;
+}
+
+.memory-step-num {
+  align-items: center;
+  background: var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  display: flex;
+  font-size: 11px;
+  font-weight: 700;
+  height: 20px;
+  justify-content: center;
+  width: 20px;
+}
+
+.memory-step-label {
+  color: #4a6450;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.memory-step.is-current {
+  background: #e6f1e8;
+  border-color: var(--green);
+}
+
+.memory-step.is-current .memory-step-num {
+  background: var(--green-dark);
+  color: #fff;
+}
+
+.memory-step.is-current .memory-step-label {
+  color: var(--green-dark);
+}
+
+.memory-step.is-done {
+  background: var(--soft);
+  border-color: var(--green);
+}
+
+.memory-step.is-done .memory-step-num {
+  background: var(--green);
+  color: #fff;
+}
+
+.memory-note {
+  color: #8a8a8a;
+  font-size: 12px;
+  margin: 16px 0 0;
+}
+
 /* ── Gallery section (shelf layout) ─────────────────────────── */
 .gallery-panel {
   background: var(--soft);

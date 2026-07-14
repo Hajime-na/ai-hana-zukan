@@ -3443,7 +3443,7 @@ document.querySelector("#galleryGrid").addEventListener("click", (event) => {
   }
 });
 
-document.querySelector("#heroPhotoButton").addEventListener("click", () => scrollToSection("#posterSection"));
+document.querySelector("#heroPhotoButton").addEventListener("click", () => scrollToSection("#memorySection"));
 document.querySelector("#heroSampleButton").addEventListener("click", () => scrollToSection("#gallerySection"));
 
 function initStickyPreview() {
@@ -3518,9 +3518,45 @@ document.querySelectorAll(".showroom-cta").forEach((btn) => {
 });
 
 // ===== Entry cards (想い出 / カフェ・店舗) =====
-// 専用フローは未実装のため、各カテゴリに最も近い既存の導線へ遷移する。
-document.querySelector("#entryMemoryCard")?.addEventListener("click", () => scrollToSection("#posterSection"));
+// 想い出は専用入口セクションへ、カフェ・店舗は既存の希望フォームへ遷移する。
+document.querySelector("#entryMemoryCard")?.addEventListener("click", () => scrollToSection("#memorySection"));
 document.querySelector("#entryCafeCard")?.addEventListener("click", () => scrollToSection("#wishSection"));
+
+// ===== Memory poster entry (想い出ポスター専用・v1.3仮ページ) =====
+// 高画質化・補正・言葉入れ以降は未実装。ここではアップロードのプレビューとステップ表示のみ行う。
+(function initMemorySection() {
+  const triggerButton = document.querySelector("#memoryUploadTriggerButton");
+  const fileInput = document.querySelector("#memoryPhotoInput");
+  const statusEl = document.querySelector("#memoryUploadStatus");
+  const previewWrap = document.querySelector("#memoryUploadPreview");
+  const previewImg = document.querySelector("#memoryUploadPreviewImg");
+  const step1 = document.querySelector("#memoryStep1");
+  const step2 = document.querySelector("#memoryStep2");
+  if (!triggerButton || !fileInput) return;
+
+  triggerButton.addEventListener("click", () => fileInput.click());
+
+  fileInput.addEventListener("change", (event) => {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      statusEl.textContent = "jpg / jpeg / png / webp の画像を選択してください。";
+      statusEl.classList.add("is-error");
+      event.target.value = "";
+      return;
+    }
+    statusEl.classList.remove("is-error");
+    statusEl.textContent = `${file.name} を受け取りました。高画質化・補正は準備中です。`;
+    const objectUrl = URL.createObjectURL(file);
+    previewImg.src = objectUrl;
+    previewWrap.hidden = false;
+    step1?.classList.remove("is-current");
+    step1?.classList.add("is-done");
+    step2?.classList.remove("is-upcoming");
+    step2?.classList.add("is-current");
+  });
+})();
 
 // ===== Wish Form =====
 (function initWishForm() {
