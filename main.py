@@ -330,6 +330,19 @@ def read_index():
     )
 
 
+# v1.3: お客様向け入口・想い出ポスター・カフェ店舗ポスター・管理画面のルート分離。
+# 現時点では同一の index.html を返し、クライアント側で data-route に応じて
+# 表示するセクションを切り替える（画面分離の土台）。
+@app.get("/memory")
+@app.get("/cafe")
+@app.get("/admin")
+def read_route_page():
+    return FileResponse(
+        STATIC_DIR / "index.html",
+        headers={"Cache-Control": "no-store"},
+    )
+
+
 @app.get("/api/info")
 def api_info():
     return {

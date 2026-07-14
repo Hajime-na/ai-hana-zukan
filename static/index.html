@@ -4,23 +4,37 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hana Poster AI | 花屋さんのポスター作成</title>
-    <link rel="stylesheet" href="/static/style.css?v=v47rc1" />
+    <link rel="stylesheet" href="/static/style.css?v=v48rc1" />
   </head>
   <body>
+    <script>
+      // v1.3: ルート分離の土台。パスに応じて <html data-route="..."> を設定し、
+      // CSS側で該当ルート以外の [data-view] 要素を非表示にする。
+      (function () {
+        var path = location.pathname.replace(/\/+$/, "") || "/";
+        var route = path === "/memory" ? "memory"
+          : path === "/cafe" ? "cafe"
+          : path === "/admin" ? "admin"
+          : "top";
+        document.documentElement.setAttribute("data-route", route);
+      })();
+    </script>
     <header class="topbar">
       <div>
-        <p class="eyebrow">Hana Poster AI</p>
-        <h1>花屋さんのポスター文字入れ</h1>
+        <a href="/" class="topbar-home-link">
+          <p class="eyebrow">Hana Poster AI</p>
+          <h1>花屋さんのポスター文字入れ</h1>
+        </a>
       </div>
       <button type="button" id="adminNavButton" class="secondary-button compact-button admin-nav-button">注文状況を確認する</button>
       <button type="button" id="bgmButton" class="bgm-button" aria-label="BGM 再生/停止">♪ BGM</button>
-      <div class="status">v1.2-rc1</div>
+      <div class="status">v1.3-rc3</div>
     </header>
 
     <main class="page">
 
       <!-- ① ヒーロー -->
-      <section id="heroSection" class="panel hero-panel">
+      <section id="heroSection" class="panel hero-panel" data-view="top">
         <div class="hero-content">
           <p class="eyebrow">Memory & Shop Poster</p>
           <h2 class="hero-title">想い出を、<br>飾れる一枚に。</h2>
@@ -33,7 +47,7 @@
       </section>
 
       <!-- ①.5 サービス入口 -->
-      <section id="entrySection" class="panel entry-panel">
+      <section id="entrySection" class="panel entry-panel" data-view="top">
         <div class="section-head">
           <div>
             <p class="eyebrow">Choose</p>
@@ -46,24 +60,28 @@
             <span class="entry-card-icon" aria-hidden="true">🖼️</span>
             <span class="entry-card-title">想い出ポスター</span>
             <span class="entry-card-desc">家族、ペット、旅行、記念日。写真をきれいに整えて、飾れるポスターにします。</span>
+            <span class="entry-card-cta">想い出ポスターを相談する →</span>
           </button>
           <button type="button" class="entry-card" id="entryCafeCard">
             <span class="entry-card-icon" aria-hidden="true">☕</span>
             <span class="entry-card-title">カフェ・店舗ポスター</span>
             <span class="entry-card-desc">メニュー、イベント、季節のお知らせ、花やギフトの告知まで。お店の雰囲気に合うポスターを作ります。</span>
+            <span class="entry-card-cta">カフェ・店舗ポスターを見る →</span>
           </button>
         </div>
       </section>
 
-      <!-- ①.6 想い出ポスター専用入口（v1.3 仮ページ） -->
-      <section id="memorySection" class="panel memory-panel" aria-labelledby="memory-title">
+      <!-- ①.6 想い出ポスター制作相談（v1.3-rc3） -->
+      <section id="memorySection" class="panel memory-panel" aria-labelledby="memory-title" data-view="memory">
         <div class="section-head">
           <div>
             <p class="eyebrow">Memory Poster</p>
-            <h2 id="memory-title">想い出写真で作る</h2>
-            <p class="section-description">写真をアップロードして、きれいに整え、言葉を添えてポスターにします。</p>
+            <h2 id="memory-title">想い出ポスター制作相談</h2>
+            <p class="section-description">写真をお預かりし、確認・補正・高画質化・サンプル作成後に、見積もりをご案内します。</p>
           </div>
         </div>
+
+        <p class="memory-important-note">この時点では、注文・決済・印刷は発生しません。まずは制作相談として内容をお送りください。</p>
 
         <div class="memory-upload-area">
           <input id="memoryPhotoInput" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="display:none" />
@@ -74,6 +92,46 @@
           </div>
         </div>
 
+        <div class="memory-form">
+          <div class="wish-section">
+            <p class="wish-section-title">用途</p>
+            <div class="wish-chips" data-group="memory-purpose">
+              <button type="button" class="wish-chip" data-value="家族">家族</button>
+              <button type="button" class="wish-chip" data-value="子ども">子ども</button>
+              <button type="button" class="wish-chip" data-value="ペット">ペット</button>
+              <button type="button" class="wish-chip" data-value="旅行">旅行</button>
+              <button type="button" class="wish-chip" data-value="記念日">記念日</button>
+              <button type="button" class="wish-chip" data-value="追悼">追悼</button>
+              <button type="button" class="wish-chip" data-value="その他">その他</button>
+            </div>
+          </div>
+
+          <label>
+            ご希望・自由記入欄
+            <textarea id="memoryWishText" rows="3" placeholder="例：明るい雰囲気に補正してほしい、A2サイズで飾りたい など"></textarea>
+          </label>
+
+          <div class="wish-section">
+            <p class="wish-section-title">連絡先</p>
+            <div class="form-grid two">
+              <label>お名前<span class="required-mark">*</span><input id="memoryContactName" type="text" placeholder="例：山田 花子" /></label>
+              <label>電話番号<input id="memoryContactPhone" type="tel" placeholder="例：090-1234-5678" /></label>
+            </div>
+            <label>メールアドレス<span class="required-mark">*</span><input id="memoryContactEmail" type="email" placeholder="例：hana@example.com" /></label>
+          </div>
+
+          <div class="memory-submit-area">
+            <button type="button" id="memorySubmitButton" class="primary-button finish-button">制作相談を送信する</button>
+            <p id="memorySubmitStatus" class="export-status" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div id="memorySubmitResult" class="memory-submit-result" hidden>
+          <p class="memory-submit-result-title">制作相談を受け付けました</p>
+          <p>内容を確認後、見積もり・お支払い案内をお送りします。</p>
+          <p>写真確認・補正作業のため、返信までお時間をいただく場合があります。</p>
+        </div>
+
         <ol class="memory-steps">
           <li class="memory-step is-current" id="memoryStep1">
             <span class="memory-step-num">1</span>
@@ -81,27 +139,50 @@
           </li>
           <li class="memory-step is-upcoming" id="memoryStep2">
             <span class="memory-step-num">2</span>
-            <span class="memory-step-label">高画質化・補正</span>
+            <span class="memory-step-label">用途・希望を入力</span>
           </li>
           <li class="memory-step is-upcoming" id="memoryStep3">
             <span class="memory-step-num">3</span>
-            <span class="memory-step-label">言葉を入れる</span>
+            <span class="memory-step-label">連絡先を入力</span>
           </li>
           <li class="memory-step is-upcoming" id="memoryStep4">
             <span class="memory-step-num">4</span>
-            <span class="memory-step-label">仕上がり確認</span>
+            <span class="memory-step-label">制作相談を送信する</span>
           </li>
           <li class="memory-step is-upcoming" id="memoryStep5">
             <span class="memory-step-num">5</span>
-            <span class="memory-step-label">仮注文</span>
+            <span class="memory-step-label">サンプル・見積もりをお待ちください</span>
           </li>
         </ol>
+      </section>
 
-        <p class="memory-note">この画面は想い出ポスターフローの仮ページです。高画質化・補正・言葉入れ以降の実処理は準備中です。</p>
+      <!-- ①.7 カフェ・店舗ポスター入口（v1.3-rc3） -->
+      <section id="cafeEntrySection" class="panel entry-panel" data-view="cafe">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Cafe & Shop Poster</p>
+            <h2>カフェ・店舗ポスター</h2>
+            <p class="section-description">お店の雰囲気に合うポスターを、文字なしサンプルから選ぶか、文字入れ込みで依頼できます。</p>
+          </div>
+        </div>
+        <div class="entry-grid">
+          <button type="button" class="entry-card" id="cafeSampleEntryCard">
+            <span class="entry-card-icon" aria-hidden="true">🖼️</span>
+            <span class="entry-card-title">文字なしサンプルを選ぶ</span>
+            <span class="entry-card-desc">季節メニューや店内装飾に使える、文字なしの完成デザインです。店名や価格は入りません。</span>
+            <span class="entry-card-cta">文字なしサンプルを選ぶ →</span>
+          </button>
+          <button type="button" class="entry-card" id="cafeLetteringEntryCard">
+            <span class="entry-card-icon" aria-hidden="true">✏️</span>
+            <span class="entry-card-title">文字入れを依頼する</span>
+            <span class="entry-card-desc">店名・商品名・価格・期間などを入れて、お店専用のポスターに仕上げます。</span>
+            <span class="entry-card-cta">文字入れを依頼する →</span>
+          </button>
+        </div>
       </section>
 
       <!-- ② 作例エリア -->
-      <section id="showroomSection" class="panel showroom-panel">
+      <section id="showroomSection" class="panel showroom-panel" data-view="cafe">
         <div class="section-head">
           <div>
             <p class="eyebrow">Showcase</p>
@@ -145,14 +226,14 @@
         </div>
       </section>
 
-      <!-- ③ 希望を伝えるフォーム -->
-      <section id="wishSection" class="panel wish-panel">
+      <!-- ③ 文字入れオーダーメイド 相談フォーム -->
+      <section id="wishSection" class="panel wish-panel" data-view="cafe">
         <details id="wishDetails" class="wish-details">
           <summary>
             <div class="wish-summary-text">
-              <p class="eyebrow">Your Wish</p>
-              <h2>希望を伝えて探す</h2>
-              <p class="section-description">ボタンを選ぶだけで、理想のポスターイメージが固まります。</p>
+              <p class="eyebrow">Custom Lettering</p>
+              <h2>文字入れを依頼する</h2>
+              <p class="section-description">店名・商品名・価格・期間などを入れて、お店専用のポスターに仕上げます。</p>
             </div>
             <div class="wish-summary-actions">
               <span class="wish-btn-open">希望を入力する ▼</span>
@@ -160,7 +241,20 @@
             </div>
           </summary>
           <div class="wish-form-body">
+            <p class="memory-important-note">この時点では、注文・決済・印刷は発生しません。まずは制作相談として内容をお送りください。</p>
             <div class="wish-form">
+              <div class="wish-section">
+                <p class="wish-section-title">掲載情報</p>
+                <div class="form-grid two">
+                  <label>店名<input id="cafeShopName" type="text" placeholder="例：Hana Cafe" /></label>
+                  <label>商品名<input id="cafeProductName" type="text" placeholder="例：季節のフルーツタルト" /></label>
+                </div>
+                <div class="form-grid two">
+                  <label>価格<input id="cafePrice" type="text" placeholder="例：￥680" /></label>
+                  <label>期間<input id="cafePeriod" type="text" placeholder="例：11月1日〜30日" /></label>
+                </div>
+                <label>営業時間<input id="cafeBusinessHours" type="text" placeholder="例：11:00〜19:00（水休）" /></label>
+              </div>
               <div class="wish-section">
                 <p class="wish-section-title">用途</p>
                 <div class="wish-chips" data-group="purpose">
@@ -218,7 +312,7 @@
                 </div>
               </div>
               <div class="wish-section">
-                <p class="wish-section-title">その他・自由に伝えたいこと</p>
+                <p class="wish-section-title">希望内容</p>
                 <textarea id="wishFreeText" rows="2" placeholder="例：白系でまとめてほしい、英字タイトルにしたい…"></textarea>
               </div>
               <div id="wishSummary" class="wish-summary" hidden>
@@ -226,13 +320,33 @@
                 <div id="wishSummaryContent" class="wish-summary-content"></div>
                 <button type="button" class="primary-button" id="wishGalleryButton">この内容でポスターを選ぶ</button>
               </div>
+
+              <div class="wish-section">
+                <p class="wish-section-title">連絡先</p>
+                <div class="form-grid two">
+                  <label>お名前<span class="required-mark">*</span><input id="cafeContactName" type="text" placeholder="例：山田 花子" /></label>
+                  <label>電話番号<input id="cafeContactPhone" type="tel" placeholder="例：090-1234-5678" /></label>
+                </div>
+                <label>メールアドレス<span class="required-mark">*</span><input id="cafeContactEmail" type="email" placeholder="例：hana@example.com" /></label>
+              </div>
+
+              <div class="memory-submit-area">
+                <button type="button" id="cafeLetteringSubmitButton" class="primary-button finish-button">制作相談を送信する</button>
+                <p id="cafeLetteringSubmitStatus" class="export-status" aria-live="polite"></p>
+              </div>
+
+              <div id="cafeLetteringSubmitResult" class="memory-submit-result" hidden>
+                <p class="memory-submit-result-title">制作相談を受け付けました</p>
+                <p>内容を確認後、見積もり・お支払い案内をお送りします。</p>
+                <p>写真確認・補正作業のため、返信までお時間をいただく場合があります。</p>
+              </div>
             </div>
           </div>
         </details>
       </section>
 
-      <!-- ④ ポスターギャラリー -->
-      <section id="gallerySection" class="panel gallery-panel" aria-labelledby="gallery-title">
+      <!-- ④ ポスターギャラリー（文字なしサンプル） -->
+      <section id="gallerySection" class="panel gallery-panel" aria-labelledby="gallery-title" data-view="cafe">
         <div class="section-head">
           <div>
             <p class="eyebrow">Poster Gallery</p>
@@ -244,7 +358,7 @@
       </section>
 
       <!-- ③ ポスター文字入れ（メイン機能） -->
-      <section id="posterSection" class="panel poster-panel" aria-labelledby="poster-title">
+      <section id="posterSection" class="panel poster-panel" aria-labelledby="poster-title" data-view="cafe admin">
         <div class="section-head">
           <div>
             <p class="eyebrow">Poster Lettering</p>
@@ -576,7 +690,7 @@
       </section>
 
       <!-- ④ 仕上がり確認 -->
-      <section id="confirmationSection" class="panel confirmation-panel" aria-labelledby="confirm-title" hidden>
+      <section id="confirmationSection" class="panel confirmation-panel" aria-labelledby="confirm-title" data-view="cafe admin" hidden>
         <div class="section-head">
           <div>
             <p class="eyebrow">Final Preview</p>
@@ -681,8 +795,8 @@
         </div>
       </section>
 
-      <!-- ⑤ 花図鑑（補助） -->
-      <section class="panel catalog-panel" aria-labelledby="catalog-title">
+      <!-- ⑤ 花図鑑（補助・v1.3では非表示。JSは維持） -->
+      <section class="panel catalog-panel" aria-labelledby="catalog-title" hidden>
         <div class="section-head">
           <div>
             <p class="eyebrow">Flower Guide</p>
@@ -694,8 +808,8 @@
         <div id="flowerGrid" class="flower-grid"></div>
       </section>
 
-      <!-- ⑥ 花の詳細 -->
-      <section class="panel detail-panel" aria-labelledby="detail-title">
+      <!-- ⑥ 花の詳細（補助・v1.3では非表示。JSは維持） -->
+      <section class="panel detail-panel" aria-labelledby="detail-title" hidden>
         <div class="detail-layout">
           <div class="photo-column">
             <div id="flowerHero" class="flower-hero" aria-label="花写真"></div>
@@ -734,8 +848,8 @@
         </div>
       </section>
 
-      <!-- ⑦ AI販促文（補助） -->
-      <section id="promotionSection" class="panel ai-panel" aria-labelledby="ai-title">
+      <!-- ⑦ AI販促文（補助・v1.3では非表示。JSは維持） -->
+      <section id="promotionSection" class="panel ai-panel" aria-labelledby="ai-title" hidden>
         <div class="section-head">
           <div>
             <p class="eyebrow">AI Promotion Draft</p>
@@ -773,7 +887,7 @@
       </section>
 
       <!-- ⑧ 仮注文履歴 -->
-      <section id="orderHistorySection" class="panel history-panel" aria-labelledby="history-title">
+      <section id="orderHistorySection" class="panel history-panel" aria-labelledby="history-title" data-view="cafe">
         <div class="section-head">
           <div>
             <p class="eyebrow">Order History</p>
@@ -785,8 +899,8 @@
         <div id="orderHistoryList" class="order-history-list"></div>
       </section>
 
-      <!-- ⑨ サーバー保存済み注文 -->
-      <section id="serverOrdersSection" class="panel history-panel" aria-labelledby="server-orders-title">
+      <!-- ⑨ サーバー保存済み注文（管理画面） -->
+      <section id="serverOrdersSection" class="panel history-panel" aria-labelledby="server-orders-title" data-view="admin">
         <!-- タイトル確認未完了警告バナー -->
         <div id="unconfirmedEmbeddedAlert" class="unregistered-alert unconfirmed-embedded-alert" hidden>
           <p class="unregistered-alert-title">⚠ タイトル確認が未完了の素材があります</p>
@@ -834,6 +948,6 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="/static/app.js?v=v53rc4"></script>
+    <script src="/static/app.js?v=v54rc1"></script>
   </body>
 </html>

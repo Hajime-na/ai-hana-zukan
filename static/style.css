@@ -45,12 +45,26 @@ textarea {
   padding: 16px 28px;
 }
 
+/* ── v1.3 ルート分離（画面分離の土台） ──────────────────────────
+   [data-view] を持つ要素は、<html data-route> と一致しない限り非表示にする。
+   data-view は複数値をスペース区切りで指定可能（例："cafe admin"）。 */
+:root[data-route="top"] [data-view]:not([data-view~="top"]) { display: none !important; }
+:root[data-route="memory"] [data-view]:not([data-view~="memory"]) { display: none !important; }
+:root[data-route="cafe"] [data-view]:not([data-view~="cafe"]) { display: none !important; }
+:root[data-route="admin"] [data-view]:not([data-view~="admin"]) { display: none !important; }
+
 .topbar > div:first-child,
 .page {
   margin-left: auto;
   margin-right: auto;
   max-width: 1280px;
   width: 100%;
+}
+
+.topbar-home-link {
+  color: inherit;
+  display: block;
+  text-decoration: none;
 }
 
 .eyebrow {
@@ -2205,10 +2219,30 @@ body.modal-open {
   line-height: 1.6;
 }
 
+.entry-card-cta {
+  color: var(--green-dark);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
 /* ── Memory poster entry (想い出ポスター専用・v1.3仮ページ) ────── */
 .memory-panel {
   background: var(--panel);
   border-color: var(--line);
+}
+
+.memory-important-note {
+  background: var(--soft);
+  border: 1px solid var(--green);
+  border-left: 4px solid var(--green-dark);
+  border-radius: 4px;
+  color: var(--green-dark);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.55;
+  margin: 10px 0 0;
+  padding: 8px 12px;
 }
 
 .memory-upload-area {
@@ -2217,6 +2251,40 @@ body.modal-open {
   flex-direction: column;
   gap: 8px;
   margin-top: 14px;
+}
+
+.memory-form {
+  display: grid;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.memory-submit-area {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.memory-submit-result {
+  background: var(--soft);
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  margin-top: 14px;
+  padding: 12px 14px;
+}
+
+.memory-submit-result p {
+  color: #4a6450;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 4px 0;
+}
+
+.memory-submit-result p.memory-submit-result-title {
+  color: var(--green-dark);
+  font-size: 0.95rem;
+  font-weight: 800;
 }
 
 .memory-upload-preview {

@@ -3197,7 +3197,11 @@ document.querySelector("#orderDetailBackdrop").addEventListener("click", closeOr
 document.querySelector("#clearEditingOrderButton").addEventListener("click", clearEditingOrder);
 
 document.querySelector("#adminNavButton")?.addEventListener("click", () => {
-  document.querySelector("#serverOrdersSection")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (document.documentElement.getAttribute("data-route") === "admin") {
+    document.querySelector("#serverOrdersSection")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  } else {
+    window.location.href = "/admin";
+  }
 });
 
 document.querySelector("#refreshServerOrdersButton").addEventListener("click", renderServerOrders);
@@ -3443,8 +3447,8 @@ document.querySelector("#galleryGrid").addEventListener("click", (event) => {
   }
 });
 
-document.querySelector("#heroPhotoButton").addEventListener("click", () => scrollToSection("#memorySection"));
-document.querySelector("#heroSampleButton").addEventListener("click", () => scrollToSection("#gallerySection"));
+document.querySelector("#heroPhotoButton").addEventListener("click", () => { window.location.href = "/memory"; });
+document.querySelector("#heroSampleButton").addEventListener("click", () => { window.location.href = "/cafe"; });
 
 function initStickyPreview() {
   const col = document.querySelector(".poster-preview-column");
@@ -3518,21 +3522,62 @@ document.querySelectorAll(".showroom-cta").forEach((btn) => {
 });
 
 // ===== Entry cards (想い出 / カフェ・店舗) =====
-// 想い出は専用入口セクションへ、カフェ・店舗は既存の希望フォームへ遷移する。
-document.querySelector("#entryMemoryCard")?.addEventListener("click", () => scrollToSection("#memorySection"));
-document.querySelector("#entryCafeCard")?.addEventListener("click", () => scrollToSection("#wishSection"));
+// v1.3-rc3: ルート分離により、それぞれ専用ページへ実遷移する。
+document.querySelector("#entryMemoryCard")?.addEventListener("click", () => { window.location.href = "/memory"; });
+document.querySelector("#entryCafeCard")?.addEventListener("click", () => { window.location.href = "/cafe"; });
 
-// ===== Memory poster entry (想い出ポスター専用・v1.3仮ページ) =====
-// 高画質化・補正・言葉入れ以降は未実装。ここではアップロードのプレビューとステップ表示のみ行う。
+// ===== Cafe entry cards (文字なしサンプル / 文字入れオーダーメイド) =====
+// 同一 /cafe ページ内の該当セクションへスクロールする。
+document.querySelector("#cafeSampleEntryCard")?.addEventListener("click", () => scrollToSection("#showroomSection"));
+document.querySelector("#cafeLetteringEntryCard")?.addEventListener("click", () => {
+  const details = document.querySelector("#wishDetails");
+  if (details) details.open = true;
+  scrollToSection("#wishSection");
+});
+
+// ===== 制作相談の共通送信処理 (想い出 / カフェ・店舗「文字入れ」共通) =====
+// v1.3-rc3: 最初の送信は「注文」ではなく「制作相談」。この時点では決済・印刷・発送は発生しない。
+// 既存の /api/save-order をそのまま使い、order_data.order_type で種別を区別する。
+async function submitConsultation({ orderType, extraFields, customer }) {
+  const orderId = generateOrderId();
+  const res = await fetch("/api/save-order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      order_id: orderId,
+      order_data: {
+        order_type: orderType,
+        status: "相談受付",
+        created_at: new Date().toISOString(),
+        customer,
+        ...extraFields,
+      },
+    }),
+  });
+  const result = await res.json();
+  if (!result.ok) throw new Error(result.error || "save failed");
+  return result;
+}
+
+// ===== 想い出ポスター制作相談（v1.3-rc3） =====
+// 高画質化・補正・サンプル作成以降は未実装。写真アップロード〜制作相談送信までを実装する。
 (function initMemorySection() {
   const triggerButton = document.querySelector("#memoryUploadTriggerButton");
   const fileInput = document.querySelector("#memoryPhotoInput");
   const statusEl = document.querySelector("#memoryUploadStatus");
   const previewWrap = document.querySelector("#memoryUploadPreview");
   const previewImg = document.querySelector("#memoryUploadPreviewImg");
+  const submitButton = document.querySelector("#memorySubmitButton");
+  const submitStatus = document.querySelector("#memorySubmitStatus");
+  const submitResult = document.querySelector("#memorySubmitResult");
   const step1 = document.querySelector("#memoryStep1");
   const step2 = document.querySelector("#memoryStep2");
+  const step3 = document.querySelector("#memoryStep3");
+  const step4 = document.querySelector("#memoryStep4");
+  const step5 = document.querySelector("#memoryStep5");
   if (!triggerButton || !fileInput) return;
+
+  let uploadedFileName = "";
 
   triggerButton.addEventListener("click", () => fileInput.click());
 
@@ -3548,6 +3593,7 @@ document.querySelector("#entryCafeCard")?.addEventListener("click", () => scroll
     }
     statusEl.classList.remove("is-error");
     statusEl.textContent = `${file.name} を受け取りました。高画質化・補正は準備中です。`;
+    uploadedFileName = file.name;
     const objectUrl = URL.createObjectURL(file);
     previewImg.src = objectUrl;
     previewWrap.hidden = false;
@@ -3555,6 +3601,96 @@ document.querySelector("#entryCafeCard")?.addEventListener("click", () => scroll
     step1?.classList.add("is-done");
     step2?.classList.remove("is-upcoming");
     step2?.classList.add("is-current");
+  });
+
+  submitButton?.addEventListener("click", async () => {
+    const purposeChip = document.querySelector('[data-group="memory-purpose"] .wish-chip.is-active');
+    const name = document.querySelector("#memoryContactName")?.value.trim() || "";
+    const email = document.querySelector("#memoryContactEmail")?.value.trim() || "";
+    const phone = document.querySelector("#memoryContactPhone")?.value.trim() || "";
+
+    if (!uploadedFileName) {
+      submitStatus.textContent = "写真をアップロードしてください。";
+      submitStatus.classList.add("is-error");
+      return;
+    }
+    if (!name || (!email && !phone)) {
+      submitStatus.textContent = "お名前と、メールアドレスまたは電話番号を入力してください。";
+      submitStatus.classList.add("is-error");
+      return;
+    }
+
+    submitStatus.classList.remove("is-error");
+    submitStatus.textContent = "送信中...";
+    submitButton.disabled = true;
+
+    try {
+      await submitConsultation({
+        orderType: "memory_consultation",
+        extraFields: {
+          memory_purpose: purposeChip?.dataset.value || "",
+          memory_wish_text: document.querySelector("#memoryWishText")?.value.trim() || "",
+          photo_file_name: uploadedFileName,
+        },
+        customer: { name, email, phone },
+      });
+      submitStatus.textContent = "";
+      [step2, step3, step4].forEach((s) => { s?.classList.remove("is-current", "is-upcoming"); s?.classList.add("is-done"); });
+      step5?.classList.remove("is-upcoming");
+      step5?.classList.add("is-current");
+      if (submitResult) submitResult.hidden = false;
+      submitButton.hidden = true;
+    } catch {
+      submitStatus.textContent = "送信に失敗しました。時間をおいて再度お試しください。";
+      submitStatus.classList.add("is-error");
+      submitButton.disabled = false;
+    }
+  });
+})();
+
+// ===== カフェ・店舗「文字入れオーダーメイド」制作相談（v1.3-rc3） =====
+(function initCafeLetteringSection() {
+  const submitButton = document.querySelector("#cafeLetteringSubmitButton");
+  const submitStatus = document.querySelector("#cafeLetteringSubmitStatus");
+  const submitResult = document.querySelector("#cafeLetteringSubmitResult");
+  if (!submitButton) return;
+
+  submitButton.addEventListener("click", async () => {
+    const name = document.querySelector("#cafeContactName")?.value.trim() || "";
+    const email = document.querySelector("#cafeContactEmail")?.value.trim() || "";
+    const phone = document.querySelector("#cafeContactPhone")?.value.trim() || "";
+
+    if (!name || (!email && !phone)) {
+      submitStatus.textContent = "お名前と、メールアドレスまたは電話番号を入力してください。";
+      submitStatus.classList.add("is-error");
+      return;
+    }
+
+    submitStatus.classList.remove("is-error");
+    submitStatus.textContent = "送信中...";
+    submitButton.disabled = true;
+
+    try {
+      await submitConsultation({
+        orderType: "cafe_lettering_consultation",
+        extraFields: {
+          cafe_shop_name: document.querySelector("#cafeShopName")?.value.trim() || "",
+          cafe_product_name: document.querySelector("#cafeProductName")?.value.trim() || "",
+          cafe_price: document.querySelector("#cafePrice")?.value.trim() || "",
+          cafe_period: document.querySelector("#cafePeriod")?.value.trim() || "",
+          cafe_business_hours: document.querySelector("#cafeBusinessHours")?.value.trim() || "",
+          wish_text: document.querySelector("#wishFreeText")?.value.trim() || "",
+        },
+        customer: { name, email, phone },
+      });
+      submitStatus.textContent = "";
+      if (submitResult) submitResult.hidden = false;
+      submitButton.hidden = true;
+    } catch {
+      submitStatus.textContent = "送信に失敗しました。時間をおいて再度お試しください。";
+      submitStatus.classList.add("is-error");
+      submitButton.disabled = false;
+    }
   });
 })();
 
