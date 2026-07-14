@@ -3517,11 +3517,10 @@ document.querySelectorAll(".showroom-cta").forEach((btn) => {
   btn.addEventListener("click", () => scrollToSection("#gallerySection"));
 });
 
-// ===== Entry cards (3カテゴリ入口) =====
-// v1.2時点では専用フローは未実装のため、各カテゴリに最も近い既存の導線へ遷移する。
+// ===== Entry cards (想い出 / カフェ・店舗) =====
+// 専用フローは未実装のため、各カテゴリに最も近い既存の導線へ遷移する。
 document.querySelector("#entryMemoryCard")?.addEventListener("click", () => scrollToSection("#posterSection"));
 document.querySelector("#entryCafeCard")?.addEventListener("click", () => scrollToSection("#wishSection"));
-document.querySelector("#entryFlowerCard")?.addEventListener("click", () => scrollToSection("#gallerySection"));
 
 // ===== Wish Form =====
 (function initWishForm() {

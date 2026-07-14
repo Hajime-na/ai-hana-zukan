@@ -2149,7 +2149,7 @@ body.modal-open {
   padding: 9px 20px;
 }
 
-/* ── Entry cards (3カテゴリ入口) ─────────────────────────────── */
+/* ── Entry cards (想い出 / カフェ・店舗) ──────────────────────── */
 .entry-panel {
   background: var(--panel);
   border-color: var(--line);
@@ -2158,11 +2158,11 @@ body.modal-open {
 .entry-grid {
   display: grid;
   gap: 14px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   margin-top: 14px;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 560px) {
   .entry-grid {
     grid-template-columns: 1fr;
   }
